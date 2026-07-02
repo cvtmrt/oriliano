@@ -138,7 +138,7 @@ export function SelectedWork() {
     >
       <div
         ref={trackRef}
-        className="flex flex-col gap-16 py-24 lg:h-screen lg:flex-row lg:flex-nowrap lg:items-center lg:gap-0 lg:py-0"
+        className="work-track flex flex-col gap-16 py-24 lg:h-screen lg:flex-row lg:flex-nowrap lg:items-center lg:gap-0 lg:py-0"
       >
         {/* Giriş paneli */}
         <div className="work-panel wrap flex shrink-0 flex-col justify-center lg:h-screen lg:w-[42vw] lg:pl-12 lg:pr-0">
