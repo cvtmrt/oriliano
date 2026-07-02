@@ -189,6 +189,38 @@ export default function Page() {
         </div>
       </section>
 
+      {/* Siteden ek ekranlar — canlı sayfalardan kareler (lazy + webp) */}
+      {p.gallery?.length > 0 && (
+        <section className="bg-night pb-20 sm:pb-28">
+          <div className="wrap">
+            <Reveal>
+              <span className="eyebrow text-steel">{t(txt.caseScreens)}</span>
+            </Reveal>
+            <div className="mt-8 grid gap-6 sm:grid-cols-2">
+              {p.gallery.map((g, i) => (
+                <Reveal key={i} delay={i * 0.06}>
+                  <figure className="overflow-hidden rounded-2xl border border-ink/10 bg-graphite shadow-soft">
+                    <picture>
+                      <source srcSet={g.shot.replace(/\.jpe?g$/i, ".webp")} type="image/webp" />
+                      <img
+                        src={g.shot}
+                        alt={t(g.caption)}
+                        loading="lazy"
+                        decoding="async"
+                        className="aspect-[16/10] w-full object-cover object-top"
+                      />
+                    </picture>
+                    <figcaption className="border-t border-ink/10 px-5 py-3 font-mono text-[0.7rem] uppercase tracking-wide text-ash">
+                      {t(g.caption)}
+                    </figcaption>
+                  </figure>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Sonraki iş + CTA */}
       <section className="border-t border-ink/10 bg-coal py-20 sm:py-24">
         <div className="wrap grid gap-12 lg:grid-cols-2 lg:items-center">

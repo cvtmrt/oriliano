@@ -123,6 +123,7 @@ export const txt = {
   caseVisitSite: { tr: "Siteyi ziyaret et ↗", en: "Visit the site ↗" },
   caseScope: { tr: "Kapsam", en: "Scope" },
   caseStudyLabel: { tr: "Vaka Çalışması", en: "Case Study" },
+  caseScreens: { tr: "Siteden Ekranlar", en: "Screens from the site" },
   caseCtaTitle: { tr: "Sıradaki iş seninki olsun.", en: "Let yours be the next one." },
   caseCtaButton: { tr: "Proje Başlatalım", en: "Start a Project" },
 

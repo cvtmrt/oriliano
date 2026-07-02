@@ -42,6 +42,10 @@ export const projects = [
       },
       tech: ["React", "Vike", "Tailwind", "Responsive UI", "SEO"],
     },
+    gallery: [
+      { shot: "/images/case-tavaci-menu.jpg", caption: { tr: "Kategorili menü ve online sipariş akışı", en: "Categorised menu and online ordering flow" } },
+      { shot: "/images/case-tavaci-subeler.jpg", caption: { tr: "Şubeler; telefon, saat ve yol tarifiyle", en: "Branches with phone, hours and directions" } },
+    ],
   },
   {
     slug: "akuport",
@@ -82,6 +86,10 @@ export const projects = [
       },
       tech: ["React", "Vike", "Tailwind", "SSR", "SEO", "Drizzle/Postgres"],
     },
+    gallery: [
+      { shot: "/images/case-akuport-acil.jpg", caption: { tr: "Acil akü sayfası; tek dokunuş arama/WhatsApp", en: "Emergency page; one-tap call/WhatsApp" } },
+      { shot: "/images/case-akuport-urunler.jpg", caption: { tr: "Araç tipine göre ürün kategorileri", en: "Product categories by vehicle type" } },
+    ],
   },
   {
     slug: "bilye",
@@ -124,6 +132,10 @@ export const projects = [
       },
       tech: ["React", "Node.js", "Auth", "REST API", "Dashboard UI", "Database Design"],
     },
+    gallery: [
+      { shot: "/images/case-bilye-panel.jpg", caption: { tr: "Panel araçları; istatistik, yorum, menü, duyuru", en: "Panel tools; stats, reviews, menu, announcements" } },
+      { shot: "/images/case-bilye-steps.jpg", caption: { tr: "4 adımda işletme kaydı ve onay akışı", en: "4-step business onboarding and approval flow" } },
+    ],
   },
   {
     slug: "geo-gorunurluk",
