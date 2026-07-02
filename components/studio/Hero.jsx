@@ -6,17 +6,18 @@ import { Magnetic } from "../anim/Interactive.jsx";
 import { Marquee } from "../anim/Reveal.jsx";
 import { useT, useLang, txt } from "../../lib/i18n.jsx";
 
-const tickerTR = ["Müsait", "Web Tasarım", "Yazılım", "SEO", "QR Menü", "Panel", "Restoran Teknolojisi", "Marka"];
-const tickerEN = ["Available", "Web Design", "Software", "SEO", "QR Menu", "Dashboards", "Restaurant Tech", "Brand"];
+const tickerTR = ["Müsait", "Web Tasarım", "SEO", "Google Ads", "E-Ticaret", "QR Menü", "Yönetim Paneli", "Marka"];
+const tickerEN = ["Available", "Web Design", "SEO", "Google Ads", "E-Commerce", "QR Menu", "Dashboards", "Brand"];
 
 const ease = [0.16, 1, 0.3, 1];
 
-// Hero sahnesinde yüzen cam araç kartları (marka stack'i).
+// Hero sahnesinde yüzen cam HİZMET kartları — araç/stack değil,
+// müşterinin alacağı sonuç (SEO, reklam, site+panel, e-ticaret).
 const tools = [
-  { mark: "Fi", name: "Figma", l1: { tr: "Arayüz Tasarımı", en: "UI Design" }, l2: { tr: "Wireframe / Sistem", en: "Wireframe / Systems" }, pos: "left-0 top-[14%]", depth: 30 },
-  { mark: "Cl", name: "Claude", l1: { tr: "Tasarım Sistemleri", en: "Design Systems" }, l2: { tr: "Önyüz Kodlama", en: "Frontend Coding" }, pos: "right-0 top-[10%]", depth: 44 },
-  { mark: "Re", name: "React / Vike", l1: { tr: "Hızlı Önyüz", en: "Fast Frontend" }, l2: { tr: "SSR / SEO", en: "SSR / SEO" }, pos: "left-[3%] bottom-[16%]", depth: 52 },
-  { mark: "No", name: "Node.js", l1: { tr: "Arka Uç", en: "Backend" }, l2: { tr: "REST API / Panel", en: "REST API / Dashboard" }, pos: "right-[2%] bottom-[12%]", depth: 36 },
+  { mark: "01", name: { tr: "SEO", en: "SEO" }, l1: { tr: "Aramalarda öne çıkın", en: "Stand out in search" }, l2: { tr: "Google'da üst sıralar", en: "Rank higher on Google" }, pos: "left-0 top-[14%]", depth: 30 },
+  { mark: "02", name: { tr: "Google Ads", en: "Google Ads" }, l1: { tr: "Reklam yönetimi", en: "Ads management" }, l2: { tr: "Ölçülebilir dönüşüm", en: "Measurable conversion" }, pos: "right-0 top-[10%]", depth: 44 },
+  { mark: "03", name: { tr: "Web Sitesi", en: "Websites" }, l1: { tr: "Yönetim paneliyle birlikte", en: "Admin panel included" }, l2: { tr: "Hosting + özel domain", en: "Hosting + custom domain" }, pos: "left-[3%] bottom-[16%]", depth: 52 },
+  { mark: "04", name: { tr: "E-Ticaret", en: "E-Commerce" }, l1: { tr: "Ödeme sistemi entegrasyonu", en: "Payment integration" }, l2: { tr: "Sipariş & panel yönetimi", en: "Orders & dashboard" }, pos: "right-[2%] bottom-[12%]", depth: 36 },
 ];
 
 const notes = [
@@ -109,7 +110,7 @@ export function Hero() {
       <div className="hero-floats pointer-events-none absolute inset-0 z-10 hidden lg:block">
         <div className="relative mx-auto h-full max-w-[1440px] px-12">
           {tools.map((tool, i) => (
-            <ParallaxItem key={tool.name} mx={mx} my={my} depth={tool.depth} tilt={7} className={`absolute ${tool.pos} w-64`}>
+            <ParallaxItem key={tool.mark} mx={mx} my={my} depth={tool.depth} tilt={7} className={`absolute ${tool.pos} w-64`}>
               <motion.div
                 initial={{ opacity: 0, y: 24, scale: 0.94 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -118,10 +119,10 @@ export function Hero() {
                 style={{ animationDelay: `${i * 1.3}s` }}
               >
                 <div className="flex items-center gap-3">
-                  <span className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-glow to-violet font-display text-sm font-black text-white">
+                  <span className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-glow to-violet font-mono text-sm font-bold text-white">
                     {tool.mark}
                   </span>
-                  <span lang="en" className="font-display text-lg font-bold tracking-tight">{tool.name}</span>
+                  <span className="font-display text-lg font-bold tracking-tight">{t(tool.name)}</span>
                 </div>
                 <p className="mt-3 text-sm text-white/75">{t(tool.l1)}</p>
                 <p className="text-sm text-white/60">{t(tool.l2)}</p>
