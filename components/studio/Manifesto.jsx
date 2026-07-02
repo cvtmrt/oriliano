@@ -23,9 +23,9 @@ export function Manifesto() {
           </h2>
         </Reveal>
 
-        {/* Editorial pull-quote + drop-cap */}
+        {/* Editorial pull-quote */}
         <Reveal delay={0.15}>
-          <p className="mt-10 max-w-3xl font-serif text-2xl italic leading-snug text-carbon/85 first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:font-display first-letter:text-6xl first-letter:font-black first-letter:not-italic first-letter:leading-[0.75] first-letter:text-glow sm:text-4xl sm:first-letter:text-8xl">
+          <p className="mt-10 max-w-3xl font-serif text-2xl italic leading-snug text-carbon/85 sm:text-4xl">
             {t(txt.manifesto2)}
           </p>
         </Reveal>
