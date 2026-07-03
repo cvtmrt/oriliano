@@ -174,6 +174,29 @@ export const txt = {
   backToTop: { tr: "Yukarı çık ↑", en: "Back to top ↑" },
   rights: { tr: "Tüm hakları saklıdır.", en: "All rights reserved." },
 
+  // Showcase (scroll-driven anasayfa)
+  show: {
+    heroA: { tr: "Fikri", en: "Ideas," },
+    heroB: { tr: "ürüne", en: "turned into" },
+    heroC: { tr: "dönüştürüyoruz", en: "products" },
+    scroll: { tr: "aşağı kaydır", en: "scroll down" },
+    workA: { tr: "Seçili", en: "Selected" },
+    workB: { tr: "işler", en: "work" },
+    caseA: { tr: "Sonuç", en: "Result" },
+    caseB: { tr: "odaklı", en: "driven" },
+    caseCta: { tr: "Vakayı incele →", en: "View the case →" },
+    servicesA: { tr: "Web · Yazılım", en: "Web · Software" },
+    servicesB: { tr: "tasarım", en: "design" },
+    stackA: { tr: "Teknoloji", en: "Stack" },
+    stackB: { tr: "yığını", en: "we use" },
+    processA: { tr: "Süreç", en: "Process" },
+    processB: { tr: "beş adım", en: "five steps" },
+    proofA: { tr: "Kanıt", en: "Proof" },
+    proofB: { tr: "rakamlarla", en: "in numbers" },
+    contactLabel: { tr: "Müsait — EST. 2026", en: "Available — EST. 2026" },
+    contactA: { tr: "Konuşalım.", en: "Let's talk." },
+  },
+
   // 404
   notFoundTitle: { tr: "Sayfa bulunamadı", en: "Page not found" },
   notFoundBody: {

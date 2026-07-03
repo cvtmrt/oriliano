@@ -23,6 +23,7 @@ export function SmoothScroll({ children }) {
     });
 
     lenis.on("scroll", ScrollTrigger.update);
+    window.__lenis = lenis; // showcase soft-snap gibi tüketiciler için
     const raf = (time) => lenis.raf(time * 1000);
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
@@ -45,6 +46,7 @@ export function SmoothScroll({ children }) {
     return () => {
       document.removeEventListener("click", onClick);
       gsap.ticker.remove(raf);
+      delete window.__lenis;
       lenis.destroy();
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
