@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
 
-// Showcase'in gerçek 3D refakatçisi (three.js, lazy-load) — nefes alan
-// sıvı-cam blob: simplex noise ile sürekli şekil değiştirir, kenarları
-// fresnel ile marka renklerinde (kobalt→mor→turuncu) parlar. Etrafında
-// yörüngede parçacık alanı + iki eğik neon halka. Fare ile derinlikli
-// döner; `active` bölüm indeksine göre sahnede süzülerek yer değiştirir
-// (hero'da büyük, vaka zoom'unda kenara çekilir, iletişim finalinde döner).
+// Gerçek 3D sahne (three.js, lazy-load) — nefes alan sıvı-cam blob:
+// simplex noise ile sürekli şekil değiştirir, kenarları fresnel ile marka
+// renklerinde (kobalt→mor→turuncu) parlar. Etrafında yörüngede parçacık
+// alanı + iki eğik neon halka. Fare ile derinlikli döner; `active` bölüm
+// indeksine göre `states` listesindeki hedefe süzülür. Tek sahnede sabit
+// kullanım için `states` prop'una tek elemanlı liste ver (bkz. Hero).
 // Sekme gizlenince / ekrandan çıkınca / tamamen sönünce rAF durur.
 // WebGL yoksa veya reduced-motion açıksa sessizce CSS atmosfere düşer.
 
@@ -172,7 +172,9 @@ void main(){
 }
 `;
 
-export function HeroScene({ active = 0 }) {
+export function HeroScene({ active = 0, states = SCENE_STATES }) {
+  const statesRef = useRef(states);
+  statesRef.current = states;
   const hostRef = useRef(null);
   const activeRef = useRef(active);
   const pokeRef = useRef(null);
@@ -296,9 +298,12 @@ export function HeroScene({ active = 0 }) {
       let fit = 1;
       let xFactor = 1;
       const target = () => {
-        const st = SCENE_STATES[Math.min(activeRef.current, SCENE_STATES.length - 1)] || SCENE_STATES[0];
+        const list = statesRef.current;
+        const st = list[Math.min(activeRef.current, list.length - 1)] || list[0];
         if (coarse) {
-          return activeRef.current === 0 ? { x: 0, y: 0.15, s: 0.9, o: 1 } : { x: 0, y: 0.15, s: 0.9, o: 0 };
+          // Mobil: blob başlığın altında, beyaz paragraf/CTA bölgesinin
+          // arkasında durur (mavi serif satırla çakışıp kontrastı düşürmesin).
+          return activeRef.current === 0 ? { x: 0, y: -0.35, s: 0.85, o: 0.9 } : { x: 0, y: -0.35, s: 0.85, o: 0 };
         }
         return { x: st.x * xFactor, y: st.y, s: st.s, o: st.o };
       };

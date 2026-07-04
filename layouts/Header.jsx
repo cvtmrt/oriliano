@@ -105,10 +105,9 @@ export function Header() {
     };
   }, [open]);
 
-  // Anasayfa (showcase) UÇTAN UCA koyu; case sayfalarının yalnız tepesi koyu.
-  const fullDark = urlPathname === "/";
-  const hasDarkHero = fullDark || urlPathname.startsWith("/case");
-  const onDark = fullDark || (hasDarkHero && !scrolled);
+  // Anasayfa ve case sayfalarının tepesi KOYU; kaydırmadan önce açık metin gerekir.
+  const hasDarkHero = urlPathname === "/" || urlPathname.startsWith("/case");
+  const onDark = hasDarkHero && !scrolled;
 
   const homeHref = urlPathname === "/" ? "#top" : "/";
 
@@ -125,11 +124,7 @@ export function Header() {
     <>
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-out-expo ${
-          scrolled
-            ? fullDark
-              ? "border-b border-white/10 bg-[#0B0B12]/95"
-              : "border-b border-ink/10 bg-night/95"
-            : "bg-transparent"
+          scrolled ? "border-b border-ink/10 bg-night/95" : "bg-transparent"
         }`}
       >
         <div className="wrap flex items-center justify-between py-4">

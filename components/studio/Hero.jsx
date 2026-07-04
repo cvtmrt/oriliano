@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Magnetic } from "../anim/Interactive.jsx";
 import { Marquee } from "../anim/Reveal.jsx";
+import { HeroScene } from "../anim/HeroScene.jsx";
 import { useT, useLang, txt } from "../../lib/i18n.jsx";
 
 const tickerTR = ["Müsait", "Web Tasarım", "SEO", "Google Ads", "E-Ticaret", "QR Menü", "Yönetim Paneli", "Marka"];
@@ -24,6 +25,12 @@ const notes = [
   { text: { tr: "Gözlemle.\nSadeleştir.\nKur.", en: "Observe.\nSimplify.\nBuild." }, pos: "left-[20%] top-[34%]", rot: "-7deg", depth: 64 },
   { text: { tr: "Şablon değil.\nÖzel kurgu.", en: "Not a template.\nCustom build." }, pos: "right-[18%] bottom-[34%]", rot: "6deg", depth: 58 },
 ];
+
+// 3D sıvı-cam blob'un hero'daki tek sabit durumu — başlığın arkasında,
+// merkezde nefes alır (showcase'teki gezici halinin aksine yer değiştirmez).
+// Hafif küçük + hafif söndürülmüş: alt rim parıltısı paragraf/CTA
+// bölgesine taşmasın, metin kontrastı korunsun.
+const heroSceneState = [{ x: 0, y: 0.12, s: 1.04, o: 0.92 }];
 
 // Sahnede uçuşan toz zerreleri (spot ışığında).
 const motes = [
@@ -93,6 +100,13 @@ export function Hero() {
       <div className="stage-floor" aria-hidden="true" />
       <div className="hero-bg pointer-events-none absolute -left-1/4 top-1/4 z-0 h-[55vh] w-[55vh] rounded-full bg-radial-glow opacity-50 blur-3xl animate-aurora" />
       <div className="hero-bg pointer-events-none absolute -right-1/4 top-1/3 z-0 h-[50vh] w-[50vh] rounded-full bg-radial-flame opacity-40 blur-3xl animate-aurora" style={{ animationDelay: "-9s", animationDuration: "28s" }} />
+
+      {/* Gerçek 3D sahne — başlığın arkasında nefes alan sıvı-cam blob
+          (WebGL, lazy). Metin z-20'de, kartlar z-10'da; blob z-0 katmanında
+          kalır, koyu cam çekirdeği başlık kontrastını korur. */}
+      <div className="hero-bg pointer-events-none absolute inset-0 z-0">
+        <HeroScene states={heroSceneState} />
+      </div>
 
       {/* Uçuşan toz zerreleri */}
       <div className="pointer-events-none absolute inset-0 z-0 hidden lg:block" aria-hidden="true">
