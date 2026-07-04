@@ -45,17 +45,23 @@ async function startServer() {
   }
 
   app.get(/.*/, async (req, res, next) => {
-    const pageContextInit = {
-      urlOriginal: req.originalUrl,
-      headersOriginal: req.headers,
-    };
-    const pageContext = await renderPage(pageContextInit);
-    const { httpResponse } = pageContext;
-    if (!httpResponse) return next();
+    // Express 4 async hataları yakalamaz — renderPage fırlatırsa (ör. deploy
+    // sonrası eski hash'li asset isteği) istek sonsuza dek cevapsız kalıyordu.
+    try {
+      const pageContextInit = {
+        urlOriginal: req.originalUrl,
+        headersOriginal: req.headers,
+      };
+      const pageContext = await renderPage(pageContextInit);
+      const { httpResponse } = pageContext;
+      if (!httpResponse) return next();
 
-    const { statusCode, headers, body } = httpResponse;
-    headers.forEach(([name, value]) => res.setHeader(name, value));
-    res.status(statusCode).send(body);
+      const { statusCode, headers, body } = httpResponse;
+      headers.forEach(([name, value]) => res.setHeader(name, value));
+      res.status(statusCode).send(body);
+    } catch (err) {
+      next(err);
+    }
   });
 
   server.listen(port);

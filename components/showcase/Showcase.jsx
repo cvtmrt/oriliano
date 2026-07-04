@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Magnetic } from "../anim/Interactive.jsx";
 import { CountUp } from "../anim/Interactive.jsx";
+import { HeroScene } from "../anim/HeroScene.jsx";
 import { projects } from "../../data/projects.js";
 import { services } from "../../data/services.js";
 import { stackGroups } from "../../data/stack.js";
@@ -232,6 +233,12 @@ export function Showcase() {
       {/* Sahne atmosferi (statik — kare maliyeti yok) */}
       <div className="pointer-events-none absolute inset-0 bg-stage-spot" />
       <div className="grain-dark" aria-hidden="true" />
+
+      {/* Gerçek 3D sahne — sıvı-cam blob, bölümden bölüme süzülür (WebGL).
+          Mockup'ın (z-10) ve metnin (z-20) arkasında sabit katman. */}
+      <div className="pointer-events-none fixed inset-0 z-[5]">
+        <HeroScene active={active} />
+      </div>
 
       <ShowcaseCanvas index={active} />
 
