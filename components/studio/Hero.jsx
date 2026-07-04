@@ -7,8 +7,8 @@ import { Marquee } from "../anim/Reveal.jsx";
 import { HeroScene } from "../anim/HeroScene.jsx";
 import { useT, useLang, txt } from "../../lib/i18n.jsx";
 
-const tickerTR = ["Müsait", "Web Tasarım", "SEO", "Google Ads", "E-Ticaret", "QR Menü", "Yönetim Paneli", "Marka"];
-const tickerEN = ["Available", "Web Design", "SEO", "Google Ads", "E-Commerce", "QR Menu", "Dashboards", "Brand"];
+const tickerTR = ["Web Tasarım", "SEO", "Google Ads", "E-Ticaret", "QR Menü", "Yönetim Paneli", "Marka"];
+const tickerEN = ["Web Design", "SEO", "Google Ads", "E-Commerce", "QR Menu", "Dashboards", "Brand"];
 
 const ease = [0.16, 1, 0.3, 1];
 
