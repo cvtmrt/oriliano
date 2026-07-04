@@ -161,7 +161,7 @@ export function Hero() {
       </div>
 
       {/* Merkez sahne içeriği */}
-      <div className="wrap relative z-20 flex flex-1 flex-col items-center justify-center pt-28 pb-10 text-center">
+      <div className="wrap relative z-20 flex flex-1 flex-col items-center justify-center pt-28 pb-10 text-center [@media(max-height:900px)]:pt-24 [@media(max-height:900px)]:pb-6">
         <motion.span
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -171,7 +171,9 @@ export function Hero() {
           {t(txt.heroEyebrow)}
         </motion.span>
 
-        <h1 className="hero-headline mt-6 font-display font-black uppercase leading-[0.86] tracking-tightest text-[clamp(2.6rem,7.5vw,6.75rem)]">
+        {/* svh sınırı: kısa ekranda (laptop) başlık yüksekliğe göre küçülür,
+            pinli sahnede alt şerit kırpılmaz */}
+        <h1 className="hero-headline mt-6 font-display font-black uppercase leading-[0.86] tracking-tightest text-[clamp(2.6rem,min(7.5vw,13svh),6.75rem)]">
           <Words text={t(txt.heroLine1)} delay={0.1} wordClass="headline-3d" />
           <Words text={t(txt.heroLine2)} delay={0.28} wordClass="headline-3d" />
           <Words
@@ -204,7 +206,7 @@ export function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 1.05 }}
-          className="mt-8 flex max-w-2xl flex-wrap justify-center gap-2 [@media(max-height:840px)]:hidden"
+          className="mt-8 flex max-w-2xl flex-wrap justify-center gap-2 [@media(max-height:900px)]:hidden"
         >
           {txt.heroBadges.map((b, i) => (
             <span key={i} className="rounded-full border border-white/12 bg-white/5 px-3.5 py-1.5 text-[0.7rem] font-medium uppercase tracking-wide text-white/60">
@@ -215,7 +217,7 @@ export function Hero() {
       </div>
 
       {/* Kayan ticker şeridi */}
-      <motion.div className="hero-fade relative z-20 border-t border-white/10 py-4">
+      <motion.div className="hero-fade relative z-20 border-t border-white/10 py-4 [@media(max-height:900px)]:py-2.5">
         <Marquee>
           {(lang === "en" ? tickerEN : tickerTR).map((w, i) => (
             <span key={i} className="mx-7 font-display text-lg font-extrabold uppercase tracking-tightest text-white/35 sm:text-2xl">
@@ -230,7 +232,7 @@ export function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1.1 }}
-        className="hero-fade wrap relative z-20 flex items-center gap-4 pb-7"
+        className="hero-fade wrap relative z-20 flex items-center gap-4 pb-7 [@media(max-height:900px)]:pb-4"
       >
         <span className="eyebrow text-white/60">{t(txt.scroll)}</span>
         <div className="relative h-px flex-1 overflow-hidden bg-white/10">
