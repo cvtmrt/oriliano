@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { projects, upcoming } from "../../data/projects.js";
+import { projects } from "../../data/projects.js";
 import { useT, txt } from "../../lib/i18n.jsx";
 
 // ────────────────────────────────────────────────────────────────
@@ -157,9 +157,6 @@ export function SelectedWork() {
         {projects.map((p, i) => (
           <WorkPanel key={p.slug} p={p} n={i + 1} total={projects.length} t={t} />
         ))}
-
-        {/* Çıkış paneli — yaklaşan işler */}
-        <OutroPanel t={t} />
       </div>
 
       {/* İlerleme çubuğu + sayaç (yalnız masaüstü / pin) */}
@@ -172,7 +169,7 @@ export function SelectedWork() {
             <div ref={barRef} className="absolute inset-0 origin-left bg-gradient-to-r from-glow to-violet" style={{ transform: "scaleX(0)" }} />
           </div>
           <span className="font-mono text-sm text-steel">
-            {String(projects.length + 2).padStart(2, "0")}
+            {String(projects.length + 1).padStart(2, "0")}
           </span>
         </div>
       </div>
@@ -242,27 +239,3 @@ function WorkPanel({ p, t }) {
   );
 }
 
-function OutroPanel({ t }) {
-  return (
-    <div className="work-panel wrap flex shrink-0 flex-col justify-center lg:h-screen lg:w-[58vw] lg:px-12">
-      <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-8 sm:p-12">
-        <span className="font-mono text-sm text-steel">{upcoming.index}</span>
-        <span className="ml-3 eyebrow text-glow">{t(upcoming.category)}</span>
-        <h3 className="mt-4 font-display text-3xl font-extrabold uppercase tracking-tightest text-white sm:text-4xl">
-          {t(upcoming.name)}
-        </h3>
-        <p className="mt-4 max-w-xl text-base leading-relaxed text-ash">{t(upcoming.summary)}</p>
-        <div className="mt-8 flex flex-wrap gap-2.5">
-          {upcoming.items.map((it, i) => (
-            <span key={i} className="rounded-full border border-white/12 bg-white/[0.02] px-4 py-2 text-sm text-ash transition-colors hover:border-glow/40 hover:text-glow">
-              {t(it)}
-            </span>
-          ))}
-        </div>
-        <a href="#contact" data-cursor className="mt-10 inline-flex items-center gap-2 rounded-full bg-brand-grad px-8 py-4 text-xs font-medium uppercase tracking-ultra text-white shadow-lift transition hover:brightness-110">
-          {t(txt.upcomingCta)}
-        </a>
-      </div>
-    </div>
-  );
-}

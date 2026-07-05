@@ -51,22 +51,6 @@ export const services = [
   },
   {
     no: "07",
-    title: { tr: "Restoran Teknoloji Sistemleri", en: "Restaurant Tech Systems" },
-    desc: {
-      tr: "Menü, sipariş ve operasyon akışları; restoranlara özel uçtan uca dijital sistemler.",
-      en: "Menu, ordering and operations flows; end-to-end digital systems built for restaurants.",
-    },
-  },
-  {
-    no: "08",
-    title: { tr: "QR Menü & Sipariş Akışları", en: "QR Menu & Ordering Flows" },
-    desc: {
-      tr: "Temassız menü ve sipariş deneyimleri; hızlı, mobil-öncelikli ve yönetilebilir.",
-      en: "Contactless menu and ordering experiences; fast, mobile-first and manageable.",
-    },
-  },
-  {
-    no: "09",
     title: { tr: "Yapay Zekâ Görünürlüğü (GEO)", en: "AI Visibility (GEO)" },
     desc: {
       tr: "Markanızın yapay zekâ aramalarında doğru bilgiyle anılmasını sağlarız; özgün içerik ve sağlam teknik altyapıyla dijital itibarınızı yapay zekânın gözünde güçlendiririz.",
@@ -74,7 +58,7 @@ export const services = [
     },
   },
   {
-    no: "10",
+    no: "08",
     title: { tr: "Bakım & Büyüme", en: "Maintenance & Growth" },
     desc: {
       tr: "Yayın sonrası performans, SEO ve sürekli iyileştirme ile büyümeyi sürdürürüz.",

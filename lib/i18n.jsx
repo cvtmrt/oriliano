@@ -58,8 +58,6 @@ export const txt = {
   nav: [
     { href: "#work", label: { tr: "İşler", en: "Work" } },
     { href: "#services", label: { tr: "Hizmetler", en: "Services" } },
-    { href: "#stack", label: { tr: "Yetkinlikler", en: "Stack" } },
-    { href: "#process", label: { tr: "Süreç", en: "Process" } },
     { href: "#contact", label: { tr: "İletişim", en: "Contact" } },
   ],
 
@@ -76,7 +74,6 @@ export const txt = {
     { tr: "E-Ticaret", en: "E-Commerce" },
     { tr: "Ödeme Entegrasyonu", en: "Payment Integration" },
     { tr: "Yönetim Paneli", en: "Admin Panel" },
-    { tr: "QR Menü", en: "QR Menu" },
     { tr: "Hosting + Domain", en: "Hosting + Domain" },
   ],
   heroPara: {
@@ -99,23 +96,12 @@ export const txt = {
       title: { tr: "Hizmetler", en: "Services" },
       sub: { tr: "Strateji, tasarım, yazılım ve büyüme; tek ekipten.", en: "Strategy, design, development and growth; from one team." },
     },
-    stack: {
-      index: { tr: "03 / Yetkinlikler", en: "03 / Skills & Stack" },
-      title: { tr: "Yetkinlikler", en: "Skills & Stack" },
-      sub: { tr: "Modern, hızlı ve sürdürülebilir bir teknoloji yığını.", en: "A modern, fast and maintainable technology stack." },
-    },
-    process: {
-      index: { tr: "04 / Süreç", en: "04 / Process" },
-      title: { tr: "Fikirden Yayına", en: "From idea to launch" },
-      sub: { tr: "Fikirden yayına; net, öngörülebilir beş adım.", en: "From idea to launch; five clear, predictable steps." },
-    },
-    contact: { index: { tr: "05 / İletişim", en: "05 / Contact" } },
+    contact: { index: { tr: "03 / İletişim", en: "03 / Contact" } },
   },
 
   // Proje kartları
   viewCase: { tr: "Detaylara bak →", en: "Take a closer look →" },
   ownProduct: { tr: "Kendi Ürünümüz", en: "Own Product" },
-  upcomingCta: { tr: "Sıradaki sizin olsun", en: "Yours could be next" },
 
   // Case (detay) sayfası
   caseAllWork: { tr: "Tüm İşler", en: "All Work" },
@@ -135,25 +121,6 @@ export const txt = {
     value: { tr: "İş Değeri", en: "Business value" },
     tech: { tr: "Teknik Detaylar", en: "Tech highlights" },
   },
-
-  // Manifesto (krem "nefes" sahnesi)
-  manifestoIndex: { tr: "Ara Perde / Manifesto", en: "Interlude / Manifesto" },
-  manifesto1: { tr: "Biz sadece web sitesi yapmıyoruz.", en: "We don't just build websites." },
-  manifesto2: {
-    tr: "Bir markanın internette nasıl göründüğünü, müşterinin neye tıkladığını ve nasıl hatırlandığını tasarlıyoruz.",
-    en: "We design how a brand looks online, what the customer clicks and how it is remembered.",
-  },
-  principles: [
-    { word: { tr: "Gözlemle", en: "Observe" }, desc: { tr: "İşi, kullanıcıyı ve problemi önce anlarız.", en: "We understand the business, the user and the problem first." } },
-    { word: { tr: "Sadeleştir", en: "Simplify" }, desc: { tr: "Gereksizi atar, en net çözüme indiririz.", en: "We cut the noise and get to the clearest solution." } },
-    { word: { tr: "Kur", en: "Build" }, desc: { tr: "Production kalitesinde, ölçeklenebilir kurarız.", en: "We build it scalable, at production quality." } },
-  ],
-  traits: [
-    { tr: "Tasarımı bilen yazılımcılar", en: "Developers who understand design" },
-    { tr: "Startup / ürün bakış açısı", en: "Startup / product mindset" },
-    { tr: "Restoran & yerel işletme uzmanlığı", en: "Restaurant & local business expertise" },
-    { tr: "Sadece güzel site değil, iş getiren sistem", en: "Not just pretty sites, systems that drive business" },
-  ],
 
   // Contact
   contactTitle1: { tr: "Bir sonraki dijital vitrininizi", en: "Let's build your next" },

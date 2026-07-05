@@ -264,8 +264,9 @@ export function HeroScene({ active = 0, states = SCENE_STATES, progressRef = nul
       ringB.scale.setScalar(1.14);
       group.add(ringA, ringB);
 
-      // Yörünge parçacıkları
-      const COUNT = coarse ? 130 : 240;
+      // Yörünge parçacıkları — sade sahne: az ama etkili
+      // (240→140 masaüstü; "hero karışık" geri bildirimi, 2026-07-05)
+      const COUNT = coarse ? 80 : 140;
       const pos = new Float32Array(COUNT * 3);
       const size = new Float32Array(COUNT);
       const phase = new Float32Array(COUNT);
@@ -278,7 +279,7 @@ export function HeroScene({ active = 0, states = SCENE_STATES, progressRef = nul
         pos[i * 3] = Math.cos(th) * r;
         pos[i * 3 + 1] = y * (1 + Math.random());
         pos[i * 3 + 2] = Math.sin(th) * r;
-        size[i] = 1.5 + Math.random() * 3.5;
+        size[i] = 1.2 + Math.random() * 2.8;
         phase[i] = Math.random();
         mixArr[i] = Math.random();
       }

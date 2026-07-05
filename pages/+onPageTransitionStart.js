@@ -14,7 +14,7 @@ export default function onPageTransitionStart() {
     ScrollTrigger.getAll().forEach((t) => t.kill());
     gsap.set("section", { clearProps: "opacity" });
     gsap.set(".hero-headline,.hero-floats,.hero-bg,.hero-fade,.work-track", { clearProps: "transform,opacity" });
-    gsap.set(".proc-card,.panel-img,.panel-copy,.panel-num", { clearProps: "transform,opacity" });
+    gsap.set(".panel-img,.panel-copy,.panel-num", { clearProps: "transform,opacity" });
   } catch {}
   const el = document.documentElement;
   el.classList.remove("is-leaving");

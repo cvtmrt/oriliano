@@ -100,14 +100,13 @@ export const projects = [
     url: "https://bilye.online",
     urlLabel: "bilye.online",
     summary: {
-      tr: "Restoranlar için işletme paneli, QR menü ve operasyon yönetimi sunan kendi ürünümüz; fikirden ürüne.",
-      en: "Our own product offering a business panel, QR menu and operations management for restaurants; from idea to product.",
+      tr: "Restoranlar için işletme paneli ve operasyon yönetimi sunan kendi ürünümüz; fikirden ürüne.",
+      en: "Our own product offering a business panel and operations management for restaurants; from idea to product.",
     },
     scope: [
       { tr: "Ürün", en: "Product" },
       { tr: "SaaS", en: "SaaS" },
       { tr: "Panel", en: "Dashboard" },
-      { tr: "QR Menü", en: "QR Menu" },
       { tr: "Yönetim Paneli", en: "Admin Panel" },
       { tr: "Arka Uç", en: "Backend" },
     ],
@@ -119,8 +118,8 @@ export const projects = [
         en: "Restaurants needed to manage menu, orders, couriers and operations from one place, in a scalable way.",
       },
       build: {
-        tr: "İşletme paneli, restoran yönetimi, QR menü mantığı ve ürünleşebilir bir SaaS altyapısını product thinking ile baştan kurguladık.",
-        en: "We designed a business panel, restaurant management, QR menu logic and a productizable SaaS foundation with product thinking from the start.",
+        tr: "İşletme paneli, restoran yönetimi ve ürünleşebilir bir SaaS altyapısını product thinking ile baştan kurguladık.",
+        en: "We designed a business panel, restaurant management and a productizable SaaS foundation with product thinking from the start.",
       },
       design: {
         tr: "Yoğun operasyon ekranlarında bile sakin kalan, veri-yoğun ama okunabilir bir dashboard dili.",
@@ -192,24 +191,3 @@ export function getAdjacentProjects(slug) {
     next: projects[(i + 1) % projects.length],
   };
 }
-
-// "More experiments / upcoming work"
-export const upcoming = {
-  index: "05",
-  name: { tr: "Yeni Sistemler", en: "Upcoming Systems" },
-  category: { tr: "Yeni denemeler & süregelen işler", en: "More experiments & ongoing work" },
-  summary: {
-    tr: "Sürekli geliştirdiğimiz ürün ve sistem alanları; sıradaki işiniz bunlardan biri olabilir.",
-    en: "Product and system areas we keep developing; your next project could be one of them.",
-  },
-  items: [
-    { tr: "Restoran sipariş sistemleri", en: "Restaurant ordering systems" },
-    { tr: "QR menü platformları", en: "QR menu platforms" },
-    { tr: "Özel işletme siteleri", en: "Custom business websites" },
-    { tr: "E-ticaret arayüzleri", en: "E-commerce interfaces" },
-    { tr: "Yönetim panelleri", en: "Admin dashboards" },
-    { tr: "SEO landing sayfaları", en: "SEO landing pages" },
-    { tr: "Marka kimliği + web sistemleri", en: "Brand identity + web systems" },
-    { tr: "Otomasyon araçları", en: "Automation tools" },
-  ],
-};
