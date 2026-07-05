@@ -55,10 +55,10 @@ function StickerWall() {
   const boxRef = useRef(null);
   const cols = 4;
   const palette = [
-    "from-glow/20 to-violet/20 border-glow/40 text-chalk",
-    "from-flame/20 to-glow/15 border-flame/40 text-chalk",
-    "from-violet/20 to-glow/15 border-violet/40 text-chalk",
-    "from-white to-iron border-ink/15 text-chalk",
+    "from-glow/25 to-violet/15 border-glow/40 text-chalk",
+    "from-flame/25 to-glow/15 border-flame/40 text-chalk",
+    "from-violet/25 to-glow/15 border-violet/40 text-chalk",
+    "from-white/15 to-white/5 border-white/25 text-chalk",
   ];
 
   return (
@@ -72,7 +72,7 @@ function StickerWall() {
 
       <div
         ref={boxRef}
-        className="relative h-[380px] overflow-hidden rounded-3xl border border-ink/10 bg-white/60 sm:h-[440px]"
+        className="relative h-[380px] overflow-hidden rounded-3xl border border-ink/10 bg-white/[0.04] sm:h-[440px]"
       >
         <div className="pointer-events-none absolute inset-0 bg-radial-glow opacity-50 blur-2xl" />
         {marqueeSkills.map((s, i) => {

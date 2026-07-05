@@ -17,17 +17,18 @@
   }
   h1, h2, h3, h4 {
     @apply font-display tracking-tightest text-chalk;
-    font-weight: 800;
+    /* Space Grotesk 700'de biter — daha ağır istekler 700'e kilitlenir. */
+    font-weight: 700;
   }
   ::selection { @apply bg-glow text-white; }
   ::-webkit-scrollbar { width: 10px; }
-  ::-webkit-scrollbar-track { background: #ECE7DC; }
-  ::-webkit-scrollbar-thumb { background: #C9C3B5; border-radius: 8px; }
+  ::-webkit-scrollbar-track { background: #141414; }
+  ::-webkit-scrollbar-thumb { background: #3A3A38; border-radius: 8px; }
   /* Çift katmanlı odak halkası — koyu ve açık zeminlerin ikisinde de görünür. */
   :focus-visible {
     outline: 2px solid #fff;
     outline-offset: 3px;
-    box-shadow: 0 0 0 5px rgba(39, 66, 255, 0.8);
+    box-shadow: 0 0 0 5px rgba(201, 99, 66, 0.85);
     border-radius: 2px;
   }
   a, button { touch-action: manipulation; }
@@ -54,16 +55,16 @@
     transition-property: background-position, filter, transform, box-shadow;
   }
   .btn-brand:hover { background-position: 100% 50%; }
-  /* Koyu dolgu (mürekkep) */
-  .btn-fill { @apply rounded-full bg-chalk px-8 py-4 text-night hover:bg-black; }
+  /* Açık dolgu (koyu zeminde beyaz buton) */
+  .btn-fill { @apply rounded-full bg-chalk px-8 py-4 text-night hover:bg-white; }
   .btn-outline { @apply rounded-full border border-ink/20 px-8 py-4 text-chalk transition-colors hover:border-glow hover:text-glow; }
   .btn-line {
     @apply relative pb-1 text-chalk after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left after:bg-glow after:transition-transform after:duration-500 hover:text-glow hover:after:origin-right hover:after:scale-x-0;
   }
 
-  /* Cam panel (açık) */
-  .glass { @apply border border-ink/10 bg-white/60 backdrop-blur-md; }
-  .glass-hover { @apply transition-all duration-500 hover:border-glow/40 hover:bg-white/80; }
+  /* Cam panel (koyu) */
+  .glass { @apply border border-white/10 bg-white/[0.05] backdrop-blur-md; }
+  .glass-hover { @apply transition-all duration-500 hover:border-glow/40 hover:bg-white/[0.09]; }
 
   .section-label { @apply mb-12 flex items-end justify-between gap-6 border-b border-ink/10 pb-6 sm:mb-16; }
 
@@ -97,7 +98,7 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  .text-stroke { -webkit-text-stroke: 1.2px rgba(22,19,15,0.65); color: transparent; }
+  .text-stroke { -webkit-text-stroke: 1.2px rgba(237,237,235,0.55); color: transparent; }
 
   /* Koyu sahnelerde grain — açık grain'in screen-blend karşılığı */
   .grain-dark {
@@ -203,7 +204,7 @@
 
   /* Gradient metinde yürüyen ışık parıltısı (accent kelime) */
   .text-gradient-shimmer {
-    background-image: linear-gradient(110deg, #2742FF 0%, #7A5BFF 28%, #FF5B34 50%, #7A5BFF 72%, #2742FF 100%);
+    background-image: linear-gradient(110deg, #C96342 0%, #E08A5C 28%, #F2B48C 50%, #E08A5C 72%, #C96342 100%);
     background-size: 240% 100%;
     -webkit-background-clip: text;
     background-clip: text;

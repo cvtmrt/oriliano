@@ -64,7 +64,7 @@ export function Process() {
             className="proc-card sticky origin-top"
             style={{ top: `calc(14vh + ${i * 1.6}rem)` }}
           >
-            <div className="relative mb-6 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#15151d] to-[#0b0b12] p-8 shadow-2xl sm:p-14">
+            <div className="relative mb-6 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-graphite to-coal p-8 shadow-2xl sm:p-14">
               <span className="pointer-events-none absolute right-6 top-2 font-display text-[8rem] font-black leading-none text-white/[0.04] sm:text-[12rem]">
                 {s.no}
               </span>

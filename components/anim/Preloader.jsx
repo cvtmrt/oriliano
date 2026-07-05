@@ -60,7 +60,7 @@ export function Preloader() {
   return (
     <div
       ref={rootRef}
-      className="preloader fixed inset-0 z-[100] flex flex-col overflow-hidden bg-[#0B0B12] px-6 py-8 text-white sm:px-12 sm:py-10"
+      className="preloader fixed inset-0 z-[100] flex flex-col overflow-hidden bg-night px-6 py-8 text-white sm:px-12 sm:py-10"
     >
       {/* Atmosfer */}
       <div className="pointer-events-none absolute left-1/2 top-0 h-[60vh] w-[80vw] -translate-x-1/2 rounded-b-[100%] bg-radial-glow opacity-40 blur-3xl" />

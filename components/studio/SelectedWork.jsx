@@ -134,7 +134,7 @@ export function SelectedWork() {
     <section
       ref={sectionRef}
       id="work"
-      className="relative overflow-hidden bg-[#0B0B12] text-white scroll-mt-24"
+      className="relative overflow-hidden bg-night text-white scroll-mt-24"
     >
       <div
         ref={trackRef}

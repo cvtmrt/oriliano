@@ -12,7 +12,7 @@ export function PageCurtain() {
   return (
     <div
       aria-hidden="true"
-      className="page-curtain fixed inset-0 z-[96] flex items-center justify-center bg-[#0B0B12]"
+      className="page-curtain fixed inset-0 z-[96] flex items-center justify-center bg-night"
     >
       <span lang="en" className="font-display text-4xl font-black uppercase tracking-tightest text-white sm:text-6xl">
         {site.name}

@@ -91,7 +91,7 @@ export function Hero() {
   }, [mx, my]);
 
   return (
-    <section ref={ref} className="relative flex min-h-[100svh] flex-col overflow-hidden bg-[#0B0B12] text-white [perspective:1200px]">
+    <section ref={ref} className="relative flex min-h-[100svh] flex-col overflow-hidden bg-night text-white [perspective:1200px]">
       {/* Sahne atmosferi */}
       <div className="pointer-events-none absolute inset-0 z-0 bg-stage-spot" />
       <div className="pointer-events-none absolute inset-0 z-0 bg-stage-glow" />

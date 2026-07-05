@@ -153,7 +153,7 @@ export function CountUp({ value, duration = 1.6, className = "" }) {
 
 // Mouse'u takip eden hafif spotlight — bir kapsayıcının içine koy (relative).
 // Mobilde otomatik kapanır.
-export function Spotlight({ className = "", size = 520, color = "rgba(201,212,255,0.10)" }) {
+export function Spotlight({ className = "", size = 520, color = "rgba(232,181,150,0.10)" }) {
   const ref = useRef(null);
   const x = useMotionValue(-9999);
   const y = useMotionValue(-9999);

@@ -76,8 +76,8 @@ function ShowcaseCanvas({ index }) {
         />
 
         {/* Tarayıcı çerçevesi */}
-        <div className="relative overflow-hidden rounded-xl border border-white/12 bg-[#101018] shadow-[0_60px_120px_-40px_rgba(0,0,0,0.85)]">
-          <div className="flex items-center gap-2 border-b border-white/8 bg-[#15151d] px-4 py-2.5">
+        <div className="relative overflow-hidden rounded-xl border border-white/12 bg-[#161616] shadow-[0_60px_120px_-40px_rgba(0,0,0,0.85)]">
+          <div className="flex items-center gap-2 border-b border-white/8 bg-[#1C1C1C] px-4 py-2.5">
             <span className="h-2.5 w-2.5 rounded-full bg-flame/70" />
             <span className="h-2.5 w-2.5 rounded-full bg-glow/50" />
             <span className="h-2.5 w-2.5 rounded-full bg-violet/50" />
@@ -109,7 +109,7 @@ function ShowcaseCanvas({ index }) {
             <motion.div
               animate={{ opacity: st.dim }}
               transition={{ duration: 0.9, ease }}
-              className="absolute inset-0 bg-[#0B0B12]"
+              className="absolute inset-0 bg-[#0E0E0E]"
             />
           </div>
         </div>
@@ -229,7 +229,7 @@ export function Showcase() {
   }, []);
 
   return (
-    <div className="relative bg-[#0B0B12] text-[#EDEDEF]">
+    <div className="relative bg-night text-chalk">
       {/* Sahne atmosferi (statik — kare maliyeti yok) */}
       <div className="pointer-events-none absolute inset-0 bg-stage-spot" />
       <div className="grain-dark" aria-hidden="true" />

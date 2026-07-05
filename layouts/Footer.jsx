@@ -72,7 +72,7 @@ export function Footer() {
             reduced-motion'da CSS animasyonu kapanır, statik durur. */}
         <div className="mt-16 select-none" aria-hidden="true">
           <Marquee>
-            <span lang="en" className="mx-10 whitespace-nowrap font-display text-[11vw] font-black uppercase leading-[0.85] tracking-tightest text-carbon/[0.08]">
+            <span lang="en" className="mx-10 whitespace-nowrap font-display text-[11vw] font-black uppercase leading-[0.85] tracking-tightest text-white/[0.05]">
               {site.fullName}
             </span>
             <span className="whitespace-nowrap serif-accent text-[7vw] lowercase text-glow/20">

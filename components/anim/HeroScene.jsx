@@ -6,6 +6,10 @@ import { useEffect, useRef } from "react";
 // alanı + iki eğik neon halka. Fare ile derinlikli döner; `active` bölüm
 // indeksine göre `states` listesindeki hedefe süzülür. Tek sahnede sabit
 // kullanım için `states` prop'una tek elemanlı liste ver (bkz. Hero).
+// `progressRef` (0..1) verilirse sinematik dalış devreye girer: scroll
+// ilerlemesi kamerayı sahnenin içine sürer (dolly), blob deformasyonu
+// artar, renkler kobalttan aleve ısınır, halkalar genişleyip kadrajdan
+// çıkar ve blob çözülerek söner (bkz. Hero'daki pinli scrub).
 // Sekme gizlenince / ekrandan çıkınca / tamamen sönünce rAF durur.
 // WebGL yoksa veya reduced-motion açıksa sessizce CSS atmosfere düşer.
 
@@ -125,10 +129,10 @@ void main(){
   vec3 rim = mix(uColA, uColB, band);
   rim = mix(rim, uColC, smoothstep(0.6, 1.0, band) * 0.55);
   // İç: koyu cam (öndeki metin kontrastını korur) · kenar: neon rim
-  vec3 core = mix(vec3(0.028, 0.028, 0.07), uColB * 0.16, band * 0.45);
+  vec3 core = mix(vec3(0.055, 0.038, 0.03), uColB * 0.16, band * 0.45);
   vec3 col = core + rim * fres * 1.7;
   // Tepeden inen sahne spotunun yüzeydeki parlaması
-  col += vec3(0.9, 0.94, 1.0) * pow(max(N.y, 0.0), 3.0) * 0.12;
+  col += vec3(1.0, 0.95, 0.9) * pow(max(N.y, 0.0), 3.0) * 0.12;
   float alpha = (0.72 + fres * 0.28) * uOp;
   gl_FragColor = vec4(col, alpha);
 }
@@ -172,7 +176,7 @@ void main(){
 }
 `;
 
-export function HeroScene({ active = 0, states = SCENE_STATES }) {
+export function HeroScene({ active = 0, states = SCENE_STATES, progressRef = null }) {
   const statesRef = useRef(states);
   statesRef.current = states;
   const hostRef = useRef(null);
@@ -214,9 +218,15 @@ export function HeroScene({ active = 0, states = SCENE_STATES }) {
       const group = new THREE.Group();
       scene.add(group);
 
-      const colA = new THREE.Color("#2742FF");
-      const colB = new THREE.Color("#7A5BFF");
-      const colC = new THREE.Color("#FF5B34");
+      const colA = new THREE.Color("#C96342");
+      const colB = new THREE.Color("#E08A5C");
+      const colC = new THREE.Color("#E25C3B");
+      // Dalışta ısınan canlı renkler — uniform'lar bu örnekleri referansla
+      // tutar, her karede base'ten yeniden karılır (yeni nesne yaratılmaz).
+      const colBBase = colB.clone();
+      const pCol = new THREE.Color("#EAB79A");
+      const pColBase = pCol.clone();
+      const pColWarm = new THREE.Color("#FFB48F");
 
       // Sıvı blob
       // Detay 6 (~41k vertex) — silüet pürüzsüz; GPU'da vertex maliyeti önemsiz.
@@ -286,7 +296,7 @@ export function HeroScene({ active = 0, states = SCENE_STATES }) {
         uniforms: {
           uTime: { value: 0 },
           uOp: { value: 1 },
-          uColA: { value: new THREE.Color("#8FA0FF") },
+          uColA: { value: pCol },
           uColC: { value: new THREE.Color("#FF8A66") },
         },
       });
@@ -309,6 +319,39 @@ export function HeroScene({ active = 0, states = SCENE_STATES }) {
       };
       // Anlık (lerplenen) değerler
       const cur = { ...target() };
+
+      // Sinematik dalış rotası — p: 0..1 scroll ilerlemesi (Hero'daki pinli
+      // scrub'dan gelir). z: kamera dolly, s: grup ölçek çarpanı, amp: blob
+      // deformasyonu, op: blob görünürlük çarpanı, ring: halka ölçeği,
+      // warm: kobalt→alev renk ısınması. p=0 nötrdür (mevcut varsayılanlar)
+      // — progressRef verilmeyen kullanımlar (Showcase) hiç etkilenmez.
+      // Kamera en fazla z=2.2'ye iner; blob o noktada tamamen çözülmüştür
+      // (deforme yüzey kameraya saplanmaz), parçacık kabuğu (r≈2–3.7)
+      // kadraj kenarlarından akarak geçiş hissi verir.
+      const JOURNEY = [
+        { t: 0.0,  z: 6.0, s: 1.0,  amp: 0.2,  op: 1,    ring: 1.0,  warm: 0 },
+        { t: 0.3,  z: 5.3, s: 1.04, amp: 0.26, op: 1,    ring: 1.06, warm: 0.12 },
+        { t: 0.6,  z: 3.8, s: 1.08, amp: 0.4,  op: 1,    ring: 1.3,  warm: 0.45 },
+        { t: 0.82, z: 2.7, s: 1.05, amp: 0.52, op: 0.45, ring: 1.75, warm: 0.8 },
+        { t: 1.0,  z: 2.2, s: 1.0,  amp: 0.58, op: 0,    ring: 2.3,  warm: 1 },
+      ];
+      const jLerp = (a, b, t2) => a + (b - a) * t2;
+      const journey = (p) => {
+        let i = 0;
+        while (i < JOURNEY.length - 2 && p > JOURNEY[i + 1].t) i++;
+        const a = JOURNEY[i];
+        const b = JOURNEY[i + 1];
+        const raw = Math.min(1, Math.max(0, (p - a.t) / (b.t - a.t)));
+        const e = raw * raw * (3 - 2 * raw); // smoothstep — keyframe geçişleri kırılmasın
+        return {
+          z: jLerp(a.z, b.z, e),
+          s: jLerp(a.s, b.s, e),
+          amp: jLerp(a.amp, b.amp, e),
+          op: jLerp(a.op, b.op, e),
+          ring: jLerp(a.ring, b.ring, e),
+          warm: jLerp(a.warm, b.warm, e),
+        };
+      };
 
       const resize = () => {
         const w = host.clientWidth || 1;
@@ -371,6 +414,19 @@ export function HeroScene({ active = 0, states = SCENE_STATES }) {
         cur.s += (tg.s - cur.s) * 0.045;
         cur.o += (tg.o - cur.o) * 0.06;
         apply();
+
+        // Dalış — scroll ilerlemesi kamera yolculuğunu sürer; scrub zaten
+        // yumuşatılmış geldiği için ek lerp gerekmez, doğrudan uygulanır.
+        const jp = progressRef && !coarse ? Math.min(Math.max(progressRef.current || 0, 0), 1) : 0;
+        const j = journey(jp);
+        camera.position.z = j.z;
+        group.scale.setScalar(fit * cur.s * j.s);
+        blobMat.uniforms.uAmp.value = j.amp;
+        blobMat.uniforms.uOp.value = cur.o * j.op;
+        colB.copy(colBBase).lerp(colC, j.warm * 0.55);
+        pCol.copy(pColBase).lerp(pColWarm, j.warm * 0.5);
+        ringA.scale.setScalar(j.ring);
+        ringB.scale.setScalar(1.14 * j.ring);
 
         blobMat.uniforms.uTime.value = t;
         pMat.uniforms.uTime.value = t;

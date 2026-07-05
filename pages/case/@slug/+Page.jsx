@@ -60,7 +60,7 @@ export default function Page() {
     <article>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(caseSchema) }} />
       {/* Koyu sinematik mini-hero */}
-      <section ref={heroRef} className="relative overflow-hidden bg-[#0B0B12] pb-16 pt-32 text-white sm:pb-20 sm:pt-40">
+      <section ref={heroRef} className="relative overflow-hidden bg-night pb-16 pt-32 text-white sm:pb-20 sm:pt-40">
         <div className="pointer-events-none absolute inset-0 bg-stage-spot opacity-80" />
         <div className="pointer-events-none absolute -bottom-1/3 left-1/2 h-[60vh] w-[120vw] -translate-x-1/2 rounded-[100%] bg-radial-glow opacity-40 blur-3xl" />
         <div className="grain-dark" aria-hidden="true" />

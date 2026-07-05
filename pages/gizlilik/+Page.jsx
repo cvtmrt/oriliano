@@ -8,7 +8,7 @@ export default function Page() {
   return (
     <article className="bg-night">
       {/* Koyu mini-hero */}
-      <section className="relative overflow-hidden bg-[#0B0B12] pb-14 pt-32 text-white sm:pt-40">
+      <section className="relative overflow-hidden bg-night pb-14 pt-32 text-white sm:pt-40">
         <div className="pointer-events-none absolute inset-0 bg-stage-spot opacity-70" />
         <div className="wrap relative z-10">
           <a href="/" className="eyebrow text-white/50 transition-colors hover:text-white">← Ana sayfa</a>
