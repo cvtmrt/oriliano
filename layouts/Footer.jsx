@@ -1,5 +1,5 @@
 import { usePageContext } from "vike-react/usePageContext";
-import { Marquee } from "../components/anim/Reveal.jsx";
+import { Marquee, Reveal } from "../components/anim/Reveal.jsx";
 import { site, whatsappLink, mailLink } from "../lib/site.js";
 import { useT, txt } from "../lib/i18n.jsx";
 
@@ -12,6 +12,7 @@ export function Footer() {
       <div className="wrap py-16 sm:py-20">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr]">
           {/* Marka + manifesto */}
+          <Reveal>
           <div>
             <span lang="en" className="font-display text-3xl font-black uppercase tracking-tightest text-chalk">
               {site.name}
@@ -24,32 +25,36 @@ export function Footer() {
               {site.location} · {site.foundedLabel}
             </p>
           </div>
+          </Reveal>
 
           {/* Navigasyon */}
+          <Reveal delay={0.08}>
           <div>
             <span className="eyebrow text-steel">{t(txt.menu)}</span>
             <ul className="mt-4 space-y-2">
               {txt.nav.map((n) => (
                 <li key={n.href}>
-                  <a href={navHref(n.href)} className="text-sm text-ash transition-colors hover:text-chalk" data-cursor>
+                  <a href={navHref(n.href)} className="inline-block text-sm text-ash transition-[color,transform] duration-300 hover:translate-x-1 hover:text-chalk" data-cursor>
                     {t(n.label)}
                   </a>
                 </li>
               ))}
             </ul>
           </div>
+          </Reveal>
 
           {/* İletişim + sosyal */}
+          <Reveal delay={0.16}>
           <div>
             <span className="eyebrow text-steel">{t(txt.contactLabel)}</span>
             <ul className="mt-4 space-y-2">
               <li>
-                <a href={mailLink} className="text-sm text-ash transition-colors hover:text-chalk" data-cursor>
+                <a href={mailLink} className="inline-block text-sm text-ash transition-[color,transform] duration-300 hover:translate-x-1 hover:text-chalk" data-cursor>
                   {site.email}
                 </a>
               </li>
               <li>
-                <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="text-sm text-ash transition-colors hover:text-chalk" data-cursor>
+                <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="inline-block text-sm text-ash transition-[color,transform] duration-300 hover:translate-x-1 hover:text-chalk" data-cursor>
                   WhatsApp ↗
                 </a>
               </li>
@@ -59,13 +64,14 @@ export function Footer() {
             <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1">
               {site.social.map((s) => (
                 <li key={s.label}>
-                  <a href={s.href} target="_blank" rel="noopener noreferrer" className="text-sm text-ash transition-colors hover:text-chalk" data-cursor>
+                  <a href={s.href} target="_blank" rel="noopener noreferrer" className="inline-block text-sm text-ash transition-[color,transform] duration-300 hover:-translate-y-0.5 hover:text-chalk" data-cursor>
                     {s.label} ↗
                   </a>
                 </li>
               ))}
             </ul>
           </div>
+          </Reveal>
         </div>
 
         {/* Dev tipografik marka şeridi — yavaş marquee, dekoratif.

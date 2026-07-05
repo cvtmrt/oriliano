@@ -1,5 +1,21 @@
+import { motion } from "framer-motion";
 import { Reveal } from "./_shared.jsx";
+import { ease } from "../anim/Reveal.jsx";
 import { useT, txt } from "../../lib/i18n.jsx";
+
+// Görününce soldan çizilen ayraç — krem zeminde carbon, ucunda terracotta.
+function DrawnRule({ delay = 0 }) {
+  return (
+    <motion.span
+      initial={{ scaleX: 0 }}
+      whileInView={{ scaleX: 1 }}
+      viewport={{ once: true, margin: "-10% 0px" }}
+      transition={{ duration: 1.2, ease, delay }}
+      className="absolute inset-x-0 top-0 h-px origin-left bg-gradient-to-r from-glow via-carbon/20 to-carbon/10"
+      aria-hidden="true"
+    />
+  );
+}
 
 // ────────────────────────────────────────────────────────────────
 // KREM "NEFES" SAHNESİ — koyu sinematik akışı bilinçli kıran editorial
@@ -31,7 +47,8 @@ export function Manifesto() {
         </Reveal>
 
         {/* Üç ilke */}
-        <div className="mt-16 grid gap-10 border-t border-carbon/10 pt-12 sm:grid-cols-3">
+        <div className="relative mt-16 grid gap-10 pt-12 sm:grid-cols-3">
+          <DrawnRule />
           {txt.principles.map((p, i) => (
             <Reveal key={i} delay={i * 0.08}>
               <div>
@@ -47,7 +64,8 @@ export function Manifesto() {
 
         {/* Özellikler */}
         <Reveal delay={0.1}>
-          <ul className="mt-14 flex flex-wrap gap-x-8 gap-y-3 border-t border-carbon/10 pt-8">
+          <ul className="relative mt-14 flex flex-wrap gap-x-8 gap-y-3 pt-8">
+            <DrawnRule delay={0.1} />
             {txt.traits.map((tr, i) => (
               <li key={i} className="flex items-center gap-2.5 text-sm text-carbon/70">
                 <span className="h-1.5 w-1.5 rounded-full bg-glow" aria-hidden="true" />

@@ -1,18 +1,61 @@
 import { useState, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Reveal } from "../anim/Reveal.jsx";
+import { Reveal, ease } from "../anim/Reveal.jsx";
+
+const inView = { once: true, margin: "-10% 0px" };
 
 // Bölüm üst etiketi: numara + İngilizce premium başlık + opsiyonel açıklama.
+// Görününce: eyebrow süzülür, başlık kelime kelime açılır (maskesiz —
+// opacity+y, tetiklenmezse bile içerik güvenli), ayırıcı üzerinde
+// terracotta çizgi soldan çizilir. Hepsi transform/opacity.
 export function SectionHead({ index, title, sub, id }) {
+  const words = String(title).split(" ");
   return (
-    <div id={id} className="section-label scroll-mt-28">
+    <div id={id} className="section-label relative scroll-mt-28">
       <div>
-        <span className="eyebrow text-steel">{index}</span>
+        <motion.span
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={inView}
+          transition={{ duration: 0.7, ease }}
+          className="eyebrow inline-block text-steel"
+        >
+          {index}
+        </motion.span>
         <h2 className="mt-3 font-display text-4xl font-extrabold uppercase tracking-tightest text-chalk sm:text-5xl">
-          {title}
+          {words.map((w, i) => (
+            <motion.span
+              key={i}
+              initial={{ opacity: 0, y: 26 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={inView}
+              transition={{ duration: 0.8, ease, delay: 0.06 + i * 0.07 }}
+              className="inline-block [&:not(:last-child)]:mr-[0.25em]"
+            >
+              {w}
+            </motion.span>
+          ))}
         </h2>
       </div>
-      {sub && <p className="hidden max-w-xs text-sm leading-relaxed text-ash sm:block">{sub}</p>}
+      {sub && (
+        <motion.p
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={inView}
+          transition={{ duration: 0.8, ease, delay: 0.2 }}
+          className="hidden max-w-xs text-sm leading-relaxed text-ash sm:block"
+        >
+          {sub}
+        </motion.p>
+      )}
+      <motion.span
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={inView}
+        transition={{ duration: 1.1, ease, delay: 0.25 }}
+        className="absolute bottom-[-1px] left-0 h-px w-44 origin-left bg-gradient-to-r from-glow to-transparent"
+        aria-hidden="true"
+      />
     </div>
   );
 }

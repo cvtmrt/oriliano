@@ -31,14 +31,14 @@ export function Stack() {
                 <h3 className="eyebrow text-glow">{t(g.label)}</h3>
                 <ul className="mt-5 flex flex-col gap-px">
                   {g.items.map((it, ii) => (
-                    <li key={ii} className="group relative border-b border-ink/10 py-2.5">
+                    <Reveal key={ii} as="li" y={14} delay={gi * 0.06 + ii * 0.04} className="group relative border-b border-ink/10 py-2.5">
                       <span className="text-base text-chalk transition-colors group-hover:text-glow sm:text-lg">
                         {t(it.name)}
                       </span>
                       <span className="block max-h-0 overflow-hidden text-sm text-ash opacity-0 transition-all duration-500 ease-out-expo group-hover:mt-1 group-hover:max-h-16 group-hover:opacity-100">
                         {t(it.note)}
                       </span>
-                    </li>
+                    </Reveal>
                   ))}
                 </ul>
               </div>

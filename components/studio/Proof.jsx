@@ -12,7 +12,7 @@ export function Proof() {
           <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-ink/10 bg-ink/10 sm:grid-cols-4">
             {proofStats.map((s, i) => (
               <Reveal key={i} delay={i * 0.06}>
-                <div className="bg-night p-7 text-center">
+                <div className="group bg-night p-7 text-center transition-colors duration-500 hover:bg-graphite">
                   <CountUp
                     value={s.value}
                     className="block font-display text-4xl font-black tracking-tightest text-gradient sm:text-5xl"
