@@ -1,4 +1,5 @@
 import { site, mailLink, whatsappLink } from "../../lib/site.js";
+import { SceneBackdrop } from "../../components/anim/SceneBackdrop.jsx";
 
 // KVKK / Gizlilik Politikası — TASLAK. Yayına almadan önce bir hukukçuya
 // gözden geçirtmeniz önerilir. Şirket ünvanı/adresi netleşince güncelleyin.
@@ -10,6 +11,8 @@ export default function Page() {
       {/* Koyu mini-hero */}
       <section className="relative overflow-hidden bg-night pb-14 pt-32 text-white sm:pt-40">
         <div className="pointer-events-none absolute inset-0 bg-stage-spot opacity-70" />
+        {/* Sağda çok kısık sahne yankısı — metin okunurluğunu bozmaz */}
+        <SceneBackdrop state={{ x: 1.9, y: 0.35, s: 0.5, o: 0.35 }} />
         <div className="wrap relative z-10">
           <a href="/" className="eyebrow text-white/50 transition-colors hover:text-white">← Ana sayfa</a>
           <h1 className="mt-6 font-display text-5xl font-black uppercase tracking-tightest sm:text-7xl">

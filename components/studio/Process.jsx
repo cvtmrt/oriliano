@@ -30,6 +30,11 @@ export function Process() {
           gsap.to(card, {
             scale: 0.92,
             opacity: 0.4,
+            // Örtülen kart hafifçe geriye yatar — yığına 3D derinlik
+            // (yalnız transform; perspective GSAP tween içinde).
+            rotationX: -7,
+            transformPerspective: 1000,
+            transformOrigin: "center top",
             ease: "none",
             scrollTrigger: {
               trigger: cards[i + 1],

@@ -1,5 +1,6 @@
 import { Magnetic } from "../anim/Interactive.jsx";
 import { Reveal } from "../anim/Reveal.jsx";
+import { SceneBackdrop } from "../anim/SceneBackdrop.jsx";
 import { site, whatsappLink, mailLink } from "../../lib/site.js";
 import { useT, txt } from "../../lib/i18n.jsx";
 
@@ -9,6 +10,10 @@ export function Contact() {
     <section id="contact" className="relative scroll-mt-24 overflow-hidden bg-night py-24 sm:py-32">
       <div className="pointer-events-none absolute left-[35%] top-1/2 h-[60vh] w-[60vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-radial-glow blur-3xl" />
       <div className="pointer-events-none absolute left-[65%] top-1/2 h-[55vh] w-[55vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-radial-flame blur-3xl" />
+      {/* Final sahnesi: başlığın arkasında nefes alan sıvı-cam blob — hero'daki
+          sahnenin kapanış yankısı. Koyu cam çekirdek başlık kontrastını korur;
+          ekran dışındayken rAF uyur, hero'nunkiyle aynı anda çalışmaz. */}
+      <SceneBackdrop state={{ x: 0, y: 0.1, s: 0.92, o: 0.7 }} />
 
       <div className="wrap relative z-10 text-center">
         <Reveal>

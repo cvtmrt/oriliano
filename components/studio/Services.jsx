@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Tilt } from "../anim/Interactive.jsx";
 import { SectionHead, Reveal } from "./_shared.jsx";
 import { services } from "../../data/services.js";
 import { useT, txt } from "../../lib/i18n.jsx";
@@ -28,6 +29,7 @@ export function Services() {
           {/* Sticky önizleme (yalnız masaüstü) */}
           <div className="hidden lg:block">
             <div className="sticky top-28">
+              <Tilt max={4}>
               <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-ink/10 bg-gradient-to-br from-graphite to-iron shadow-soft">
                 <div className="pointer-events-none absolute inset-0 bg-radial-glow opacity-70" />
                 <AnimatePresence mode="wait">
@@ -54,6 +56,7 @@ export function Services() {
                   </motion.div>
                 </AnimatePresence>
               </div>
+              </Tilt>
             </div>
           </div>
 
