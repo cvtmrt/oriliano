@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { useRef, useEffect } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Magnetic } from "../anim/Interactive.jsx";
 import { Marquee } from "../anim/Reveal.jsx";
 import { HeroScene } from "../anim/HeroScene.jsx";
@@ -27,8 +28,23 @@ export function Hero() {
   const t = useT();
   const { lang } = useLang();
 
+  // PIN'SİZ dalış — sayfa normal akar; hero görünümden çıkarken scroll
+  // ilerlemesi HeroScene'in sinematik "journey"sini sürer (kamera blob'a
+  // yaklaşır, renkler ısınır, halkalar genişler, blob çözülür) ve metin
+  // hafif parallax ile yukarı süzülüp söner. Yalnız transform/opacity +
+  // WebGL uniform'ları; mobilde journey otomatik kapalı (coarse).
+  const ref = useRef(null);
+  const progressRef = useRef(0);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  useEffect(
+    () => scrollYProgress.on("change", (v) => { progressRef.current = v; }),
+    [scrollYProgress]
+  );
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, -90]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
+
   return (
-    <section className="relative flex min-h-[100svh] flex-col overflow-hidden bg-night text-white">
+    <section ref={ref} className="relative flex min-h-[100svh] flex-col overflow-hidden bg-night text-white">
       {/* Sahne atmosferi — yalnız spot + zemin parıltısı */}
       <div className="pointer-events-none absolute inset-0 z-0 bg-stage-spot" />
       <div className="pointer-events-none absolute inset-0 z-0 bg-stage-glow" />
@@ -36,7 +52,7 @@ export function Hero() {
       {/* Gerçek 3D sahne — başlığın arkasında nefes alan sıvı-cam blob
           (WebGL, lazy). Koyu cam çekirdeği başlık kontrastını korur. */}
       <div className="pointer-events-none absolute inset-0 z-0">
-        <HeroScene states={heroSceneState} />
+        <HeroScene states={heroSceneState} progressRef={progressRef} />
       </div>
 
       {/* Uçuşan toz zerreleri */}
@@ -51,8 +67,11 @@ export function Hero() {
       </div>
       <div className="grain-dark" aria-hidden="true" />
 
-      {/* Merkez sahne içeriği */}
-      <div className="wrap relative z-20 flex flex-1 flex-col items-center justify-center pt-28 pb-10 text-center [@media(max-height:900px)]:pt-24 [@media(max-height:900px)]:pb-6">
+      {/* Merkez sahne içeriği — scroll'da yukarı süzülüp söner */}
+      <motion.div
+        style={{ y: contentY, opacity: contentOpacity }}
+        className="wrap relative z-20 flex flex-1 flex-col items-center justify-center pt-28 pb-10 text-center [@media(max-height:900px)]:pt-24 [@media(max-height:900px)]:pb-6"
+      >
         <motion.span
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -90,7 +109,7 @@ export function Hero() {
           <Magnetic href="#work" className="btn btn-brand">{t(txt.heroCtaWork)}</Magnetic>
           <Magnetic href="#contact" className="btn btn-outline border-white/20 text-white hover:border-white hover:text-white">{t(txt.heroCtaStart)}</Magnetic>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Kayan ticker şeridi */}
       <motion.div
