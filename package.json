@@ -1,9 +1,9 @@
 {
-  "name": "senstudio",
+  "name": "orhankemalkoc",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "SenStudio — premium yazılım & tasarım stüdyosu portfolyo sitesi",
+  "description": "OrhanKemalKoç — premium yazılım & tasarım portfolyo sitesi",
   "engines": {
     "node": ">=20"
   },

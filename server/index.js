@@ -21,7 +21,7 @@ async function startServer() {
     res.type("text/plain").send(`User-agent: *\nAllow: /\nSitemap: ${site.url}/sitemap.xml\n`);
   });
   app.get("/sitemap.xml", (_req, res) => {
-    const urls = ["/", ...projects.map((p) => `/case/${p.slug}`), "/gizlilik"];
+    const urls = ["/", ...projects.map((p) => `/case/${p.slug}`)];
     const body =
       `<?xml version="1.0" encoding="UTF-8"?>\n` +
       `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +

@@ -82,7 +82,7 @@ function ShowcaseCanvas({ index }) {
             <span className="h-2.5 w-2.5 rounded-full bg-glow/50" />
             <span className="h-2.5 w-2.5 rounded-full bg-violet/50" />
             <div className="ml-3 flex-1 truncate rounded-md bg-white/5 px-3 py-0.5 font-mono text-[0.6rem] text-white/45">
-              {SHOTS[st.shot]?.urlLabel || "senstudio"}
+              {SHOTS[st.shot]?.urlLabel || "orhankemalkoc"}
             </div>
           </div>
           <div className="relative aspect-[16/10] w-full">

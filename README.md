@@ -1,6 +1,6 @@
-# SenStudio — Studio Portfolio
+# OrhanKemalKoç — Portfolio
 
-Premium, interaktif tek sayfa stüdyo portfolyosu.
+Premium, interaktif tek sayfa portfolyo.
 **Stack:** Vike (SSR) + React 18 + Tailwind 3 + Framer Motion + GSAP + Lenis — Express sunucu.
 Veritabanı yok; tüm içerik `data/` ve `lib/site.js` dosyalarından beslenir.
 
