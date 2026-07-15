@@ -175,6 +175,163 @@ export const projects = [
       tech: ["GEO", "Schema.org", "Structured Data", "İçerik Stratejisi", "Analytics"],
     },
   },
+  {
+    slug: "terk-edilmis",
+    index: "05",
+    name: "TERK EDİLMİŞ",
+    category: { tr: "Oyun Geliştirme", en: "Game Development" },
+    year: "2026",
+    concept: true,
+    conceptLabel: { tr: "Geliştirme aşamasında", en: "In development" },
+    summary: {
+      tr: "Unity 6 ile geliştirilen birinci şahıs korku oyunu; el yapımı bir Osmanlı konağında geçen atmosfer odaklı bir deneyim.",
+      en: "A first-person horror game built with Unity 6; an atmosphere-driven experience set in a hand-crafted Ottoman mansion.",
+    },
+    scope: [
+      { tr: "Oyun Tasarımı", en: "Game Design" },
+      { tr: "Seviye Tasarımı", en: "Level Design" },
+      { tr: "Atmosfer & Işık", en: "Atmosphere & Lighting" },
+      { tr: "C#", en: "C#" },
+    ],
+    shot: "/images/work-terk-edilmis.jpg",
+    caseStudy: {
+      problem: {
+        tr: "Korku türünde ucuz jump-scare kalabalığından ayrışan, mekânın kendisini ana karakter yapan bir deneyim kurmak istedik.",
+        en: "We wanted an experience that stands apart from cheap jump-scare crowds by making the space itself the main character.",
+      },
+      build: {
+        tr: "Unity 6 ve URP üzerinde, mütevazı donanımda bile akıcı çalışacak şekilde optimize edilmiş birinci şahıs korku altyapısı; konak elden, modül modül inşa edildi.",
+        en: "A first-person horror foundation on Unity 6 and URP, optimized to run smoothly even on modest hardware; the mansion was built by hand, module by module.",
+      },
+      design: {
+        tr: "Osmanlı konağı mimarisi, kısıtlı ışık ve ses tasarımıyla gerilim mekândan doğuyor; oyuncu neyin gerçek olduğunu sorgulayarak ilerliyor.",
+        en: "With Ottoman mansion architecture, restrained lighting and sound design, tension grows out of the space; the player advances questioning what is real.",
+      },
+      value: {
+        tr: "Web dışında da ürün düşünebildiğimizi gösteren bir çalışma: oyun döngüsü, performans bütçesi ve atmosfer aynı disiplinle kurgulandı.",
+        en: "Work that shows we think in products beyond the web: game loop, performance budget and atmosphere designed with the same discipline.",
+      },
+      tech: ["Unity 6", "URP", "C#", "Level Design", "Sound Design"],
+    },
+  },
+  {
+    slug: "futbol-tabu",
+    index: "06",
+    name: "Futbol Tabu",
+    category: { tr: "Mobil Parti Oyunu", en: "Mobile Party Game" },
+    year: "2026",
+    concept: true,
+    conceptLabel: { tr: "Mobil uygulama", en: "Mobile app" },
+    isProduct: true,
+    summary: {
+      tr: "Futbol temalı Tabu parti oyunu: 505 kart, takım modu ve tamamen çevrimdışı çalışan akıcı bir mobil deneyim.",
+      en: "A football-themed Taboo party game: 505 cards, team mode and a fluid mobile experience that works fully offline.",
+    },
+    scope: [
+      { tr: "Mobil Uygulama", en: "Mobile App" },
+      { tr: "Oyun Tasarımı", en: "Game Design" },
+      { tr: "Çevrimdışı", en: "Offline-first" },
+      { tr: "UI/UX", en: "UI/UX" },
+    ],
+    shot: "/images/work-futbol-tabu.jpg",
+    caseStudy: {
+      problem: {
+        tr: "Klasik Tabu'yu futbol kültürüyle birleştirip arkadaş ortamında internetsiz bile sorunsuz oynanan bir parti oyunu yapmak istedik.",
+        en: "We wanted to merge classic Taboo with football culture into a party game that plays flawlessly with friends, even without internet.",
+      },
+      build: {
+        tr: "React Native ve Expo ile tek kod tabanı; 505 kartlık içerik ayrı bir üretim script'inden derleniyor, oyun durumu Zustand ile yönetiliyor.",
+        en: "A single codebase with React Native and Expo; the 505-card deck is compiled from a dedicated build script, game state managed with Zustand.",
+      },
+      design: {
+        tr: "Saha yeşili yerine koyu, premium bir arayüz; kart, süre ve skor her an tek bakışta okunur, akış kesintisiz.",
+        en: "Instead of pitch green, a dark premium interface; card, timer and score readable at a glance, the flow uninterrupted.",
+      },
+      value: {
+        tr: "Fikirden yayına uçtan uca kendi ürünümüz: içerik üretimi, oyun döngüsü ve arayüz tek elden kurgulandı.",
+        en: "Our own product end to end, from idea to release: content pipeline, game loop and interface designed as one.",
+      },
+      tech: ["React Native", "Expo", "Zustand", "Offline-first"],
+    },
+  },
+  {
+    slug: "rias",
+    index: "07",
+    name: "RIAS",
+    category: { tr: "Yapay Zekâ Sesli Asistan", en: "AI Voice Assistant" },
+    year: "2026",
+    concept: true,
+    conceptLabel: { tr: "Kişisel proje", en: "Personal project" },
+    summary: {
+      tr: "Türkçe konuşan, gerçek zamanlı yapay zekâ sesli asistan; geçmiş konuşmaları hatırlayan epizodik hafızasıyla süreklilik kurar.",
+      en: "A Turkish-speaking, real-time AI voice assistant; its episodic memory recalls past conversations and builds continuity.",
+    },
+    scope: [
+      { tr: "Yapay Zekâ", en: "AI" },
+      { tr: "Gerçek Zamanlı Ses", en: "Real-time Voice" },
+      { tr: "Hafıza Sistemi", en: "Memory System" },
+      { tr: "Masaüstü", en: "Desktop" },
+    ],
+    shot: "/images/work-rias.jpg",
+    caseStudy: {
+      problem: {
+        tr: "Sesli asistanların çoğu her konuşmaya sıfırdan başlar; Türkçede doğal, kesintisiz ve seni hatırlayan bir asistan yoktu.",
+        en: "Most voice assistants start every conversation from zero; there was no assistant in Turkish that felt natural, uninterrupted and remembered you.",
+      },
+      build: {
+        tr: "Gemini Live API üzerine kurulu gerçek zamanlı ses hattı; konuşmalardan süzülen epizodik hafıza katmanı asistana geçmiş bağlamı taşıyor.",
+        en: "A real-time voice pipeline built on the Gemini Live API; an episodic memory layer distilled from conversations carries past context to the assistant.",
+      },
+      design: {
+        tr: "Arayüz değil konuşma tasarlandı: doğal kesme/araya girme, Türkçe akıcılık ve tutarlı bir asistan karakteri öncelik oldu.",
+        en: "We designed the conversation, not the interface: natural interruption, Turkish fluency and a consistent assistant character came first.",
+      },
+      value: {
+        tr: "Yapay zekâ API'lerini gerçek zamanlı, üretim kalitesinde bir ürüne çevirebildiğimizin kanıtı; hafıza mimarisi başka projelere de taşınabilir.",
+        en: "Proof we can turn AI APIs into a real-time, production-grade product; the memory architecture is portable to other projects.",
+      },
+      tech: ["Gemini Live API", "Real-time Audio", "Epizodik Hafıza", "Windows"],
+    },
+  },
+  {
+    slug: "design-studio",
+    index: "08",
+    name: "Design Studio",
+    category: { tr: "Canlı Efekt Galerisi & Tema Stüdyosu", en: "Live Effect Gallery & Theme Studio" },
+    year: "2026",
+    concept: true,
+    conceptLabel: { tr: "Dahili araç", en: "Internal tool" },
+    summary: {
+      tr: "200'den fazla canlı arayüz efekti demosunu tek çatıda toplayan galeri ve tema stüdyosu; projelere hazır efekt/tema kaynağı.",
+      en: "A gallery and theme studio collecting 200+ live UI effect demos under one roof; a ready effect/theme source for projects.",
+    },
+    scope: [
+      { tr: "Arayüz Efektleri", en: "UI Effects" },
+      { tr: "Tema Sistemi", en: "Theme System" },
+      { tr: "Tasarım Aracı", en: "Design Tooling" },
+      { tr: "React", en: "React" },
+    ],
+    shot: "/images/work-design-studio.jpg",
+    caseStudy: {
+      problem: {
+        tr: "Her projede animasyon ve efekt araştırması sıfırdan başlıyordu; denenmiş efektleri canlı görüp seçebileceğimiz bir kaynak gerekiyordu.",
+        en: "Every project restarted animation and effect research from zero; we needed a source where proven effects could be seen live and picked.",
+      },
+      build: {
+        tr: "React ve Vite üzerinde, 200'den fazla demonun tek bir kayıt (registry) dosyasından beslendiği modüler bir galeri; yanında renk ve tipografi deneyen tema stüdyosu.",
+        en: "A modular gallery on React and Vite where 200+ demos feed from a single registry file; alongside it, a theme studio for exploring color and typography.",
+      },
+      design: {
+        tr: "Galeri kendisi de bir vitrin: her demo kendi kartında canlı çalışır, kategorilere ayrılır ve tek tıkla incelenir.",
+        en: "The gallery is a showcase itself: every demo runs live in its own card, grouped by category and inspected in one click.",
+      },
+      value: {
+        tr: "Müşteri projelerinde efekt seçimini saatlerden dakikalara indiren, sürekli büyüyen bir iç kütüphane.",
+        en: "A continuously growing internal library that cuts effect selection from hours to minutes on client projects.",
+      },
+      tech: ["React", "Vite", "CSS/JS Efektleri", "Tema Sistemi"],
+    },
+  },
 ];
 
 // Slug ile tek proje bul (case sayfası için).
