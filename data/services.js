@@ -1,5 +1,5 @@
 // Hizmetler: satış odaklı, kısa ve net. title + desc { tr, en }.
-// Sıralama müşteri gözünden: site → görünürlük → satış → yönetim → sektör.
+// Sıralama müşteri gözünden: site → uygulama → görünürlük → satış → yönetim → deneyim.
 export const services = [
   {
     no: "01",
@@ -11,6 +11,14 @@ export const services = [
   },
   {
     no: "02",
+    title: { tr: "Mobil Uygulama Geliştirme", en: "Mobile App Development" },
+    desc: {
+      tr: "iOS ve Android için tek kod tabanından, mağazaya hazır mobil uygulamalar; internetsiz bile akıcı çalışan, hızlı ve modern arayüzlerle.",
+      en: "Store-ready mobile apps for iOS and Android from a single codebase; fast, modern interfaces that stay fluid even offline.",
+    },
+  },
+  {
+    no: "03",
     title: { tr: "SEO & Google'da Görünürlük", en: "SEO & Google Visibility" },
     desc: {
       tr: "Aramalarda öne çıkın: teknik SEO, içerik yapısı ve hızlı açılış sayfalarıyla Google'da üst sıralara taşırız.",
@@ -18,7 +26,7 @@ export const services = [
     },
   },
   {
-    no: "03",
+    no: "04",
     title: { tr: "Google Ads Reklam Yönetimi", en: "Google Ads Management" },
     desc: {
       tr: "Bütçenizi doğru aramalara harcayan, dönüşümü ölçülen reklam kampanyaları; kurulumdan optimizasyona uçtan uca yönetim.",
@@ -26,7 +34,7 @@ export const services = [
     },
   },
   {
-    no: "04",
+    no: "05",
     title: { tr: "E-Ticaret & Ödeme Entegrasyonu", en: "E-Commerce & Payment Integration" },
     desc: {
       tr: "Ürün kataloğu, sepet ve sanal POS / ödeme sistemi entegrasyonu; siparişleri tek panelden yönetin.",
@@ -34,7 +42,7 @@ export const services = [
     },
   },
   {
-    no: "05",
+    no: "06",
     title: { tr: "Yönetim Panelleri", en: "Admin Dashboards" },
     desc: {
       tr: "Sitenizi ve işletmenizi kendiniz yönetin: içerik, ürün, sipariş ve raporlar tek ekranda.",
@@ -42,15 +50,15 @@ export const services = [
     },
   },
   {
-    no: "06",
-    title: { tr: "Hosting, Domain & Teknik Kurulum", en: "Hosting, Domain & Technical Setup" },
+    no: "07",
+    title: { tr: "Yapay Zekâ Entegrasyonu & Asistanlar", en: "AI Integration & Assistants" },
     desc: {
-      tr: "Hosting, özel alan adı, SSL ve kurumsal e-posta; teknik her şeyi biz kurarız, siz işinize bakarsınız.",
-      en: "Hosting, custom domain, SSL and business email; we handle all the technical setup so you can focus on your business.",
+      tr: "İşinize gömülü yapay zekâ: gerçek zamanlı sesli ve yazılı asistanlar, müşteriyi hatırlayan hafıza sistemleri ve süreçlerinizi hızlandıran akıllı otomasyonlar.",
+      en: "AI embedded in your business: real-time voice and chat assistants, memory systems that remember your customers and smart automations that speed up your workflows.",
     },
   },
   {
-    no: "07",
+    no: "08",
     title: { tr: "Yapay Zekâ Görünürlüğü (GEO)", en: "AI Visibility (GEO)" },
     desc: {
       tr: "Markanızın yapay zekâ aramalarında doğru bilgiyle anılmasını sağlarız; özgün içerik ve sağlam teknik altyapıyla dijital itibarınızı yapay zekânın gözünde güçlendiririz.",
@@ -58,7 +66,23 @@ export const services = [
     },
   },
   {
-    no: "08",
+    no: "09",
+    title: { tr: "Arayüz Animasyonları & 3D Deneyimler", en: "UI Animation & 3D Experiences" },
+    desc: {
+      tr: "Sitenizi sıradanlıktan çıkaran mikro etkileşimler, sinematik geçişler ve tarayıcıda çalışan 3D sahneler; markanıza özel tema ve efekt sistemleriyle.",
+      en: "Micro-interactions, cinematic transitions and in-browser 3D scenes that lift your site out of the ordinary; with theme and effect systems tailored to your brand.",
+    },
+  },
+  {
+    no: "10",
+    title: { tr: "Hosting, Domain & Teknik Kurulum", en: "Hosting, Domain & Technical Setup" },
+    desc: {
+      tr: "Hosting, özel alan adı, SSL ve kurumsal e-posta; teknik her şeyi biz kurarız, siz işinize bakarsınız.",
+      en: "Hosting, custom domain, SSL and business email; we handle all the technical setup so you can focus on your business.",
+    },
+  },
+  {
+    no: "11",
     title: { tr: "Bakım & Büyüme", en: "Maintenance & Growth" },
     desc: {
       tr: "Yayın sonrası performans, SEO ve sürekli iyileştirme ile büyümeyi sürdürürüz.",
