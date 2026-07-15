@@ -14,7 +14,7 @@ export function PageCurtain() {
       aria-hidden="true"
       className="page-curtain fixed inset-0 z-[96] flex items-center justify-center bg-night"
     >
-      <span lang="en" className="font-display text-4xl font-black uppercase tracking-tightest text-white sm:text-6xl">
+      <span lang="en" className="whitespace-nowrap font-display text-[clamp(1.5rem,7.5vw,3.75rem)] font-black uppercase tracking-tightest text-white">
         {site.name}
         <span className="serif-accent text-glow">{site.nameSuffix}</span>
       </span>

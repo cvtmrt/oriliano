@@ -79,7 +79,7 @@ export function Preloader() {
       <div className="relative flex flex-1 flex-col items-center justify-center text-center">
         <span
           lang="en"
-          className="pl-fade font-display text-6xl font-black uppercase leading-[0.9] tracking-tightest sm:text-8xl lg:text-9xl"
+          className="pl-fade whitespace-nowrap font-display text-[clamp(1.75rem,8.5vw,8rem)] font-black uppercase leading-[0.9] tracking-tightest"
         >
           {site.name}
           <span className="serif-accent text-glow">{site.nameSuffix}</span>
