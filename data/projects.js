@@ -136,6 +136,50 @@ export const projects = [
       { shot: "/images/case-bilye-steps.jpg", caption: { tr: "4 adımda işletme kaydı ve onay akışı", en: "4-step business onboarding and approval flow" } },
     ],
   },
+  {
+    slug: "gold-clover",
+    index: "04",
+    name: "Gold Clover",
+    category: { tr: "Etkinlik & Kuaför — İki Markalı Site", en: "Events & Salon — Two-Brand Site" },
+    year: "2026",
+    url: "https://goldclover.site",
+    urlLabel: "goldclover.site",
+    summary: {
+      tr: "Ankara merkezli Gold Clover için tek adreste iki marka: etkinlik organizasyonu ve DS Önce Sen kuaför; panelden yönetilen ürün kataloğu ve galeri.",
+      en: "Two brands at one address for Ankara-based Gold Clover: event organization and DS Önce Sen salon; panel-managed product catalog and gallery.",
+    },
+    scope: [
+      { tr: "Web Tasarım", en: "Web Design" },
+      { tr: "İki Marka Portalı", en: "Two-Brand Portal" },
+      { tr: "Yönetim Paneli", en: "Admin Panel" },
+      { tr: "Arka Uç", en: "Backend" },
+      { tr: "SEO", en: "SEO" },
+    ],
+    shot: "/images/work-gold-clover.jpg",
+    caseStudy: {
+      problem: {
+        tr: "Aynı işletmenin iki farklı hizmetini (etkinlik organizasyonu ve kuaför) karıştırmadan tek adreste sunmak ve içeriği kod bilmeden yönetmek gerekiyordu.",
+        en: "The business needed to present two distinct services (event organization and hair salon) at one address without mixing them, and manage content without touching code.",
+      },
+      build: {
+        tr: "Girişte marka seçtiren bir portal, her marka için ayrı site, panelden yönetilen ürün kataloğu ve kuaför galerisi, talep formları ve şifreli yönetim paneli.",
+        en: "An entry portal that lets visitors choose a brand, a separate site per brand, a panel-managed product catalog and salon gallery, lead forms and a secured admin panel.",
+      },
+      design: {
+        tr: "Altın ve krem tonlarında lüks, sinematik bir dil; her iki marka da aynı premium hisse sahip ama kendi kimliğini korur.",
+        en: "A luxe, cinematic language in gold and cream; both brands share the same premium feel while keeping their own identity.",
+      },
+      value: {
+        tr: "İki markayı tek adreste net biçimde ayıran, sahibinin ürün ve fotoğraflarını anında güncelleyebildiği, arama motorlarına hazır bir site.",
+        en: "A search-ready site that cleanly separates two brands at one address and lets the owner update products and photos instantly.",
+      },
+      tech: ["React", "React Router", "Express", "PostgreSQL", "Admin Panel", "SEO"],
+    },
+    gallery: [
+      { shot: "/images/case-gold-clover-portal.jpg", caption: { tr: "Girişte marka seçtiren portal ekranı", en: "Entry portal that lets visitors pick a brand" } },
+      { shot: "/images/case-gold-clover-kuafor.jpg", caption: { tr: "DS Önce Sen kuaför sitesi ve randevu akışı", en: "DS Önce Sen salon site and appointment flow" } },
+    ],
+  },
 ];
 
 // Slug ile tek proje bul (case sayfası için).
