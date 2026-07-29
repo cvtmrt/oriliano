@@ -180,6 +180,50 @@ export const projects = [
       { shot: "/images/case-gold-clover-kuafor.jpg", caption: { tr: "DS Önce Sen kuaför sitesi ve randevu akışı", en: "DS Önce Sen salon site and appointment flow" } },
     ],
   },
+  {
+    slug: "incek-sandvic",
+    index: "05",
+    name: "İncek Sandviç",
+    category: { tr: "Restoran & Online Sipariş Sistemi", en: "Restaurant & Online Ordering System" },
+    year: "2026",
+    url: "https://inceksandvic.com",
+    urlLabel: "inceksandvic.com",
+    summary: {
+      tr: "İncek'in yerel sandviç markası için iştah açıcı bir vitrin, yönetilebilir menü ve kapıda ödeme akışını tek deneyimde buluşturduk.",
+      en: "We brought together an appetizing storefront, manageable menu and pay-on-delivery flow for İncek's local sandwich brand.",
+    },
+    scope: [
+      { tr: "Web Tasarım", en: "Web Design" },
+      { tr: "Online Sipariş", en: "Online Ordering" },
+      { tr: "Yönetim Paneli", en: "Admin Panel" },
+      { tr: "QR Menü", en: "QR Menu" },
+      { tr: "Yerel SEO", en: "Local SEO" },
+    ],
+    shot: "/images/work-incek-sandvic.jpg",
+    caseStudy: {
+      problem: {
+        tr: "İşletmenin ürünlerini güçlü bir marka diliyle sergilemesi, güncel menüyü kolayca yönetmesi ve müşteriyi aracı platformlara bağımlı kalmadan siparişe taşıması gerekiyordu.",
+        en: "The business needed to showcase its products through a strong brand language, manage an up-to-date menu easily and take customers to ordering without relying on intermediary platforms.",
+      },
+      build: {
+        tr: "Filtrelenebilir ürün kataloğu, ürün özelleştirme, sepet, kapıda ödeme sipariş akışı, QR menü, Adisyo entegrasyonu ve şifreli yönetim panelinden oluşan uçtan uca restoran sistemi.",
+        en: "An end-to-end restaurant system with a filterable product catalog, product customization, cart, pay-on-delivery ordering, QR menu, Adisyo integration and a secured admin panel.",
+      },
+      design: {
+        tr: "Markanın turuncu-sarı renklerinden beslenen; güçlü tipografi, gerçek ürün fotoğrafları ve mobilde iştah açıcı, hızlı bir alışveriş deneyimi sunan sıcak bir görsel dil.",
+        en: "A warm visual language built around the brand's orange-yellow palette, bold typography, real product photography and a fast, appetizing mobile shopping experience.",
+      },
+      value: {
+        tr: "Menüden teslimat siparişine kadar tüm müşteri yolculuğunu tek yerde toplayan; işletmeye içerik kontrolü, müşteriye hızlı ve doğrudan sipariş imkânı veren canlı bir satış kanalı.",
+        en: "A live sales channel that brings the full customer journey from menu to delivery order into one place, giving the business content control and customers a fast, direct way to order.",
+      },
+      tech: ["JavaScript", "Express", "PostgreSQL", "Adisyo API", "Admin Panel", "Local SEO"],
+    },
+    gallery: [
+      { shot: "/images/case-incek-sandvic-menu.jpg", caption: { tr: "Arama, kategori filtreleri ve güncel ürünlerle yönetilebilir menü", en: "Manageable menu with search, category filters and up-to-date products" } },
+      { shot: "/images/case-incek-sandvic-qr.jpg", caption: { tr: "Temassız menü ve yol tarifi için markalı QR deneyimi", en: "Branded QR experience for contactless menu access and directions" } },
+    ],
+  },
 ];
 
 // Slug ile tek proje bul (case sayfası için).
