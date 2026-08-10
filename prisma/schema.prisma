@@ -1,0 +1,380 @@
+// Çetiner Hukuk ve Danışmanlık — veri modeli
+//
+// Tasarım kuralı: sitede hardcode metin/görsel yok. Kod içinde sadece
+// VARSAYILAN değerler var (src/content/defaults.ts); gerçek içerik burada.
+//
+// Çeviri durumu (auto/manual/pending/failed) ayrı bir tabloda (FieldMeta)
+// tutuluyor; böylece her modele durum kolonu eklemek gerekmiyor ve tek bir
+// çeviri motoru tüm varlıklar için çalışıyor.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TranslationStatus {
+  AUTO // otomatik çevrildi
+  MANUAL // elle düzenlendi, otomatik ezilmez
+  PENDING // kuyrukta / çevriliyor
+  FAILED // çeviri başarısız, eski değer korundu
+}
+
+enum TextKind {
+  SHORT // tek satır input
+  LONG // textarea
+  RICH // zengin metin editörü
+}
+
+// ---------------------------------------------------------------------------
+// Serbest metin havuzu — sayfa başlıkları, paragraflar, buton etiketleri...
+// key örneği: "home.hero.title", "about.body", "footer.note"
+// ---------------------------------------------------------------------------
+model LocalizedText {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  group     String // panelde gruplama: "home", "about", "settings", "common"...
+  label     String // panelde gösterilen Türkçe alan adı
+  kind      TextKind @default(SHORT)
+  order     Int      @default(0)
+  tr        String   @default("") @db.Text
+  en        String   @default("") @db.Text
+  seeded    Boolean  @default(false) // örnek veriyle mi geldi
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@index([group, order])
+}
+
+// ---------------------------------------------------------------------------
+// Yüklenen dosyalar. Railway Volume'a yazılır, /api/media/<filename> ile servis
+// edilir. Base64 olarak DB'ye GÖMÜLMEZ.
+// ---------------------------------------------------------------------------
+model Media {
+  id           String   @id @default(cuid())
+  filename     String   @unique // volume içindeki dosya adı
+  originalName String
+  mimeType     String
+  width        Int?
+  height       Int?
+  sizeBytes    Int
+  createdAt    DateTime @default(now())
+
+  slots            MediaSlot[]
+  services         Service[]     @relation("ServiceImage")
+  serviceOgImages  Service[]     @relation("ServiceOgImage")
+  teamMembers      TeamMember[]
+  publications     Publication[]
+  seoOgImages      SeoMeta[]
+  settingsLogo     SiteSetting[] @relation("SettingsLogo")
+  settingsLogoDark SiteSetting[] @relation("SettingsLogoDark")
+  settingsFavicon  SiteSetting[] @relation("SettingsFavicon")
+}
+
+// Sayfadaki her görsel yuvası: hero görseli, bölüm görseli, arka plan...
+model MediaSlot {
+  id      String  @id @default(cuid())
+  key     String  @unique // "home.hero.image", "about.section1.image"
+  group   String
+  label   String
+  order   Int     @default(0)
+  mediaId String?
+  media   Media?  @relation(fields: [mediaId], references: [id], onDelete: SetNull)
+  altTr   String  @default("")
+  altEn   String  @default("")
+  seeded  Boolean @default(false)
+
+  updatedAt DateTime @updatedAt
+
+  @@index([group, order])
+}
+
+// ---------------------------------------------------------------------------
+// Genel ayarlar (tek satır)
+// ---------------------------------------------------------------------------
+model SiteSetting {
+  id Int @id @default(1)
+
+  siteNameTr String @default("Çetiner Hukuk ve Danışmanlık")
+  siteNameEn String @default("Çetiner Hukuk ve Danışmanlık")
+  taglineTr  String @default("")
+  taglineEn  String @default("")
+
+  logoId     String?
+  logo       Media?  @relation("SettingsLogo", fields: [logoId], references: [id], onDelete: SetNull)
+  logoDarkId String?
+  logoDark   Media?  @relation("SettingsLogoDark", fields: [logoDarkId], references: [id], onDelete: SetNull)
+  faviconId  String?
+  favicon    Media?  @relation("SettingsFavicon", fields: [faviconId], references: [id], onDelete: SetNull)
+
+  accentColor String @default("#A9834B")
+
+  phone          String @default("")
+  phoneSecondary String @default("")
+  email          String @default("")
+  addressTr      String @default("") @db.Text
+  addressEn      String @default("") @db.Text
+  workingHoursTr String @default("")
+  workingHoursEn String @default("")
+
+  mapEmbedUrl String @default("") @db.Text
+  mapLat      String @default("")
+  mapLng      String @default("")
+
+  linkedin  String @default("")
+  instagram String @default("")
+  x         String @default("")
+  facebook  String @default("")
+  youtube   String @default("")
+
+  baseUrl String @default("https://cetinerlegal.com")
+
+  // Panelden "örnek verileri temizle" için: seed'in bıraktığı iz
+  seedVersion String?
+
+  updatedAt DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// Üst menü — etiket, sıra, görünürlük panelden
+// ---------------------------------------------------------------------------
+model MenuItem {
+  id       String  @id @default(cuid())
+  routeKey String  @unique // src/lib/routes.ts içindeki kanonik anahtar
+  labelTr  String
+  labelEn  String
+  order    Int     @default(0)
+  visible  Boolean @default(true)
+  seeded   Boolean @default(false)
+
+  @@index([order])
+}
+
+// ---------------------------------------------------------------------------
+// Hizmet alanları — her biri kendi detay sayfasına sahip
+// ---------------------------------------------------------------------------
+model Service {
+  id     String @id @default(cuid())
+  slugTr String @unique
+  slugEn String @unique
+
+  icon     String  @default("scale") // src/components/site/ServiceIcon.tsx anahtarı
+  order    Int     @default(0)
+  visible  Boolean @default(true)
+  featured Boolean @default(false) // anasayfada öne çıkar
+
+  titleTr   String
+  titleEn   String @default("")
+  excerptTr String @default("") @db.Text
+  excerptEn String @default("") @db.Text
+  bodyTr    String @default("") @db.Text
+  bodyEn    String @default("") @db.Text
+
+  imageId    String?
+  image      Media?  @relation("ServiceImage", fields: [imageId], references: [id], onDelete: SetNull)
+  imageAltTr String  @default("")
+  imageAltEn String  @default("")
+
+  seoTitleTr String  @default("")
+  seoTitleEn String  @default("")
+  seoDescTr  String  @default("") @db.Text
+  seoDescEn  String  @default("") @db.Text
+  ogImageId  String?
+  ogImage    Media?  @relation("ServiceOgImage", fields: [ogImageId], references: [id], onDelete: SetNull)
+
+  seeded    Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@index([order])
+}
+
+// ---------------------------------------------------------------------------
+// Ekip
+// ---------------------------------------------------------------------------
+model TeamMember {
+  id   String @id @default(cuid())
+  slug String @unique
+
+  order   Int     @default(0)
+  visible Boolean @default(true)
+
+  // Kişi adı çevrilmez — tek alan
+  name        String
+  titleTr     String @default("")
+  titleEn     String @default("")
+  bioTr       String @default("") @db.Text
+  bioEn       String @default("") @db.Text
+  // Uzmanlık alanları satır satır saklanıyor ("\n" ile ayrılmış)
+  expertiseTr String @default("") @db.Text
+  expertiseEn String @default("") @db.Text
+
+  email    String @default("")
+  phone    String @default("")
+  linkedin String @default("")
+
+  photoId    String?
+  photo      Media?  @relation(fields: [photoId], references: [id], onDelete: SetNull)
+  photoAltTr String  @default("")
+  photoAltEn String  @default("")
+
+  seeded    Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@index([order])
+}
+
+// ---------------------------------------------------------------------------
+// Yayınlar — altyapı hazır, panelden kapalı geliyor
+// ---------------------------------------------------------------------------
+model Publication {
+  id     String @id @default(cuid())
+  slugTr String @unique
+  slugEn String @unique
+
+  published   Boolean   @default(false)
+  publishedAt DateTime?
+  order       Int       @default(0)
+
+  titleTr   String
+  titleEn   String @default("")
+  excerptTr String @default("") @db.Text
+  excerptEn String @default("") @db.Text
+  bodyTr    String @default("") @db.Text
+  bodyEn    String @default("") @db.Text
+  author    String @default("")
+
+  coverId    String?
+  cover      Media?  @relation(fields: [coverId], references: [id], onDelete: SetNull)
+  coverAltTr String  @default("")
+  coverAltEn String  @default("")
+
+  seoTitleTr String @default("")
+  seoTitleEn String @default("")
+  seoDescTr  String @default("") @db.Text
+  seoDescEn  String @default("") @db.Text
+
+  seeded    Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@index([order])
+}
+
+// ---------------------------------------------------------------------------
+// Sayfa bazlı SEO
+// ---------------------------------------------------------------------------
+model SeoMeta {
+  id       String @id @default(cuid())
+  routeKey String @unique
+
+  titleTr String @default("")
+  titleEn String @default("")
+  descTr  String @default("") @db.Text
+  descEn  String @default("") @db.Text
+
+  ogImageId String?
+  ogImage   Media?  @relation(fields: [ogImageId], references: [id], onDelete: SetNull)
+
+  noindex Boolean @default(false)
+  seeded  Boolean @default(false)
+
+  updatedAt DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// İletişim formu mesajları
+// ---------------------------------------------------------------------------
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String   @default("")
+  subject   String   @default("")
+  message   String   @db.Text
+  locale    String   @default("tr")
+  ip        String   @default("")
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([read])
+}
+
+// ---------------------------------------------------------------------------
+// Çeviri altyapısı
+// ---------------------------------------------------------------------------
+
+// Her çevrilebilir alanın durumu. entity+entityId+field benzersiz.
+model FieldMeta {
+  id        String            @id @default(cuid())
+  entity    String // "LocalizedText" | "Service" | "TeamMember" | ...
+  entityId  String
+  field     String // "body", "title", "excerpt", "alt", "seoTitle"...
+  status    TranslationStatus @default(AUTO)
+  srcHash   String? // kaynağın (TR) hash'i — değişmediyse API'ye gitme
+  error     String?           @db.Text
+  updatedAt DateTime          @updatedAt
+
+  @@unique([entity, entityId, field])
+  @@index([status])
+}
+
+// Arka plan çeviri kuyruğu
+model TranslationJob {
+  id        String    @id @default(cuid())
+  entity    String
+  entityId  String
+  field     String
+  source    String    @db.Text
+  attempts  Int       @default(0)
+  lastError String?   @db.Text
+  claimedAt DateTime?
+  doneAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@unique([entity, entityId, field])
+  @@index([doneAt, createdAt])
+}
+
+// Panelden düzenlenebilir terim sözlüğü — system prompt'a buradan basılır
+model GlossaryTerm {
+  id     String  @id @default(cuid())
+  tr     String  @unique
+  en     String
+  note   String  @default("")
+  order  Int     @default(0)
+  active Boolean @default(true)
+  seeded Boolean @default(false)
+
+  @@index([order])
+}
+
+// ---------------------------------------------------------------------------
+// Yönetim
+// ---------------------------------------------------------------------------
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String    @default("Yönetici")
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+
+  sessions AdminSession[]
+}
+
+model AdminSession {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  userId    String
+  user      AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+
+  @@index([expiresAt])
+}

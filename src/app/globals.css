@@ -1,0 +1,168 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Vurgu rengi panelden geliyor; layout bu değişkeni inline olarak eziyor. */
+  --accent: #a9834b;
+  --accent-soft: #f0e8da;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    @apply bg-paper text-graphite-800 font-sans antialiased;
+    font-feature-settings: 'kern', 'liga';
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif text-navy-900;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Klavye navigasyonu görünür olsun */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: #fff;
+  }
+}
+
+@layer components {
+  /* Bağlantı altı çizgisi — hover'da soldan sağa açılır.
+     DİKKAT: buraya transform koymuyoruz; hareketi Framer Motion yönetiyor,
+     aynı transform'u iki sistem yönetirse Motion'ın inline style'ı CSS'i ezer. */
+  .link-underline {
+    @apply relative inline-block;
+  }
+  .link-underline::after {
+    content: '';
+    @apply absolute left-0 -bottom-0.5 h-px w-full origin-right scale-x-0 bg-current transition-transform duration-300 ease-out;
+  }
+  .link-underline:hover::after,
+  .link-underline:focus-visible::after {
+    @apply origin-left scale-x-100;
+  }
+
+  .btn {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-sm px-6 py-3 text-sm font-medium tracking-wide transition-colors duration-200;
+  }
+  .btn-primary {
+    @apply btn bg-navy-700 text-white hover:bg-navy-800;
+  }
+  .btn-accent {
+    @apply btn text-white;
+    background-color: var(--accent);
+  }
+  .btn-accent:hover {
+    filter: brightness(0.92);
+  }
+  .btn-outline {
+    @apply btn border border-navy-200 bg-transparent text-navy-800 hover:border-navy-700 hover:bg-navy-50;
+  }
+  .btn-ghost {
+    @apply btn px-0 text-navy-700 hover:text-navy-900;
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.18em];
+    color: var(--accent);
+  }
+
+  .rule {
+    @apply h-px w-12 border-0;
+    background-color: var(--accent);
+  }
+
+  .card {
+    @apply rounded-sm border border-paper-line bg-white shadow-card;
+  }
+
+  /* Panelden gelen zengin metnin tipografisi (Tailwind typography eklentisi
+     kullanılmadı; kontrol bizde kalsın ve bağımlılık artmasın diye). */
+  .prose-legal {
+    @apply text-[0.975rem] leading-[1.75] text-graphite-700;
+  }
+  .prose-legal > * + * {
+    @apply mt-4;
+  }
+  .prose-legal h3 {
+    @apply mt-10 font-serif text-xl text-navy-900;
+  }
+  .prose-legal h4 {
+    @apply mt-8 font-serif text-lg text-navy-900;
+  }
+  .prose-legal p {
+    @apply text-graphite-700;
+  }
+  .prose-legal strong {
+    @apply font-semibold text-navy-900;
+  }
+  .prose-legal ul {
+    @apply list-none space-y-2 pl-0;
+  }
+  .prose-legal ul > li {
+    @apply relative pl-6;
+  }
+  .prose-legal ul > li::before {
+    content: '';
+    @apply absolute left-0 top-[0.7em] h-1.5 w-1.5 rounded-full;
+    background-color: var(--accent);
+  }
+  .prose-legal ol {
+    @apply list-decimal space-y-2 pl-5 marker:text-navy-400;
+  }
+  .prose-legal a {
+    @apply underline decoration-1 underline-offset-2;
+    color: var(--accent);
+  }
+  .prose-legal blockquote {
+    @apply border-l-2 pl-5 italic text-graphite-600;
+    border-color: var(--accent);
+  }
+  .prose-legal hr {
+    @apply my-10 border-paper-line;
+  }
+  .prose-legal table {
+    @apply w-full border-collapse text-sm;
+  }
+  .prose-legal th,
+  .prose-legal td {
+    @apply border border-paper-line px-3 py-2 text-left;
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-sm font-medium text-graphite-700;
+  }
+  .field-input {
+    @apply block w-full rounded-sm border border-paper-line bg-white px-3.5 py-2.5 text-[0.95rem] text-graphite-900 transition-colors placeholder:text-graphite-400 focus:border-navy-500 focus:outline-none focus:ring-2 focus:ring-navy-100;
+  }
+}
+
+/* JS kapalıyken hareketle gizlenen içerik kaybolmasın. */
+.no-js [data-reveal] {
+  opacity: 1 !important;
+  transform: none !important;
+}

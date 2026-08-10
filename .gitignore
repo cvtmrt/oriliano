@@ -1,5 +1,21 @@
-node_modules
-dist
+node_modules/
+.next/
+out/
+build/
+dist/
+
 .env
+.env.local
+.env.*.local
+
+# Yerel görsel yüklemeleri (Railway'de Volume'a yazılır)
+.uploads/
+
 *.log
+npm-debug.log*
 .DS_Store
+Thumbs.db
+.vscode/
+.idea/
+next-env.d.ts
+tsconfig.tsbuildinfo
