@@ -8,6 +8,7 @@ import {
   translateMissingAction,
 } from '../actions'
 import { PageTitle, Card, SubmitButton, Banner } from '@/components/admin/ui'
+import TranslationTest from '@/components/admin/TranslationTest'
 
 export const dynamic = 'force-dynamic'
 
@@ -41,6 +42,13 @@ export default async function ToolsPage() {
       ) : null}
 
       <div className="space-y-6">
+        <Card
+          title="Çeviri bağlantı testi"
+          description="ANTHROPIC_API_KEY ekledikten sonra buradan doğrulayın. Küçük bir cümle çevirir, kuyruğa dokunmaz."
+        >
+          <TranslationTest />
+        </Card>
+
         <Card
           title="Eksik İngilizce metinleri toplu çevir"
           description="Türkçesi dolu, İngilizcesi boş olan tüm alanları sıraya alır. Elle düzenlenmiş (kilitli) alanlara dokunmaz."

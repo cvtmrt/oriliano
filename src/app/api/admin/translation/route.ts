@@ -10,6 +10,7 @@ import {
   runQueue,
   type EntityName,
 } from '@/lib/translation-queue'
+import { translateToEnglish, translationConfigured } from '@/lib/translate'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -36,6 +37,27 @@ export async function POST(request: Request) {
   if (body.action === 'tick') {
     const result = await runQueue(4)
     return NextResponse.json({ ok: true, ...result, ...(await queueStats()) })
+  }
+
+  // Panelden tek tıkla bağlantı testi: küçük bir cümle çevirir.
+  // API anahtarı ve model erişimi doğru mu, kuyruğa dokunmadan görülür.
+  if (body.action === 'test') {
+    if (!translationConfigured()) {
+      return NextResponse.json(
+        { ok: false, error: 'ANTHROPIC_API_KEY tanımlı değil.' },
+        { status: 400 },
+      )
+    }
+    const sample = 'İş Hukuku alanında müvekkillerimize danışmanlık ve dava takibi hizmeti veriyoruz.'
+    try {
+      const translated = await translateToEnglish(sample)
+      return NextResponse.json({ ok: true, source: sample, translated })
+    } catch (err) {
+      return NextResponse.json(
+        { ok: false, error: (err as Error).message.slice(0, 300) },
+        { status: 502 },
+      )
+    }
   }
 
   if (!entity || !entitySpecs[entity] || !body.entityId) {

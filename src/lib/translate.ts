@@ -125,34 +125,58 @@ export async function translateBatch(
     additionalProperties: false,
   }
 
-  const res = await getClient().messages.create({
+  const system = await buildSystemPrompt()
+  const userContent =
+    'Aşağıdaki JSON nesnesindeki her değeri İngilizceye çevir. Anahtarları AYNEN koru, ' +
+    'yalnızca değerleri çevir.\n\n' +
+    JSON.stringify(Object.fromEntries(keys.map((k) => [k, entries[k]])), null, 2)
+
+  const request = {
     model: TRANSLATION_MODEL,
     max_tokens: 16000,
-    system: await buildSystemPrompt(),
-    output_config: {
-      effort: 'low',
-      format: { type: 'json_schema', schema },
-    },
-    messages: [
-      {
-        role: 'user',
-        content:
-          'Aşağıdaki JSON nesnesindeki her değeri İngilizceye çevir. Anahtarları AYNEN koru, ' +
-          'yalnızca değerleri çevir.\n\n' +
-          JSON.stringify(Object.fromEntries(keys.map((k) => [k, entries[k]])), null, 2),
-      },
-    ],
-  })
+    system,
+    messages: [{ role: 'user' as const, content: userContent }],
+  }
+
+  let res
+  try {
+    res = await getClient().messages.create({
+      ...request,
+      output_config: { effort: 'low', format: { type: 'json_schema', schema } },
+    })
+  } catch (err) {
+    // Yapılandırılmış çıktı bu hesap/model için kabul edilmezse tek seferlik
+    // yedek yol: şemasız iste, yanıttaki JSON'u kendimiz ayıklayalım.
+    // Böylece API yüzeyi değişse bile toplu çeviri tamamen durmaz.
+    const status = (err as { status?: number }).status
+    if (status !== 400) throw err
+    res = await getClient().messages.create({
+      ...request,
+      output_config: { effort: 'low' },
+      messages: [
+        {
+          role: 'user' as const,
+          content:
+            userContent +
+            '\n\nYalnızca geçerli bir JSON nesnesi döndür; kod bloğu, açıklama veya ön söz ekleme.',
+        },
+      ],
+    })
+  }
 
   if (res.stop_reason === 'refusal') {
     throw new Error('Çeviri modeli isteği reddetti.')
   }
 
-  const raw = res.content
+  let raw = res.content
     .filter((b): b is Extract<typeof b, { type: 'text' }> => b.type === 'text')
     .map((b) => b.text)
     .join('')
     .trim()
+
+  // Yedek yolda model yine de ```json ile sarmalayabilir — temizle.
+  const fenced = raw.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/)
+  if (fenced) raw = fenced[1].trim()
 
   let parsed: unknown
   try {
