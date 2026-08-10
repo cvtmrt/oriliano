@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
+import { contactNotificationBody, mailConfigured, parseRecipients, sendMail } from '@/lib/mail'
+import { pick } from '@/lib/i18n'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -69,8 +71,9 @@ export async function POST(request: Request) {
 
   const data = parsed.data
 
+  let saved
   try {
-    await prisma.contactMessage.create({
+    saved = await prisma.contactMessage.create({
       data: {
         name: data.name,
         email: data.email,
@@ -95,5 +98,66 @@ export async function POST(request: Request) {
     )
   }
 
+  // Bildirim gönderimi mesajın kaydından SONRA ve isteği BLOKLAMADAN yapılır:
+  // e-posta sağlayıcısı yavaşsa ya da düşerse ziyaretçi beklemesin, mesaj da
+  // kaybolmasın — o zaten veritabanında.
+  void notify(saved.id, data).catch((err) => console.error('[contact] bildirim:', err))
+
   return NextResponse.json({ ok: true })
+}
+
+async function notify(
+  id: string,
+  data: { name: string; email: string; phone: string; subject: string; message: string; locale: 'tr' | 'en' },
+): Promise<void> {
+  if (!mailConfigured()) return
+
+  let settings
+  try {
+    settings = await prisma.siteSetting.findUnique({ where: { id: 1 } })
+  } catch {
+    return
+  }
+  if (!settings) return
+
+  const base = (settings.baseUrl?.trim() || '').replace(/\/$/, '')
+
+  // 1) Büroya bildirim
+  if (settings.notifyEnabled) {
+    const recipients = parseRecipients(settings.notifyEmail || settings.email || '')
+    if (recipients.length > 0) {
+      const body = contactNotificationBody({
+        ...data,
+        panelUrl: `${base}/admin/messages`,
+      })
+      const result = await sendMail({
+        to: recipients,
+        subject: `Web sitesi mesajı — ${data.name}${data.subject ? ` · ${data.subject}` : ''}`,
+        text: body.text,
+        html: body.html,
+        // Yanıtla'ya basınca doğrudan ziyaretçiye gitsin
+        replyTo: data.email,
+      })
+      if (!result.ok) console.error('[contact] bildirim gönderilemedi:', result.error, id)
+    }
+  }
+
+  // 2) Ziyaretçiye otomatik yanıt (varsayılan kapalı — kendi alan adınız
+  //    doğrulanmadan gönderim reddedilebilir)
+  if (settings.autoReplyEnabled) {
+    const body = pick(data.locale, settings.autoReplyTr, settings.autoReplyEn).trim()
+    if (body) {
+      const siteName = pick(data.locale, settings.siteNameTr, settings.siteNameEn)
+      const result = await sendMail({
+        to: [data.email],
+        subject:
+          data.locale === 'en'
+            ? `We received your message — ${siteName}`
+            : `Mesajınızı aldık — ${siteName}`,
+        text: body,
+        replyTo: settings.email || undefined,
+      })
+      if (!result.ok) console.error('[contact] otomatik yanıt gönderilemedi:', result.error, id)
+    }
+  }
 }

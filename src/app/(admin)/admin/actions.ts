@@ -135,6 +135,8 @@ export async function saveSettingsAction(form: FormData): Promise<void> {
     { name: 'tagline', rich: false },
     { name: 'address', rich: false },
     { name: 'workingHours', rich: false },
+    { name: 'autoReply', rich: false },
+    { name: 'whatsappText', rich: false },
   ])
 
   const data = {
@@ -155,6 +157,13 @@ export async function saveSettingsAction(form: FormData): Promise<void> {
     logoId: nullableId(form, 'logoId'),
     logoDarkId: nullableId(form, 'logoDarkId'),
     faviconId: nullableId(form, 'faviconId'),
+    notifyEnabled: bool(form, 'notifyEnabled'),
+    notifyEmail: str(form, 'notifyEmail'),
+    autoReplyEnabled: bool(form, 'autoReplyEnabled'),
+    floatingEnabled: bool(form, 'floatingEnabled'),
+    // WhatsApp numarası yalnız rakam olmalı (wa.me biçimi)
+    whatsappNumber: str(form, 'whatsappNumber').replace(/\D/g, ''),
+    showCallButton: bool(form, 'showCallButton'),
   }
 
   await prisma.siteSetting.upsert({

@@ -2,11 +2,12 @@ import type { Metadata, Viewport } from 'next'
 import { Inter, Poppins, Source_Serif_4 } from 'next/font/google'
 import { notFound } from 'next/navigation'
 import '@/app/globals.css'
-import { isLocale, htmlLang, type Locale } from '@/lib/i18n'
+import { isLocale, htmlLang, pick, type Locale } from '@/lib/i18n'
 import { getSettings, getMenu, getT, siteName, getImage, mediaUrl } from '@/lib/content'
 import Header from '@/components/site/Header'
 import Footer from '@/components/site/Footer'
 import OrganizationJsonLd from '@/components/site/OrganizationJsonLd'
+import FloatingContact from '@/components/site/FloatingContact'
 
 const sans = Inter({
   subsets: ['latin', 'latin-ext'],
@@ -127,6 +128,19 @@ export default async function SiteLayout({
         </main>
 
         <Footer locale={locale} menu={menu} />
+
+        {settings.floatingEnabled ? (
+          <FloatingContact
+            whatsappNumber={settings.whatsappNumber}
+            whatsappText={pick(locale, settings.whatsappTextTr, settings.whatsappTextEn)}
+            phone={settings.phone}
+            showCall={settings.showCallButton}
+            labels={{
+              whatsapp: locale === 'tr' ? 'WhatsApp' : 'WhatsApp',
+              call: locale === 'tr' ? 'Ara' : 'Call',
+            }}
+          />
+        ) : null}
 
         <OrganizationJsonLd locale={locale} />
       </body>

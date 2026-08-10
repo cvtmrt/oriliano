@@ -51,7 +51,7 @@ export const entitySpecs: Record<EntityName, EntitySpec> = {
     },
   },
   SiteSetting: {
-    fields: ['siteName', 'tagline', 'address', 'workingHours'],
+    fields: ['siteName', 'tagline', 'address', 'workingHours', 'autoReply', 'whatsappText'],
     columns: suffixed,
     read: () => prisma.siteSetting.findUnique({ where: { id: 1 } }) as Promise<Record<string, unknown> | null>,
     write: async (_id, data) => {

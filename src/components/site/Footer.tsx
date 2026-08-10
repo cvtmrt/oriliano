@@ -29,8 +29,11 @@ export default async function Footer({ locale, menu }: { locale: Locale; menu: M
     .map((f) => ({ ...f, url: (settings as unknown as Record<string, string>)[f.key] }))
     .filter((s) => s.url && s.url.trim())
 
+  // Üstte boşluk (mt-24) YOK: sayfaların son bölümleri zaten kendi alt
+  // boşluğunu veriyor. Boşluk verildiğinde anasayfadaki koyu CTA şeridi ile
+  // koyu alt bilgi arasında boş bir açık bant kalıyordu.
   return (
-    <footer className="mt-24 border-t border-paper-line bg-navy-900 text-navy-100">
+    <footer className="border-t border-paper-line bg-navy-900 text-navy-100">
       <div className="container grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-4 lg:py-20">
         <div className="lg:col-span-2">
           {settings.logoDark ? (

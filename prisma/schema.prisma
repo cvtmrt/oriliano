@@ -132,6 +132,26 @@ model SiteSetting {
 
   baseUrl String @default("https://cetinerlegal.com")
 
+  // --- Form bildirimleri -----------------------------------------------
+  // Sağlayıcı anahtarı ortam değişkeninde (RESEND_API_KEY); panelden
+  // yalnızca kime/gönderilsin mi/ne yazsın ayarlanıyor.
+  notifyEnabled Boolean @default(true)
+  /// Virgülle birden fazla adres yazılabilir
+  notifyEmail   String  @default("")
+  /// Formu dolduran kişiye otomatik "aldık" yanıtı
+  autoReplyEnabled Boolean @default(false)
+  autoReplyTr      String  @default("") @db.Text
+  autoReplyEn      String  @default("") @db.Text
+
+  // --- Hızlı iletişim (sabit buton) ------------------------------------
+  floatingEnabled Boolean @default(true)
+  /// Uluslararası biçim, yalnız rakam: 905XXXXXXXXX
+  whatsappNumber  String  @default("")
+  /// WhatsApp'ta hazır gelen mesaj
+  whatsappTextTr  String  @default("")
+  whatsappTextEn  String  @default("")
+  showCallButton  Boolean @default(true)
+
   // Panelden "örnek verileri temizle" için: seed'in bıraktığı iz
   seedVersion String?
 
