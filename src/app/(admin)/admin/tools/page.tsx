@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { queueStats } from '@/lib/translation-queue'
 import {
   clearSeedDataAction,
+  loadSeedDataAction,
   retryFailedTranslationsAction,
   translateMissingAction,
 } from '../actions'
@@ -22,13 +23,17 @@ export default async function ToolsPage() {
       prisma.teamMember.count({ where: { seeded: true } }).catch(() => 0),
       prisma.localizedText.count({ where: { seeded: true } }).catch(() => 0),
       prisma.publication.count({ where: { seeded: true } }).catch(() => 0),
+      prisma.localizedText.count({ where: { seeded: false } }).catch(() => 0),
+      prisma.service.count().catch(() => 0),
+      prisma.teamMember.count().catch(() => 0),
     ]),
     prisma.fieldMeta
       .findMany({ where: { status: 'FAILED' }, take: 20 })
       .catch(() => []),
   ])
 
-  const [seededServices, seededTeam, seededTexts, seededPubs] = seededCounts
+  const [seededServices, seededTeam, seededTexts, seededPubs, nonSeededTexts, serviceCount, teamCount] =
+    seededCounts
   const totalSeeded = seededServices + seededTeam + seededTexts + seededPubs
 
   return (
@@ -82,6 +87,19 @@ export default async function ToolsPage() {
             </form>
           </Card>
         ) : null}
+
+        <Card
+          title="Örnek verileri yükle"
+          description="Sayfa metinleri, görsel yuvaları, menü, 10 hizmet, 4 ekip üyesi, SEO kayıtları ve terim sözlüğü. Var olan kayıtların içeriğine dokunmaz — istediğiniz kadar çalıştırabilirsiniz."
+        >
+          <p className="mb-4 text-sm text-graphite-600">
+            Şu an veritabanında: {seededTexts + nonSeededTexts} metin, {serviceCount} hizmet,{' '}
+            {teamCount} ekip üyesi.
+          </p>
+          <form action={loadSeedDataAction}>
+            <SubmitButton variant="secondary">Örnek verileri yükle</SubmitButton>
+          </form>
+        </Card>
 
         <Card
           title="Örnek verileri temizle"

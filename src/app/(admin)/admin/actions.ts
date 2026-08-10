@@ -16,6 +16,7 @@ import {
   type EntityName,
 } from '@/lib/translation-queue'
 import { SEED_VERSION } from '@/content/defaults'
+import { runSeed } from '@/lib/seed'
 
 /**
  * Panelin tüm yazma işlemleri. Her aksiyon önce yetki kontrolü yapar.
@@ -627,6 +628,19 @@ export async function clearSeedDataAction(form: FormData): Promise<void> {
 
   refreshSite()
   revalidatePath('/admin/tools')
+}
+
+/**
+ * "Örnek verileri yükle" — Railway'de veritabanına yalnızca özel ağdan
+ * erişilebildiği için seed dışarıdan atılamıyor; bu yüzden panelde duruyor.
+ * İdempotent: var olan kayıtların içeriğine dokunmaz.
+ */
+export async function loadSeedDataAction(): Promise<void> {
+  await requireAdmin()
+  await runSeed(prisma)
+  refreshSite()
+  revalidatePath('/admin/tools')
+  revalidatePath('/admin')
 }
 
 export async function markSeedVersionAction(): Promise<void> {
