@@ -4,7 +4,8 @@ import { getCurrentAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { getFieldMeta } from '@/lib/translation-queue'
 import { saveTextsAction, translateGroupAction } from '../../actions'
-import { PageTitle, Card, SubmitButton, Banner } from '@/components/admin/ui'
+import { PageTitle, Card, Banner } from '@/components/admin/ui'
+import SaveBar from '@/components/admin/SaveBar'
 import BilingualField from '@/components/admin/BilingualField'
 import MediaPicker from '@/components/admin/MediaPicker'
 import SlotAltFields from '@/components/admin/SlotAltFields'
@@ -50,7 +51,7 @@ export default async function ContentGroupPage({
 
       <form action={translateGroupAction} className="mb-6">
         <input type="hidden" name="group" value={group} />
-        <SubmitButton variant="secondary">Bu sayfayı tümüyle yeniden çevir</SubmitButton>
+        <SaveBar variant="secondary" savedLabel="Çeviri sıraya alındı" note="birkaç saniye içinde tamamlanır">Bu sayfayı tümüyle yeniden çevir</SaveBar>
         <p className="mt-2 text-xs text-graphite-500">
           Elle düzenlenmiş (kilitli) alanlar dâhil tüm İngilizce metinler yeniden üretilir.
         </p>
@@ -98,7 +99,7 @@ export default async function ContentGroupPage({
         ) : null}
 
         <div className="sticky bottom-0 -mx-4 border-t border-graphite-200 bg-white/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
-          <SubmitButton>Değişiklikleri kaydet</SubmitButton>
+          <SaveBar note="İngilizce çeviri arka planda üretiliyor">Değişiklikleri kaydet</SaveBar>
         </div>
       </form>
     </>

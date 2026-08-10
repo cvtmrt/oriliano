@@ -3,7 +3,8 @@ import { getCurrentAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { getFieldMeta } from '@/lib/translation-queue'
 import { saveMenuAction } from '../actions'
-import { PageTitle, Card, SubmitButton, Empty } from '@/components/admin/ui'
+import { PageTitle, Card, Empty } from '@/components/admin/ui'
+import SaveBar from '@/components/admin/SaveBar'
 import MenuRow from '@/components/admin/MenuRow'
 import { routeSegment, type RouteKey } from '@/lib/routes'
 
@@ -53,7 +54,7 @@ export default async function MenuPage() {
           </Card>
 
           <div className="sticky bottom-0 -mx-4 border-t border-graphite-200 bg-white/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
-            <SubmitButton>Menüyü kaydet</SubmitButton>
+            <SaveBar note="İngilizce çeviri arka planda üretiliyor">Menüyü kaydet</SaveBar>
           </div>
         </form>
       )}

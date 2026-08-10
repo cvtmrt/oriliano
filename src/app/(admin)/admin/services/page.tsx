@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { deleteServiceAction } from '../actions'
 import { PageTitle, Empty } from '@/components/admin/ui'
 import DeleteButton from '@/components/admin/DeleteButton'
+import SavedNotice from '@/components/admin/SavedNotice'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,6 +28,8 @@ export default async function ServicesAdminPage() {
           </Link>
         }
       />
+
+      <SavedNotice />
 
       {services.length === 0 ? (
         <Empty>Henüz hizmet yok.</Empty>

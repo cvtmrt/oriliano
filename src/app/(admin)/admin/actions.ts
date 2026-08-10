@@ -321,7 +321,7 @@ export async function saveServiceAction(form: FormData): Promise<void> {
 
   await syncTranslations('Service', serviceId, bilingual)
   refreshSite()
-  redirect('/admin/services')
+  redirect(`/admin/services?saved=${encodeURIComponent(titleTr)}`)
 }
 
 export async function deleteServiceAction(form: FormData): Promise<void> {
@@ -382,7 +382,7 @@ export async function saveTeamMemberAction(form: FormData): Promise<void> {
 
   await syncTranslations('TeamMember', memberId, bilingual)
   refreshSite()
-  redirect('/admin/team')
+  redirect(`/admin/team?saved=${encodeURIComponent(name)}`)
 }
 
 export async function deleteTeamMemberAction(form: FormData): Promise<void> {
@@ -447,7 +447,7 @@ export async function savePublicationAction(form: FormData): Promise<void> {
 
   await syncTranslations('Publication', pubId, bilingual)
   refreshSite()
-  redirect('/admin/publications')
+  redirect(`/admin/publications?saved=${encodeURIComponent(titleTr)}`)
 }
 
 export async function deletePublicationAction(form: FormData): Promise<void> {

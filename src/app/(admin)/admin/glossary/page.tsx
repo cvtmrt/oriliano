@@ -2,7 +2,8 @@ import { redirect } from 'next/navigation'
 import { getCurrentAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { saveGlossaryAction } from '../actions'
-import { PageTitle, Card, SubmitButton } from '@/components/admin/ui'
+import { PageTitle, Card } from '@/components/admin/ui'
+import SaveBar from '@/components/admin/SaveBar'
 
 export const dynamic = 'force-dynamic'
 
@@ -78,7 +79,7 @@ export default async function GlossaryPage() {
         </Card>
 
         <div className="sticky bottom-0 -mx-4 border-t border-graphite-200 bg-white/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
-          <SubmitButton>Sözlüğü kaydet</SubmitButton>
+          <SaveBar>Sözlüğü kaydet</SaveBar>
         </div>
       </form>
     </>

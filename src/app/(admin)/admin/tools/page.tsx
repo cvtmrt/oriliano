@@ -8,7 +8,8 @@ import {
   retryFailedTranslationsAction,
   translateMissingAction,
 } from '../actions'
-import { PageTitle, Card, SubmitButton, Banner } from '@/components/admin/ui'
+import { PageTitle, Card, Banner } from '@/components/admin/ui'
+import SaveBar from '@/components/admin/SaveBar'
 import TranslationTest from '@/components/admin/TranslationTest'
 import ConfirmButton from '@/components/admin/ConfirmButton'
 
@@ -68,7 +69,7 @@ export default async function ToolsPage() {
             <strong>{stats?.failed ?? 0}</strong>
           </p>
           <form action={translateMissingAction}>
-            <SubmitButton>Eksikleri çevir</SubmitButton>
+            <SaveBar savedLabel="Sıraya alındı" note="çeviri arka planda sürüyor">Eksikleri çevir</SaveBar>
           </form>
         </Card>
 
@@ -88,7 +89,7 @@ export default async function ToolsPage() {
               ))}
             </ul>
             <form action={retryFailedTranslationsAction}>
-              <SubmitButton variant="secondary">Başarısızları tekrar dene</SubmitButton>
+              <SaveBar variant="secondary" savedLabel="Yeniden denendi">Başarısızları tekrar dene</SaveBar>
             </form>
           </Card>
         ) : null}
@@ -102,7 +103,7 @@ export default async function ToolsPage() {
             {teamCount} ekip üyesi.
           </p>
           <form action={loadSeedDataAction}>
-            <SubmitButton variant="secondary">Örnek verileri yükle</SubmitButton>
+            <SaveBar variant="secondary" savedLabel="Örnek veriler yüklendi">Örnek verileri yükle</SaveBar>
           </form>
         </Card>
 

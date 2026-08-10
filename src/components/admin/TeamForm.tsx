@@ -2,7 +2,8 @@
 
 import Link from 'next/link'
 import { saveTeamMemberAction } from '@/app/(admin)/admin/actions'
-import { Card, SubmitButton } from './ui'
+import { Card } from './ui'
+import SaveBar from './SaveBar'
 import BilingualField from './BilingualField'
 import MediaPicker from './MediaPicker'
 
@@ -143,7 +144,7 @@ export default function TeamForm({
       </Card>
 
       <div className="sticky bottom-0 -mx-4 flex flex-wrap items-center gap-3 border-t border-graphite-200 bg-white/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
-        <SubmitButton>{values.id ? 'Kaydet' : 'Üyeyi oluştur'}</SubmitButton>
+        <SaveBar>{values.id ? 'Kaydet' : 'Üyeyi oluştur'}</SaveBar>
         <Link href="/admin/team" className="text-sm text-graphite-600 underline underline-offset-2">
           Vazgeç
         </Link>

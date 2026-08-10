@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { deletePublicationAction } from '../actions'
 import { PageTitle, Empty, Banner } from '@/components/admin/ui'
 import DeleteButton from '@/components/admin/DeleteButton'
+import SavedNotice from '@/components/admin/SavedNotice'
 
 export const dynamic = 'force-dynamic'
 
@@ -30,6 +31,8 @@ export default async function PublicationsAdminPage() {
           </Link>
         }
       />
+
+      <SavedNotice />
 
       {menuItem && !menuItem.visible ? (
         <Banner type="info">

@@ -3,7 +3,8 @@ import { getCurrentAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { getFieldMeta } from '@/lib/translation-queue'
 import { saveSettingsAction } from '../actions'
-import { PageTitle, Card, SubmitButton, Banner } from '@/components/admin/ui'
+import { PageTitle, Card, Banner } from '@/components/admin/ui'
+import SaveBar from '@/components/admin/SaveBar'
 import BilingualField from '@/components/admin/BilingualField'
 import MediaPicker from '@/components/admin/MediaPicker'
 
@@ -242,7 +243,7 @@ export default async function SettingsPage() {
         </Card>
 
         <div className="sticky bottom-0 -mx-4 border-t border-graphite-200 bg-white/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
-          <SubmitButton>Ayarları kaydet</SubmitButton>
+          <SaveBar note="İngilizce çeviri arka planda üretiliyor">Ayarları kaydet</SaveBar>
         </div>
       </form>
     </>

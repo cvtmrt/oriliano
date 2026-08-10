@@ -3,7 +3,8 @@ import { getCurrentAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { getFieldMeta } from '@/lib/translation-queue'
 import { saveSeoAction } from '../actions'
-import { PageTitle, Card, SubmitButton, Empty } from '@/components/admin/ui'
+import { PageTitle, Card, Empty } from '@/components/admin/ui'
+import SaveBar from '@/components/admin/SaveBar'
 import SeoRow from '@/components/admin/SeoRow'
 
 export const dynamic = 'force-dynamic'
@@ -65,7 +66,7 @@ export default async function SeoPage() {
           ))}
 
           <div className="sticky bottom-0 -mx-4 border-t border-graphite-200 bg-white/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
-            <SubmitButton>SEO ayarlarını kaydet</SubmitButton>
+            <SaveBar note="İngilizce çeviri arka planda üretiliyor">SEO ayarlarını kaydet</SaveBar>
           </div>
         </form>
       )}
