@@ -1,6 +1,6 @@
 import 'server-only'
 import { prisma } from './prisma'
-import { hashSource, translateBatch, translationConfigured } from './translate'
+import { hashSource, providerLabel, translateBatch, translationConfigured } from './translate'
 
 /**
  * ARKA PLAN ÇEVİRİ KUYRUĞU
@@ -435,5 +435,5 @@ export async function queueStats() {
     prisma.translationJob.count({ where: { doneAt: null } }),
     prisma.fieldMeta.count({ where: { status: 'FAILED' } }),
   ])
-  return { pending, failed, configured: translationConfigured() }
+  return { pending, failed, configured: translationConfigured(), provider: providerLabel() }
 }

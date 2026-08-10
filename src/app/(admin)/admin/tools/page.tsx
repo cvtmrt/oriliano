@@ -43,9 +43,13 @@ export default async function ToolsPage() {
 
       {stats && !stats.configured ? (
         <Banner type="warn">
-          <code>ANTHROPIC_API_KEY</code> tanımlı olmadığı için otomatik çeviri çalışmaz.
+          Otomatik çeviri kapalı. <code>GEMINI_API_KEY</code> (Google AI Studio&apos;dan ücretsiz
+          alınabilir) veya <code>ANTHROPIC_API_KEY</code> ekleyin. İkisi de tanımlıysa Gemini
+          kullanılır; <code>TRANSLATION_PROVIDER</code> ile zorlayabilirsiniz.
         </Banner>
-      ) : null}
+      ) : (
+        <Banner type="info">Çeviri sağlayıcısı: <strong>{stats?.provider}</strong></Banner>
+      )}
 
       <div className="space-y-6">
         <Card

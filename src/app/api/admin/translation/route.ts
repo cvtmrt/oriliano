@@ -10,7 +10,7 @@ import {
   runQueue,
   type EntityName,
 } from '@/lib/translation-queue'
-import { translateToEnglish, translationConfigured } from '@/lib/translate'
+import { providerLabel, translateToEnglish, translationConfigured } from '@/lib/translate'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -44,14 +44,18 @@ export async function POST(request: Request) {
   if (body.action === 'test') {
     if (!translationConfigured()) {
       return NextResponse.json(
-        { ok: false, error: 'ANTHROPIC_API_KEY tanımlı değil.' },
+        {
+          ok: false,
+          error:
+            'Çeviri sağlayıcısı tanımlı değil. GEMINI_API_KEY (ücretsiz katman) veya ANTHROPIC_API_KEY ekleyin.',
+        },
         { status: 400 },
       )
     }
     const sample = 'İş Hukuku alanında müvekkillerimize danışmanlık ve dava takibi hizmeti veriyoruz.'
     try {
       const translated = await translateToEnglish(sample)
-      return NextResponse.json({ ok: true, source: sample, translated })
+      return NextResponse.json({ ok: true, source: sample, translated, provider: providerLabel() })
     } catch (err) {
       return NextResponse.json(
         { ok: false, error: (err as Error).message.slice(0, 300) },

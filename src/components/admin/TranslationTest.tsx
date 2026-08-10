@@ -8,7 +8,12 @@ import { useState } from 'react'
  */
 export default function TranslationTest() {
   const [state, setState] = useState<'idle' | 'busy' | 'ok' | 'error'>('idle')
-  const [result, setResult] = useState<{ source?: string; translated?: string; error?: string }>({})
+  const [result, setResult] = useState<{
+    source?: string
+    translated?: string
+    provider?: string
+    error?: string
+  }>({})
 
   async function run() {
     setState('busy')
@@ -23,6 +28,7 @@ export default function TranslationTest() {
         ok?: boolean
         source?: string
         translated?: string
+        provider?: string
         error?: string
       }
       if (!res.ok || !json.ok) {
@@ -31,7 +37,7 @@ export default function TranslationTest() {
         return
       }
       setState('ok')
-      setResult({ source: json.source, translated: json.translated })
+      setResult({ source: json.source, translated: json.translated, provider: json.provider })
     } catch (err) {
       setState('error')
       setResult({ error: (err as Error).message })
@@ -51,7 +57,9 @@ export default function TranslationTest() {
 
       {state === 'ok' ? (
         <div className="mt-4 rounded border border-green-200 bg-green-50 p-4 text-sm">
-          <p className="font-medium text-green-800">Çeviri çalışıyor.</p>
+          <p className="font-medium text-green-800">
+            Çeviri çalışıyor{result.provider ? ` — ${result.provider}` : ''}.
+          </p>
           <p className="mt-2 text-graphite-600">
             <span className="text-graphite-400">TR:</span> {result.source}
           </p>

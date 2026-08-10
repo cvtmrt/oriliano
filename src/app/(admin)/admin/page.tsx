@@ -57,8 +57,10 @@ export default async function AdminDashboard() {
 
       {queue && !queue.configured ? (
         <Banner type="warn">
-          <strong>Otomatik çeviri kapalı.</strong> <code>ANTHROPIC_API_KEY</code> tanımlı değil.
-          İngilizce alanları elle doldurabilirsiniz; boş kalırsa site Türkçe metni gösterir.
+          <strong>Otomatik çeviri kapalı.</strong> Çalışması için{' '}
+          <code>GEMINI_API_KEY</code> (ücretsiz katmanı var) veya{' '}
+          <code>ANTHROPIC_API_KEY</code> ortam değişkenlerinden biri gerekiyor. İngilizce alanları
+          elle de doldurabilirsiniz; boş kalırsa site Türkçe metni gösterir.
         </Banner>
       ) : null}
 
@@ -143,7 +145,7 @@ export default async function AdminDashboard() {
             <div className="flex justify-between gap-4">
               <dt className="text-graphite-500">Otomatik çeviri</dt>
               <dd className={queue?.configured ? 'text-green-700' : 'text-amber-700'}>
-                {queue?.configured ? 'Etkin (claude-opus-5)' : 'Kapalı'}
+                {queue?.configured ? queue.provider : 'Kapalı'}
               </dd>
             </div>
           </dl>

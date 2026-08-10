@@ -15,7 +15,8 @@ her şey veritabanından gelir, kod içinde yalnızca varsayılan değerler bulu
 | **Veritabanı** | PostgreSQL (Prisma 6) |
 | **Hareket** | Framer Motion — tek kaynak: `src/components/motion.tsx` |
 | **Diller** | `/tr` ve `/en`, varsayılan `tr`, yerelleştirilmiş adresler |
-| **Otomatik çeviri** | Anthropic API, `claude-opus-5` |
+| **Otomatik çeviri** | Google Gemini (ücretsiz katman) veya Anthropic `claude-opus-5` |
+| **Panel erişimi** | Gizli anahtar kapısı + bcrypt giriş |
 | **Görsel depolama** | Railway Volume + `sharp` ile otomatik WebP |
 | **Deploy** | Railway (Nixpacks) |
 
@@ -64,7 +65,9 @@ Servisin **Variables** sekmesine girin:
 | `SESSION_SECRET` | 32+ karakter rastgele değer |
 | `ADMIN_EMAIL` | Giriş yapacağınız e-posta |
 | `ADMIN_PASSWORD_HASH` | `npm run hash` çıktısı |
-| `ANTHROPIC_API_KEY` | Otomatik çeviri için (opsiyonel) |
+| `GEMINI_API_KEY` | Otomatik çeviri — ücretsiz katman ([AI Studio](https://aistudio.google.com/apikey)) |
+| `ANTHROPIC_API_KEY` | Otomatik çeviri alternatifi (kullandıkça öde) |
+| `ADMIN_GATE_KEY` | Panel kapısı — en az 12 karakter rastgele değer |
 | `UPLOAD_DIR` | `/data/uploads` |
 | `SITE_URL` | `https://cetinerlegal.com` |
 | `DISALLOW_INDEXING` | Ön izleme ortamında `true`, canlıda `false` |
@@ -119,10 +122,21 @@ eklemediğiniz sürece.
 Seed **idempotenttir** — tekrar çalıştırmak elle yaptığınız düzenlemeleri ezmez,
 yalnızca eksik kayıtları ekler.
 
-### 2.5 Giriş
+### 2.5 Giriş — panelin önünde iki kapı var
 
-`https://<servis-adresiniz>/admin` → `ADMIN_EMAIL` + şifreniz.
-Kullanıcı veritabanında yoksa ilk girişte ortam değişkenlerinden oluşturulur.
+`ADMIN_GATE_KEY` tanımlıyken `/admin` adresine anahtarsız gelen bir istek **404**
+alır; giriş formu bile görünmez. Bu, bot taramalarını ve kaba kuvvet
+denemelerini daha form yüklenmeden keser. 401 yerine 404 döndürülür — 401
+"burada bir panel var" bilgisini sızdırır, 404 hiçbir şey söylemez.
+
+1. Bir kez `https://<adres>/admin?k=<ADMIN_GATE_KEY>` adresine gidin.
+   Anahtar httpOnly çereze yazılır (180 gün) ve sorgusuz adrese yönlendirilirsiniz.
+2. Ardından normal giriş: `ADMIN_EMAIL` + şifreniz. Kullanıcı veritabanında
+   yoksa ilk girişte ortam değişkenlerinden oluşturulur.
+
+Bu adresi yer imine ekleyin. Anahtarı kaybederseniz Railway&apos;deki değişkenden
+okuyabilir veya değiştirebilirsiniz. `ADMIN_GATE_KEY` boş bırakılırsa kapı
+devre dışı kalır (yerel geliştirmede pratik).
 
 ---
 
@@ -198,6 +212,22 @@ Panel mobilde de tam işlevseldir (44px dokunma hedefleri, hamburger menü).
 **Türkçe kaynaktır.** Kaydet'e bastığınızda İngilizcesi arka planda üretilir;
 kaydet tuşu çeviriyi beklemez.
 
+### Hangi sağlayıcı?
+
+| Sağlayıcı | Değişken | Maliyet |
+|---|---|---|
+| **Google Gemini** (varsayılan tercih) | `GEMINI_API_KEY` | Ücretsiz katman — bu boyuttaki bir site için fazlasıyla yeterli |
+| Anthropic | `ANTHROPIC_API_KEY` | Kullandıkça öde |
+
+İkisi de tanımlıysa Gemini kullanılır; `TRANSLATION_PROVIDER=anthropic` ile
+zorlayabilirsiniz. Gemini tarafı resmî REST uç noktasına `fetch` ile gider —
+ek bir paket kurulmaz. Model adı `GEMINI_MODEL` ile değiştirilebilir;
+verilmezse `gemini-2.5-flash` denenir, bulunamazsa `2.0-flash` ve `1.5-flash`
+sırasıyla denenir (model adları zamanla değişiyor).
+
+Anahtarı ekledikten sonra **Araçlar → “Çeviri bağlantısını test et”** ile
+doğrulayın; hangi sağlayıcının kullanıldığını da yazar.
+
 Her alanın bir durumu vardır:
 
 | Durum | Anlamı |
@@ -222,8 +252,8 @@ Her alanın bir durumu vardır:
 - Terim sözlüğü koda gömülü değildir; `GlossaryTerm` tablosundan okunur ve
   panelden düzenlenir.
 
-`ANTHROPIC_API_KEY` tanımlı değilse panel çalışmaya devam eder; İngilizce
-alanları elle doldurursunuz, boş kalırsa site Türkçe metni gösterir.
+Hiçbir anahtar tanımlı değilse panel çalışmaya devam eder; İngilizce alanları
+elle doldurursunuz, boş kalırsa site Türkçe metni gösterir.
 
 ---
 
