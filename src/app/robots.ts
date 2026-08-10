@@ -1,7 +1,8 @@
 import type { MetadataRoute } from 'next'
 import { getSettings } from '@/lib/content'
 
-export const revalidate = 3600
+// Panelden değiştirilen alan adını okuduğu için istek anında üretiliyor.
+export const dynamic = 'force-dynamic'
 
 export default async function robots(): Promise<MetadataRoute.Robots> {
   const settings = await getSettings()

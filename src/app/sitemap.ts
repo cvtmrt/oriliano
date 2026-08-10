@@ -3,7 +3,15 @@ import { getSettings, getServices, getTeam, getPublications, isRouteVisible, ser
 import { locales, type Locale } from '@/lib/i18n'
 import { href, routeKeys, type RouteKey } from '@/lib/routes'
 
-export const revalidate = 3600
+/**
+ * İstek anında üretilir, build'de değil.
+ *
+ * Build sırasında veritabanına erişilemediği (Railway özel ağ) için
+ * ön-üretilen sitemap yalnızca statik sayfaları içeriyordu; hizmet, ekip ve
+ * yayın adresleri eksik kalıyordu. Sitemap'i tarayıcılar seyrek çektiği için
+ * her istekte üretmek sorun değil, karşılığında hep güncel.
+ */
+export const dynamic = 'force-dynamic'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const settings = await getSettings()
