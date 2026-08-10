@@ -166,8 +166,19 @@ async function main() {
   })
   check('"Avukatlık Ortaklığı" ifadesi yok', noAvukatlikOrtakligi === 0, String(noAvukatlikOrtakligi))
 
-  const messages = await prisma.contactMessage.count()
-  check('iletişim formu mesajı kaydedildi', messages > 0, String(messages))
+  // Mesajın var olduğunu varsaymak yerine kendimiz oluşturup doğruluyoruz.
+  const created = await prisma.contactMessage.create({
+    data: {
+      name: 'Duman Testi',
+      email: 'duman@example.com',
+      message: 'Bu kayıt duman testi tarafından oluşturuldu ve hemen silinir.',
+    },
+  })
+  const found = await prisma.contactMessage.findUnique({ where: { id: created.id } })
+  check('iletişim mesajı kaydedilip okunabiliyor', found?.name === 'Duman Testi')
+  check('yeni mesaj okunmamış geliyor', found?.read === false)
+  await prisma.contactMessage.delete({ where: { id: created.id } })
+  check('mesaj silinebiliyor', (await prisma.contactMessage.findUnique({ where: { id: created.id } })) === null)
 
   console.log(`\n${pass} geçti, ${fail} başarısız\n`)
   if (fail > 0) process.exitCode = 1

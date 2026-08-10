@@ -74,6 +74,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, queued: count })
   }
 
+  // Panel "Yeniden çevir" sonrası bu uç noktayı yokluyor: iş bitti mi?
+  if (body.action === 'field-status') {
+    const field = body.field
+    if (!field) return NextResponse.json({ ok: false, error: 'Eksik alan.' }, { status: 400 })
+    const meta = await prisma.fieldMeta.findUnique({
+      where: {
+        entity_entityId_field: { entity, entityId: body.entityId, field },
+      },
+    })
+    return NextResponse.json({ ok: true, status: meta?.status ?? 'AUTO', error: meta?.error ?? null })
+  }
+
   if (body.action === 'field') {
     const field = body.field
     if (!field || !entitySpecs[entity].fields.includes(field)) {

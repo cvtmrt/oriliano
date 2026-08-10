@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from 'react'
 import { StatusBadge } from './ui'
+import { useBilingualState } from './useBilingualState'
 
 /**
  * Görsel yuvasının alternatif metni (erişilebilirlik + SEO).
- * İki dilli; İngilizceye elle dokunulursa alan kilitlenir.
+ * İki dilli; İngilizceye elle yazılırsa alan kilitlenir.
  */
 export default function SlotAltFields({
   slotId,
@@ -18,8 +18,7 @@ export default function SlotAltFields({
   altEn: string
   status?: string | null
 }) {
-  const [manual, setManual] = useState(status === 'MANUAL')
-  const [en, setEn] = useState(altEn)
+  const { en, manual, edit } = useBilingualState(altEn, status)
 
   return (
     <div className="-mt-2 pb-5">
@@ -43,10 +42,7 @@ export default function SlotAltFields({
           <input
             name={`en__alt__${slotId}`}
             value={en}
-            onChange={(e) => {
-              setEn(e.target.value)
-              setManual(true)
-            }}
+            onChange={(e) => edit(e.target.value)}
             className="field-input"
           />
         </div>

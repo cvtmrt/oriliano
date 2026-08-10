@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import RichText from './RichText'
 import { StatusBadge } from './ui'
@@ -28,6 +28,9 @@ export interface BilingualFieldProps {
  * Türkçe kaynak, İngilizce hedef. Admin İngilizce alana dokunursa gizli
  * `manual__<name>` bayrağı 1 olur; sunucu bunu görünce alanı MANUAL kilitler
  * ve otomatik çeviri bir daha üzerine yazmaz.
+ *
+ * Kilit YALNIZCA gerçek kullanıcı düzenlemesiyle kurulur. Alana tıklayıp
+ * çıkmak, ya da arka planda çeviri gelip alanı tazelemek kilit kurmaz.
  */
 export default function BilingualField({
   name,
@@ -48,10 +51,39 @@ export default function BilingualField({
   const [busy, setBusy] = useState(false)
   const [note, setNote] = useState<string | null>(null)
 
+  // Kullanıcı bu alanda yazdı mı? Yazdıysa sunucudan gelen değer üzerine
+  // yazmayız — yoksa arka plandaki bir tazeleme yazdığını silerdi.
+  const editedRef = useRef(false)
+
+  /**
+   * Sunucudan gelen değer değiştiğinde yereli eşitle (React'in "render
+   * sırasında state düzeltme" deseni). Arka plan çevirisi bitip sayfa
+   * tazelendiğinde kutunun ve rozetin güncellenmesini bu sağlıyor;
+   * olmadığında alan eski/boş görünmeye devam ediyordu.
+   */
+  const [seenEn, setSeenEn] = useState(valueEn)
+  const [seenStatus, setSeenStatus] = useState(status)
+  if ((valueEn !== seenEn || status !== seenStatus) && !editedRef.current) {
+    setSeenEn(valueEn)
+    setSeenStatus(status)
+    setEn(valueEn)
+    setManual(status === 'MANUAL')
+  } else if (valueEn !== seenEn || status !== seenStatus) {
+    // Kullanıcı yazmışsa yalnızca "gördüğümüz" değeri ilerlet, kutuya dokunma.
+    setSeenEn(valueEn)
+    setSeenStatus(status)
+  }
+
+  function markEdited(value: string) {
+    editedRef.current = true
+    setEn(value)
+    setManual(true)
+  }
+
   async function retranslate() {
     if (!target) return
     setBusy(true)
-    setNote(null)
+    setNote('Çeviri sıraya alındı, bekleniyor…')
     try {
       const res = await fetch('/api/admin/translation', {
         method: 'POST',
@@ -60,16 +92,30 @@ export default function BilingualField({
       })
       const json = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string }
       if (!res.ok || !json.ok) {
+        setBusy(false)
         setNote(json.error || 'Çeviri başlatılamadı.')
-      } else {
-        setManual(false)
-        setNote('Çeviri sıraya alındı. Birkaç saniye içinde güncellenecek.')
-        setTimeout(() => router.refresh(), 4000)
+        return
       }
-    } catch {
-      setNote('Çeviri başlatılamadı.')
-    } finally {
+
+      // Elle kilidi kırdık; artık sunucudan gelen değeri kabul edebiliriz.
+      editedRef.current = false
+      setManual(false)
+
+      // Bitene kadar yokla — tek seferlik zamanlayıcı, çeviri geç bitince
+      // "hiçbir şey olmadı" hissi veriyordu.
+      const settled = await pollUntilSettled(target)
       setBusy(false)
+      if (settled === 'FAILED') {
+        setNote('Çeviri başarısız oldu. Eski İngilizce metin korundu.')
+      } else if (settled === 'PENDING') {
+        setNote('Çeviri hâlâ sürüyor. Sayfayı birazdan tazeleyin.')
+      } else {
+        setNote(null)
+      }
+      router.refresh()
+    } catch {
+      setBusy(false)
+      setNote('Çeviri başlatılamadı.')
     }
   }
 
@@ -84,7 +130,7 @@ export default function BilingualField({
         </label>
 
         <div className="flex items-center gap-2">
-          <StatusBadge status={effectiveStatus} />
+          <StatusBadge status={busy ? 'PENDING' : effectiveStatus} />
           {target ? (
             <button
               type="button"
@@ -92,7 +138,7 @@ export default function BilingualField({
               disabled={busy}
               className="rounded border border-graphite-300 px-2 py-1 text-[0.7rem] text-graphite-700 transition-colors hover:bg-graphite-100 disabled:opacity-50"
             >
-              {busy ? '…' : 'Yeniden çevir'}
+              {busy ? 'Çevriliyor…' : 'Yeniden çevir'}
             </button>
           ) : null}
         </div>
@@ -139,22 +185,15 @@ export default function BilingualField({
       </div>
 
       <div className={tab === 'en' ? 'block' : 'hidden'}>
+        {/* RichText, defaultValue değişince içeriği kendisi tazeliyor;
+            remount gerekmiyor — imleç kaybolmasın diye key vermiyoruz. */}
         {kind === 'RICH' ? (
-          <RichText
-            name={`en__${name}`}
-            defaultValue={valueEn}
-            onInput={(html) => {
-              if (html !== valueEn) setManual(true)
-            }}
-          />
+          <RichText name={`en__${name}`} defaultValue={en} onUserEdit={markEdited} />
         ) : kind === 'LONG' ? (
           <textarea
             name={`en__${name}`}
             value={en}
-            onChange={(e) => {
-              setEn(e.target.value)
-              setManual(true)
-            }}
+            onChange={(e) => markEdited(e.target.value)}
             rows={rows}
             className="field-input resize-y"
           />
@@ -162,16 +201,13 @@ export default function BilingualField({
           <input
             name={`en__${name}`}
             value={en}
-            onChange={(e) => {
-              setEn(e.target.value)
-              setManual(true)
-            }}
+            onChange={(e) => markEdited(e.target.value)}
             className="field-input"
           />
         )}
         <p className="mt-1.5 text-xs text-graphite-500">
-          Boş bırakırsanız Türkçe metin gösterilir. Buraya elle yazarsanız alan kilitlenir ve
-          otomatik çeviri üzerine yazmaz.
+          Boş bırakırsanız Türkçe metin gösterilir. Buraya <strong>elle yazarsanız</strong> alan
+          kilitlenir ve otomatik çeviri üzerine yazmaz; kilidi &quot;Yeniden çevir&quot; kırar.
         </p>
       </div>
 
@@ -180,4 +216,29 @@ export default function BilingualField({
       {note ? <p className="mt-2 text-xs text-navy-700">{note}</p> : null}
     </div>
   )
+}
+
+/** Alanın durumu AUTO/FAILED olana kadar yoklar (en fazla ~24 sn). */
+async function pollUntilSettled(target: {
+  entity: string
+  entityId: string
+  field: string
+}): Promise<'AUTO' | 'FAILED' | 'PENDING'> {
+  for (let i = 0; i < 8; i++) {
+    await new Promise((r) => setTimeout(r, 3000))
+    try {
+      const res = await fetch('/api/admin/translation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'field-status', ...target }),
+      })
+      const json = (await res.json().catch(() => ({}))) as { ok?: boolean; status?: string }
+      if (json.ok && json.status && json.status !== 'PENDING') {
+        return json.status === 'FAILED' ? 'FAILED' : 'AUTO'
+      }
+    } catch {
+      /* ağ hatası — yoklamaya devam */
+    }
+  }
+  return 'PENDING'
 }

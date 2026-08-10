@@ -9,41 +9,68 @@ import { useEffect, useRef, useState } from 'react'
  * tercih edildi: sıfır bağımlılık, mobilde sorunsuz ve panelin ihtiyacı olan
  * biçimlendirme (kalın, italik, başlık, liste, bağlantı) bununla karşılanıyor.
  * Gerçek değer gizli bir textarea'da tutulur, form onu gönderir.
+ *
+ * İKİ AYRI GERİ ÇAĞRI var ve aradaki fark önemli:
+ *
+ *   onChange   — içerik her senkronlandığında (blur dâhil) çalışır.
+ *   onUserEdit — YALNIZCA kullanıcı gerçekten yazdığında/biçimlendirdiğinde.
+ *
+ * İngilizce alanın "elle düzenlendi" kilidi `onUserEdit`e bağlı. Blur'da da
+ * tetiklenseydi, alana sadece tıklayıp çıkmak bile alanı kilitlerdi: tarayıcı
+ * innerHTML'i normalleştirdiği için (`<br />` → `<br>` gibi) metin
+ * değişmemiş olsa da farklı görünür.
  */
 export default function RichText({
   name,
   defaultValue,
-  onInput,
+  onUserEdit,
   placeholder,
   minHeight = 220,
 }: {
   name: string
   defaultValue: string
-  onInput?: (html: string) => void
+  onUserEdit?: (html: string) => void
   placeholder?: string
   minHeight?: number
 }) {
   const editorRef = useRef<HTMLDivElement>(null)
+  const editedRef = useRef(false)
   const [value, setValue] = useState(defaultValue)
-  const [ready, setReady] = useState(false)
 
+  // Sunucudan yeni bir değer geldiğinde (ör. arka plan çevirisi bitince)
+  // editörü tazele — ama kullanıcı bu alanda yazmışsa veya imleç içerideyse
+  // dokunma, yazdığını silmeyelim.
   useEffect(() => {
-    if (editorRef.current && !ready) {
-      editorRef.current.innerHTML = defaultValue || ''
-      setReady(true)
-    }
-  }, [defaultValue, ready])
+    const el = editorRef.current
+    if (!el) return
+    if (editedRef.current) return
+    if (document.activeElement === el) return
+    if (el.innerHTML === defaultValue) return
+    el.innerHTML = defaultValue || ''
+    setValue(defaultValue)
+  }, [defaultValue])
 
+  function readEditor(): string {
+    return editorRef.current?.innerHTML ?? ''
+  }
+
+  /** Gizli textarea'yı güncelle (form değeri). Kilit tetiklemez. */
   function sync() {
-    const html = editorRef.current?.innerHTML ?? ''
+    setValue(readEditor())
+  }
+
+  /** Gerçek kullanıcı düzenlemesi: hem değeri güncelle hem kilidi bildir. */
+  function userEdit() {
+    const html = readEditor()
+    editedRef.current = true
     setValue(html)
-    onInput?.(html)
+    onUserEdit?.(html)
   }
 
   function exec(command: string, arg?: string) {
     editorRef.current?.focus()
     document.execCommand(command, false, arg)
-    sync()
+    userEdit()
   }
 
   function addLink() {
@@ -91,15 +118,18 @@ export default function RichText({
         role="textbox"
         aria-multiline="true"
         aria-label={placeholder || 'Zengin metin'}
-        onInput={sync}
+        onInput={userEdit}
         onBlur={sync}
         // Yapıştırmada biçim taşımasın
         onPaste={(e) => {
           e.preventDefault()
           const text = e.clipboardData.getData('text/plain')
           document.execCommand('insertText', false, text)
-          sync()
+          userEdit()
         }}
+        // İçerik React tarafından değil, yukarıdaki effect ile yazılıyor.
+        // dangerouslySetInnerHTML kullanılsaydı React her yeniden çizimde
+        // içeriği geri yazıp kullanıcının yazdığını silebilirdi.
         className="prose-legal max-w-none px-4 py-3 text-sm focus:outline-none"
         style={{ minHeight }}
       />

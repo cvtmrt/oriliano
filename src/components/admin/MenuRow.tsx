@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
 import { StatusBadge } from './ui'
+import { useBilingualState } from './useBilingualState'
 
 export default function MenuRow({
   id,
@@ -26,8 +26,7 @@ export default function MenuRow({
   status?: string | null
   lockedVisibility?: boolean
 }) {
-  const [manual, setManual] = useState(status === 'MANUAL')
-  const [en, setEn] = useState(labelEn)
+  const { en, manual, edit } = useBilingualState(labelEn, status)
 
   return (
     <div className="grid gap-3 border-b border-graphite-200 py-4 last:border-b-0 sm:grid-cols-[4rem_1fr_1fr_auto] sm:items-start">
@@ -61,10 +60,7 @@ export default function MenuRow({
         <input
           name={`en__${id}`}
           value={en}
-          onChange={(e) => {
-            setEn(e.target.value)
-            setManual(true)
-          }}
+          onChange={(e) => edit(e.target.value)}
           className="field-input"
         />
         <p className="mt-1 font-mono text-[0.68rem] text-graphite-400">{pathEn}</p>
