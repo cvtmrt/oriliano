@@ -106,11 +106,15 @@ start → prisma migrate deploy && next start
 > `prisma migrate deploy` build'e konursa deploy `P1001: Can't reach database
 > server` ile düşer. Bu yüzden migration ilk açılışta uygulanır.
 
-Örnek içeriği yüklemek için deploy sonrası bir kez:
+Örnek içeriği yüklemenin **üç** yolu var. Railway'de veritabanı yalnızca özel
+ağdan (`postgres.railway.internal`) erişilebildiği için `railway run npm run
+db:seed` **kendi makinenizden çalışmaz** — Postgres servisine bir TCP proxy
+eklemediğiniz sürece.
 
-```bash
-railway run npm run db:seed
-```
+1. **Panelden (en kolay):** `/admin` → **Araçlar** → *Örnek verileri yükle*.
+2. **İlk açılışta:** `SEED_ON_BOOT=true` değişkenini ekleyin; sunucu ilk
+   açılışta yükler. Yükledikten sonra `false` yapın.
+3. **Yerelde:** kendi veritabanınıza karşı `npm run db:seed`.
 
 Seed **idempotenttir** — tekrar çalıştırmak elle yaptığınız düzenlemeleri ezmez,
 yalnızca eksik kayıtları ekler.
