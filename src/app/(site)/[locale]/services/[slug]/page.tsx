@@ -23,10 +23,6 @@ import { Reveal, Stagger, StaggerItem } from '@/components/motion'
 
 export const revalidate = 300
 
-export async function generateStaticParams() {
-  return []
-}
-
 export async function generateMetadata({
   params,
 }: {

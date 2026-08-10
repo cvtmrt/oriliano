@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter, Poppins, Source_Serif_4 } from 'next/font/google'
 import { notFound } from 'next/navigation'
 import '@/app/globals.css'
-import { locales, isLocale, htmlLang, type Locale } from '@/lib/i18n'
+import { isLocale, htmlLang, type Locale } from '@/lib/i18n'
 import { getSettings, getMenu, getT, siteName, getImage, mediaUrl } from '@/lib/content'
 import Header from '@/components/site/Header'
 import Footer from '@/components/site/Footer'
@@ -37,9 +37,19 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
-export function generateStaticParams() {
-  return locales.map((locale) => ({ locale }))
-}
+/**
+ * BİLEREK `generateStaticParams` YOK.
+ *
+ * Sayfalar build sırasında ön-üretilirse içerikleri o an dondurulur — ama
+ * Railway'de veritabanı build aşamasında erişilemiyor (özel ağ), dolayısıyla
+ * ön-üretilen HTML'e boş/varsayılan içerik gömülüyordu ve ilk `revalidate`
+ * penceresi dolana kadar site eski görünüyordu.
+ *
+ * Bunun yerine sayfalar ilk istekte üretilip önbelleğe alınıyor (ISR): içerik
+ * her zaman veritabanından gelir, sonrası yine hızlıdır. Panelden kaydedince
+ * `revalidatePath('/', 'layout')` önbelleği anında tazeliyor.
+ */
+export const dynamicParams = true
 
 export async function generateMetadata({
   params,
