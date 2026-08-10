@@ -75,6 +75,11 @@ Servisin **Variables** sekmesine girin:
 > `DATABASE_URL` değerini `${{ Postgres.DATABASE_URL }}` şeklinde referansla
 > verin. Şifre değişse bile bağlantı kendiliğinden güncellenir.
 
+> ⚠️ **`NODE_ENV=production` EKLEMEYİN.** npm bunu görünce `devDependencies`'i
+> kurmaz; Tailwind, PostCSS ve TypeScript build sırasında gerekli olduğu için
+> derleme `Cannot find module 'tailwindcss'` ile düşer. Next.js zaten `build`
+> ve `start` sırasında `NODE_ENV`'i kendisi ayarlar.
+
 ### 2.3 Görsel deposu için Volume — **atlamayın**
 
 Railway container'ının dosya sistemi **kalıcı değildir**: her deploy'da sıfırlanır.
