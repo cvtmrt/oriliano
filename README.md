@@ -94,11 +94,17 @@ yazmalı. "Hayır" görüyorsanız Volume bağlanmamıştır.
 
 ### 2.4 İlk deploy ve seed
 
-Build komutu (`package.json` → `scripts.build`) migration'ı kendisi çalıştırır:
+Migration **başlatma komutunda** çalışır, build'de değil:
 
 ```
-prisma generate && prisma migrate deploy && next build
+build → prisma generate && next build
+start → prisma migrate deploy && next start
 ```
+
+> **Neden böyle?** Railway'in özel ağı (`postgres.railway.internal`) yalnızca
+> çalışma zamanında erişilebilir; build aşamasında veritabanına ulaşılamaz.
+> `prisma migrate deploy` build'e konursa deploy `P1001: Can't reach database
+> server` ile düşer. Bu yüzden migration ilk açılışta uygulanır.
 
 Örnek içeriği yüklemek için deploy sonrası bir kez:
 
@@ -324,8 +330,9 @@ verilmez** — Motion'ın inline style'ı CSS'i ezer ve hover bozulur.
 | Komut | Ne yapar |
 |---|---|
 | `npm run dev` | Geliştirme sunucusu |
-| `npm run build` | `prisma generate` + `migrate deploy` + `next build` |
-| `npm start` | Üretim sunucusu |
+| `npm run build` | `prisma generate` + `next build` |
+| `npm start` | `prisma migrate deploy` + üretim sunucusu |
+| `npm run smoke` | 46 kontrollük duman testi (DB gerekir) |
 | `npm run typecheck` | TypeScript denetimi |
 | `npm run db:migrate` | Yerelde yeni migration |
 | `npm run db:deploy` | Bekleyen migration'ları uygula |
