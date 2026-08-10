@@ -652,6 +652,36 @@ export const teamDefaults: TeamDefault[] = [
 ]
 
 // ---------------------------------------------------------------------------
+// Örnek iletişim bilgileri
+//
+// Site boş görünmesin diye seed bunları doldurur, ama hepsi AÇIKÇA yer
+// tutucudur — gerçek bir adres, telefon veya hesap değildir. "Örnek verileri
+// sil" düğmesi yalnızca değeri hâlâ buradakiyle aynı olan alanları boşaltır;
+// siz gerçek bilgiyi girdiyseniz ona dokunmaz.
+// ---------------------------------------------------------------------------
+export const settingsExample = {
+  taglineTr: 'Hukuki danışmanlık ve temsil',
+  taglineEn: 'Legal advisory and representation',
+  phone: '+90 (312) 000 00 00',
+  phoneSecondary: '',
+  email: 'info@cetinerlegal.com',
+  addressTr: 'Örnek Mahallesi, Örnek Caddesi No: 1 Kat: 3\nÇankaya / Ankara',
+  addressEn: 'Örnek Mahallesi, Örnek Caddesi No: 1 Kat: 3\nÇankaya / Ankara',
+  workingHoursTr: 'Pazartesi – Cuma, 09:00 – 18:00',
+  workingHoursEn: 'Monday – Friday, 09:00 – 18:00',
+  linkedin: '',
+  instagram: '',
+  x: '',
+  facebook: '',
+  youtube: '',
+  // Harita bilerek boş: sahte bir adresi haritada göstermek yanıltıcı olur.
+  mapEmbedUrl: '',
+} as const
+
+/** Seed'in doldurduğu ayar alanları — temizlemede aynı liste kullanılır. */
+export const settingsExampleFields = Object.keys(settingsExample) as (keyof typeof settingsExample)[]
+
+// ---------------------------------------------------------------------------
 // Terim sözlüğü — çeviri system prompt'una buradan basılır, panelden düzenlenir
 // ---------------------------------------------------------------------------
 export const glossaryDefaults: { tr: string; en: string }[] = [

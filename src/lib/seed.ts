@@ -6,6 +6,8 @@ import {
   menuDefaults,
   seoDefaults,
   serviceDefaults,
+  settingsExample,
+  settingsExampleFields,
   teamDefaults,
   textDefaults,
 } from '@/content/defaults'
@@ -43,23 +45,26 @@ export async function runSeed(prisma: PrismaClient): Promise<SeedResult> {
         id: 1,
         siteNameTr: 'Çetiner Hukuk ve Danışmanlık',
         siteNameEn: 'Çetiner Hukuk ve Danışmanlık',
-        taglineTr: 'Hukuki danışmanlık ve temsil',
-        taglineEn: 'Legal advisory and representation',
         accentColor: '#A9834B',
-        // Gerçek iletişim bilgileri panelden girilecek — uydurma veri yok.
-        phone: '',
-        email: '',
-        addressTr: '',
-        addressEn: '',
-        workingHoursTr: 'Pazartesi – Cuma, 09:00 – 18:00',
-        workingHoursEn: 'Monday – Friday, 09:00 – 18:00',
+        ...settingsExample,
         baseUrl: process.env.SITE_URL || 'https://cetinerlegal.com',
         seedVersion: SEED_VERSION,
       },
     })
     settingsCreated = true
   } else {
-    await prisma.siteSetting.update({ where: { id: 1 }, data: { seedVersion: SEED_VERSION } })
+    // Var olan kayıtta YALNIZCA boş alanları doldur — elle girilen gerçek
+    // bilgiye asla dokunma.
+    const fill: Record<string, string> = {}
+    for (const field of settingsExampleFields) {
+      const current = String((existingSettings as unknown as Record<string, unknown>)[field] ?? '')
+      const example = settingsExample[field]
+      if (!current.trim() && example) fill[field] = example
+    }
+    await prisma.siteSetting.update({
+      where: { id: 1 },
+      data: { ...fill, seedVersion: SEED_VERSION },
+    })
   }
 
   let newTexts = 0

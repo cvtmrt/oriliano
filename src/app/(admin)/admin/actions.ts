@@ -15,7 +15,7 @@ import {
   lockFieldManual,
   type EntityName,
 } from '@/lib/translation-queue'
-import { SEED_VERSION } from '@/content/defaults'
+import { SEED_VERSION, settingsExample, settingsExampleFields } from '@/content/defaults'
 import { runSeed } from '@/lib/seed'
 
 /**
@@ -611,11 +611,8 @@ export async function retryFailedTranslationsAction(): Promise<void> {
  * "Örnek verileri temizle" — seed'in eklediği kayıtları siler.
  * Elle girilen/düzenlenen içeriğe dokunmaz (seeded=false olanlar kalır).
  */
-export async function clearSeedDataAction(form: FormData): Promise<void> {
+export async function clearSeedDataAction(): Promise<void> {
   await requireAdmin()
-  if (str(form, 'confirm') !== 'TEMIZLE') {
-    throw new Error('Onay metni hatalı. Kutuya TEMIZLE yazın.')
-  }
 
   await prisma.service.deleteMany({ where: { seeded: true } })
   await prisma.teamMember.deleteMany({ where: { seeded: true } })
@@ -624,10 +621,25 @@ export async function clearSeedDataAction(form: FormData): Promise<void> {
   await prisma.mediaSlot.deleteMany({ where: { seeded: true } })
   await prisma.seoMeta.deleteMany({ where: { seeded: true } })
   await prisma.glossaryTerm.deleteMany({ where: { seeded: true } })
-  await prisma.siteSetting.updateMany({ where: { id: 1 }, data: { seedVersion: null } })
+
+  // Ayarlar tek satır olduğu için silinmez; yalnızca DEĞERİ HÂLÂ ÖRNEK OLAN
+  // alanlar boşaltılır. Gerçek bilgi girdiyseniz ona dokunulmaz.
+  const settings = await prisma.siteSetting.findUnique({ where: { id: 1 } })
+  if (settings) {
+    const reset: Record<string, string> = {}
+    for (const field of settingsExampleFields) {
+      const current = String((settings as unknown as Record<string, unknown>)[field] ?? '')
+      if (current && current === settingsExample[field]) reset[field] = ''
+    }
+    await prisma.siteSetting.update({
+      where: { id: 1 },
+      data: { ...reset, seedVersion: null },
+    })
+  }
 
   refreshSite()
   revalidatePath('/admin/tools')
+  revalidatePath('/admin/settings')
 }
 
 /**

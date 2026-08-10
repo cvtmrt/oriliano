@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { defaultLocale, locales, type Locale } from './lib/i18n'
 import { isCanonicalSegment, routeFileSegment, routeKeyFromSegment, routeSegment } from './lib/routes'
+import { GATE_COOKIE, GATE_MAX_AGE, GATE_QUERY, gateKey, safeEqual } from './lib/admin-gate'
 
 /**
  * İKİ İŞ YAPAR:
@@ -32,8 +33,12 @@ function preferredLocale(request: NextRequest): Locale {
 export function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl
 
+  // Panel kapısı: anahtarsız istek giriş formunu bile görmesin.
+  if (pathname === '/admin' || pathname.startsWith('/admin/')) {
+    return guardAdmin(request)
+  }
+
   if (
-    pathname.startsWith('/admin') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/_next') ||
     pathname === '/sitemap.xml' ||
@@ -84,6 +89,38 @@ export function middleware(request: NextRequest) {
   }
 
   return NextResponse.next()
+}
+
+/**
+ * Panelin önündeki gizli anahtar kapısı.
+ *
+ * - Çerezde geçerli anahtar varsa: normal devam.
+ * - `?k=<anahtar>` doğruysa: çerezi yaz, adres çubuğunu temizlemek için
+ *   sorgusuz hâline yönlendir.
+ * - Aksi hâlde: 404. Panelin varlığını sızdırmamak için 401 değil.
+ */
+function guardAdmin(request: NextRequest) {
+  const key = gateKey()
+  if (!key) return NextResponse.next() // kapı kapalı (yerel geliştirme)
+
+  const cookie = request.cookies.get(GATE_COOKIE)?.value
+  if (cookie && safeEqual(cookie, key)) return NextResponse.next()
+
+  const supplied = request.nextUrl.searchParams.get(GATE_QUERY)
+  if (supplied && safeEqual(supplied, key)) {
+    const clean = new URL(request.nextUrl.pathname, request.url)
+    const response = NextResponse.redirect(clean)
+    response.cookies.set(GATE_COOKIE, key, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: request.nextUrl.protocol === 'https:',
+      path: '/',
+      maxAge: GATE_MAX_AGE,
+    })
+    return response
+  }
+
+  return new NextResponse(null, { status: 404 })
 }
 
 export const config = {

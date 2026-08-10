@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Source_Serif_4 } from 'next/font/google'
+import { Inter, Poppins, Source_Serif_4 } from 'next/font/google'
 import { notFound } from 'next/navigation'
 import '@/app/globals.css'
 import { locales, isLocale, htmlLang, type Locale } from '@/lib/i18n'
@@ -18,6 +18,17 @@ const serif = Source_Serif_4({
   subsets: ['latin', 'latin-ext'],
   display: 'swap',
   variable: '--font-serif',
+})
+
+/**
+ * Yalnızca geçici yazı logosu için. Logodaki yuvarlak geometrik sans'a en
+ * yakın karşılık; panelden gerçek logo yüklenince zaten kullanılmıyor.
+ */
+const wordmark = Poppins({
+  subsets: ['latin', 'latin-ext'],
+  weight: ['500', '600'],
+  display: 'swap',
+  variable: '--font-wordmark',
 })
 
 export const viewport: Viewport = {
@@ -74,7 +85,7 @@ export default async function SiteLayout({
   return (
     <html
       lang={htmlLang[locale]}
-      className={`${sans.variable} ${serif.variable} no-js`}
+      className={`${sans.variable} ${serif.variable} ${wordmark.variable} no-js`}
       style={{ ['--accent' as string]: accent, ['--accent-soft' as string]: `${accent}1A` }}
       suppressHydrationWarning
     >

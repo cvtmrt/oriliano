@@ -25,9 +25,10 @@ export default function Wordmark({
   return (
     <span className={`inline-flex flex-col leading-none ${className}`} aria-hidden>
       <span
-        className={`font-sans font-semibold tracking-tight text-graphite-700 ${
+        className={`font-semibold lowercase tracking-tight text-graphite-700 ${
           compact ? 'text-lg' : 'text-xl sm:text-2xl'
         }`}
+        style={{ fontFamily: 'var(--font-wordmark), var(--font-sans), sans-serif' }}
       >
         {chars.map((ch, i) => (
           <span key={i} className={i === 0 || i === lastIndex ? 'text-navy-700' : undefined}>
@@ -39,9 +40,10 @@ export default function Wordmark({
         <>
           <span className="mt-1 block h-px w-full bg-navy-700/70" />
           <span
-            className={`mt-1 font-sans font-medium uppercase text-graphite-600 ${
+            className={`mt-1 font-medium uppercase text-graphite-600 ${
               compact ? 'text-[0.5rem] tracking-[0.22em]' : 'text-[0.58rem] tracking-[0.26em]'
             }`}
+            style={{ fontFamily: 'var(--font-wordmark), var(--font-sans), sans-serif' }}
           >
             {rest}
           </span>

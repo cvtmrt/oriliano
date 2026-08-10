@@ -10,6 +10,7 @@ import {
 } from '../actions'
 import { PageTitle, Card, SubmitButton, Banner } from '@/components/admin/ui'
 import TranslationTest from '@/components/admin/TranslationTest'
+import ConfirmButton from '@/components/admin/ConfirmButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -113,18 +114,18 @@ export default async function ToolsPage() {
           {totalSeeded === 0 ? (
             <Banner type="success">Örnek veri kalmadı.</Banner>
           ) : (
-            <form action={clearSeedDataAction} className="space-y-3">
-              <div>
-                <label className="field-label" htmlFor="confirm">
-                  Onaylamak için kutuya <code>TEMIZLE</code> yazın
-                </label>
-                <input id="confirm" name="confirm" className="field-input max-w-xs" autoComplete="off" />
-              </div>
-              <SubmitButton variant="danger">Örnek verileri sil</SubmitButton>
-              <p className="text-xs text-graphite-500">
-                Bu işlem geri alınamaz. Silinen metin alanları koddaki varsayılanlara döner.
+            <>
+              <ConfirmButton
+                action={clearSeedDataAction}
+                confirmText="Örnek veriler silinecek. Sizin girdiğiniz veya düzenlediğiniz içeriğe dokunulmaz. Devam edilsin mi?"
+                label="Örnek verileri sil"
+              />
+              <p className="mt-3 text-xs text-graphite-500">
+                Geri alınamaz — ama istediğiniz zaman yukarıdaki düğmeyle yeniden
+                yükleyebilirsiniz. İletişim bilgilerinden yalnızca hâlâ örnek değerinde
+                olanlar boşaltılır.
               </p>
-            </form>
+            </>
           )}
         </Card>
 
