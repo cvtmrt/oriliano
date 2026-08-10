@@ -27,8 +27,13 @@ export type Provider = 'gemini' | 'anthropic'
 export const ANTHROPIC_MODEL = 'claude-opus-5'
 /** Gemini model adları zamanla değişiyor; env ile geçersiz kılınabilir. */
 export const GEMINI_MODEL = process.env.GEMINI_MODEL?.trim() || 'gemini-2.5-flash'
-/** İstenen model bulunamazsa sırayla bunlar denenir. */
-const GEMINI_FALLBACK_MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash']
+/**
+ * İstenen model bulunamazsa (404) sırayla bunlar denenir.
+ * `*-latest` takma adları Google tarafından güncel tutuluyor, bu yüzden
+ * sürüm numarası vermek yerine onlara düşüyoruz — model emekliye ayrılsa da
+ * çeviri durmaz. (gemini-1.5-flash artık 404 veriyor, bu yüzden listede yok.)
+ */
+const GEMINI_FALLBACK_MODELS = ['gemini-flash-latest', 'gemini-flash-lite-latest']
 
 let client: Anthropic | null = null
 
