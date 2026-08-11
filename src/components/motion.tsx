@@ -220,7 +220,12 @@ export function TextReveal({
         }}
       >
         {words.map((word, i) => (
-          <span key={`${word}-${i}`} className="inline-block overflow-hidden align-bottom">
+          // pb + eşit negatif mb: maske penceresini alt çizginin altına genişletir,
+          // yoksa sıkı satır aralığında y/ş/ğ kuyrukları kesiliyor (overflow-hidden).
+          <span
+            key={`${word}-${i}`}
+            className="-mb-[0.16em] inline-block overflow-hidden pb-[0.16em] align-bottom"
+          >
             <motion.span
               className="inline-block"
               variants={{

@@ -166,3 +166,71 @@
   opacity: 1 !important;
   transform: none !important;
 }
+
+/* ---------------------------------------------------------------------------
+   Ortam animasyonları — tamamı CSS'te, Framer Motion bu elemanlara dokunmaz
+   (aynı transform'u iki sistem yönetirse Motion inline style CSS'i ezer).
+   --------------------------------------------------------------------------- */
+
+/* Hero fotoğraflarında çok yavaş, fark edilir edilmez zoom (Ken Burns). */
+@keyframes kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.07);
+  }
+}
+.kenburns {
+  animation: kenburns 26s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+/* Anasayfanın düz lacivert hero'sunda süzülen ışımalar. */
+@keyframes drift-a {
+  from {
+    transform: translate3d(-5%, -4%, 0);
+  }
+  to {
+    transform: translate3d(6%, 5%, 0);
+  }
+}
+@keyframes drift-b {
+  from {
+    transform: translate3d(5%, 6%, 0);
+  }
+  to {
+    transform: translate3d(-6%, -5%, 0);
+  }
+}
+.drift-a {
+  animation: drift-a 18s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.drift-b {
+  animation: drift-b 22s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+/* Altın ayraç çizgisi soldan sağa çizilir (hero başlığının altında). */
+@keyframes rule-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.rule-grow {
+  transform-origin: left center;
+  animation: rule-grow 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.55s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kenburns,
+  .drift-a,
+  .drift-b,
+  .rule-grow {
+    animation: none !important;
+  }
+}

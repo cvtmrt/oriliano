@@ -28,18 +28,23 @@ export default function PageHero({
               alt={image!.alt}
               ratio="h-full"
               className="h-full w-full"
+              imageClassName="kenburns"
               priority
               sizes="100vw"
             />
           </div>
-          <div className="absolute inset-0 bg-navy-950/72" />
+          {/* /72 Tailwind opasite skalasında yok — sınıf üretilmiyordu ve örtü
+              hiç uygulanmıyordu; 5'in katı olmalı. */}
+          <div className="absolute inset-0 bg-navy-950/70" />
         </>
       ) : null}
 
-      {/* Sabit min-yükseklik: TR/EN arasında başlık satır sayısı değişince
-          hero'nun boyu oynamasın — iki dilde de aynı yükseklik. */}
+      {/* Sabit min-yükseklik: TR/EN arasında başlık/alt metin satır sayısı
+          değişince hero'nun boyu oynamasın. Değerler EN UZUN dilin en kötü
+          durumuna göre seçildi (2 satır başlık + 3 satır alt metin dahi
+          min'in altında kalır) — iki dilde de blok aynı boyda. */}
       <div
-        className={`container relative flex min-h-[21rem] flex-col justify-center py-16 sm:min-h-[24rem] sm:py-20 lg:min-h-[27rem] lg:py-24 ${
+        className={`container relative flex min-h-[26rem] flex-col justify-center py-16 sm:min-h-[28rem] sm:py-20 lg:min-h-[31rem] lg:py-24 ${
           hasImage ? 'text-white' : ''
         }`}
       >
@@ -70,8 +75,10 @@ export default function PageHero({
             </RevealOnMount>
           ) : null}
 
-          <Reveal delay={340}>
-            <hr className={`rule mt-8 ${hasImage ? '!bg-white/60' : ''}`} />
+          {/* Çizginin transform'u CSS animasyonunda (rule-grow); Reveal yalnızca
+              sarmalayıcının opacity/y'sini yönetir — çakışma yok. */}
+          <Reveal delay={340} direction="none">
+            <hr className={`rule rule-grow mt-8 ${hasImage ? '!bg-white/60' : ''}`} />
           </Reveal>
         </div>
       </div>

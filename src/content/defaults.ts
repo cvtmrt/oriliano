@@ -410,16 +410,16 @@ export const mediaSlotDefaults: MediaSlotDefault[] = [
   // Anasayfa hero'suna bilerek paket görsel verilmedi — müşteri isteği:
   // fotoğraf yüklenene kadar düz lacivert kalsın.
   m('home.hero.image', 'home', 'Anasayfa hero görseli', 'Büro çalışma alanı', 'Office working area'),
-  m('home.intro.image', 'home', 'Anasayfa tanıtım görseli', 'Lacivert ve altın tasarım kompozisyonu', 'Navy and gold design composition', BODY),
+  m('home.intro.image', 'home', 'Anasayfa tanıtım görseli', 'Belge imzalayan el', 'A hand signing a document', BODY),
   m('home.cta.background', 'home', 'Anasayfa alt CTA arka planı', 'Arka plan dokusu', 'Background texture', { width: 1920, height: 800 }),
-  m('about.hero.image', 'about', 'Hakkımızda hero görseli', 'Sütun motifli tasarım görseli', 'Column motif design graphic', HERO),
-  m('about.body.image', 'about', 'Hakkımızda bölüm görseli', 'Kitaplık motifli tasarım görseli', 'Bookshelf motif design graphic', BODY),
-  m('services.hero.image', 'services', 'Hizmetler hero görseli', 'Izgara motifli tasarım görseli', 'Grid motif design graphic', HERO),
-  m('legalServices.hero.image', 'legalServices', 'Avukatlık ve Danışmanlık hero görseli', 'Sözleşme motifli tasarım görseli', 'Contract motif design graphic', HERO),
-  m('mediation.hero.image', 'mediation', 'Arabuluculuk hero görseli', 'Kesişen daireler motifli tasarım görseli', 'Intersecting circles design graphic', HERO),
-  m('team.hero.image', 'team', 'Ekibimiz hero görseli', 'Daire motifli tasarım görseli', 'Circle motif design graphic', HERO),
-  m('contact.hero.image', 'contact', 'İletişim hero görseli', 'Halka motifli tasarım görseli', 'Ring motif design graphic', HERO),
-  m('publications.hero.image', 'publications', 'Yayınlar hero görseli', 'Yayın rafı motifli tasarım görseli', 'Publication shelf design graphic', HERO),
+  m('about.hero.image', 'about', 'Hakkımızda hero görseli', 'Kütüphanede mermer büstler ve eski kitaplar', 'Marble busts and old books in a library', HERO),
+  m('about.body.image', 'about', 'Hakkımızda bölüm görseli', 'Kitaplık rafları', 'Bookshelves', BODY),
+  m('services.hero.image', 'services', 'Hizmetler hero görseli', 'Ahşap tokmak yakın çekimi', 'Close-up of a wooden gavel', HERO),
+  m('legalServices.hero.image', 'legalServices', 'Avukatlık ve Danışmanlık hero görseli', 'Adalet heykeli', 'Statue of Lady Justice', HERO),
+  m('mediation.hero.image', 'mediation', 'Arabuluculuk hero görseli', 'Boş toplantı salonu', 'Empty boardroom', HERO),
+  m('team.hero.image', 'team', 'Ekibimiz hero görseli', 'Cam bölmeli ofis koridoru', 'Office corridor with glass partitions', HERO),
+  m('contact.hero.image', 'contact', 'İletişim hero görseli', 'Yüksek ofis binaları', 'High-rise office buildings', HERO),
+  m('publications.hero.image', 'publications', 'Yayınlar hero görseli', 'Kitaplarla dolu kütüphane duvarı', 'Library wall full of books', HERO),
   m('seo.defaultOg', 'seo', 'Varsayılan paylaşım görseli (OG)', 'Çetiner Hukuk ve Danışmanlık', 'Çetiner Hukuk ve Danışmanlık', { width: 1200, height: 630 }),
 ]
 

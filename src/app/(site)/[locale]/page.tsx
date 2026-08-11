@@ -57,14 +57,27 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 alt={hero.alt}
                 ratio="h-full"
                 className="h-full w-full"
+                imageClassName="kenburns"
                 priority
                 sizes="100vw"
               />
             </div>
-            <div className="absolute inset-0 bg-gradient-to-br from-navy-950/92 via-navy-900/85 to-navy-800/70" />
+            {/* /92 opasite skalasında yok — from rengi hiç üretilmiyordu. */}
+            <div className="absolute inset-0 bg-gradient-to-br from-navy-950/90 via-navy-900/85 to-navy-800/70" />
           </>
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-b from-navy-900 to-navy-950" aria-hidden />
+          <div className="absolute inset-0 overflow-hidden" aria-hidden>
+            <div className="absolute inset-0 bg-gradient-to-b from-navy-900 to-navy-950" />
+            {/* Süzülen ışımalar: düz zemini öldürmeden nefes aldırır */}
+            <div
+              className="drift-a absolute -left-48 -top-48 h-[38rem] w-[38rem] rounded-full opacity-30"
+              style={{ background: 'radial-gradient(circle, #1E2A5E 0%, transparent 62%)' }}
+            />
+            <div
+              className="drift-b absolute -bottom-56 right-[-10rem] h-[42rem] w-[42rem] rounded-full opacity-[0.13]"
+              style={{ background: 'radial-gradient(circle, #A9834B 0%, transparent 60%)' }}
+            />
+          </div>
         )}
 
         {/* Alt kenarda, ortada yoğunlaşan çok ince altın çizgi */}
@@ -77,7 +90,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           aria-hidden
         />
 
-        <div className="container relative flex min-h-[78vh] flex-col justify-center py-20 text-white sm:min-h-[80vh] lg:py-28">
+        {/* Mobilde vh yerine sabit rem: küçük ekranda uzun Türkçe başlık 78vh'i
+            aşınca bölüm metinle birlikte büyüyor ve TR/EN yükseklikleri
+            farklılaşıyordu. Sabit taban + geniş ekranda vh. */}
+        <div className="container relative flex min-h-[46rem] flex-col justify-center py-20 text-white sm:min-h-[80vh] lg:py-28">
           <div className="max-w-3xl">
             <RevealOnMount>
               <p className="eyebrow !text-white/75">{t('home.hero.eyebrow')}</p>
