@@ -4,6 +4,8 @@ import { prisma } from '@/lib/prisma'
 import { getFieldMeta } from '@/lib/translation-queue'
 import { saveSeoAction } from '../actions'
 import { PageTitle, Card, Empty } from '@/components/admin/ui'
+import LanguageHint from '@/components/admin/LanguageHint'
+import { translationConfigured } from '@/lib/translate'
 import SaveBar from '@/components/admin/SaveBar'
 import SeoRow from '@/components/admin/SeoRow'
 
@@ -42,6 +44,8 @@ export default async function SeoPage() {
         title="SEO"
         description="Sayfa başlıkları, açıklamaları ve paylaşım görselleri. Hizmet ve ekip detay sayfalarının SEO alanları kendi düzenleme ekranlarındadır."
       />
+
+      <LanguageHint configured={translationConfigured()} />
 
       {ordered.length === 0 ? (
         <Empty>

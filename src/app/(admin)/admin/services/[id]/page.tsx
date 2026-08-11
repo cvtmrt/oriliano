@@ -4,6 +4,8 @@ import { getCurrentAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { getFieldMeta } from '@/lib/translation-queue'
 import { PageTitle } from '@/components/admin/ui'
+import LanguageHint from '@/components/admin/LanguageHint'
+import { translationConfigured } from '@/lib/translate'
 import ServiceForm, { type ServiceFormValues } from '@/components/admin/ServiceForm'
 
 export const dynamic = 'force-dynamic'
@@ -47,6 +49,7 @@ export default async function ServiceEditPage({ params }: { params: Promise<{ id
             </Link>
           }
         />
+        <LanguageHint configured={translationConfigured()} />
         <ServiceForm values={emptyService} meta={{}} />
       </>
     )
@@ -70,6 +73,7 @@ export default async function ServiceEditPage({ params }: { params: Promise<{ id
           </Link>
         }
       />
+      <LanguageHint configured={translationConfigured()} />
       <ServiceForm
         values={{
           id: service.id,

@@ -17,6 +17,7 @@ import {
 } from '@/lib/translation-queue'
 import { SEED_VERSION, settingsExample, settingsExampleFields } from '@/content/defaults'
 import { runSeed } from '@/lib/seed'
+import { normalizeWhatsapp } from '@/lib/phone'
 
 /**
  * Panelin tüm yazma işlemleri. Her aksiyon önce yetki kontrolü yapar.
@@ -161,8 +162,9 @@ export async function saveSettingsAction(form: FormData): Promise<void> {
     notifyEmail: str(form, 'notifyEmail'),
     autoReplyEnabled: bool(form, 'autoReplyEnabled'),
     floatingEnabled: bool(form, 'floatingEnabled'),
-    // WhatsApp numarası yalnız rakam olmalı (wa.me biçimi)
-    whatsappNumber: str(form, 'whatsappNumber').replace(/\D/g, ''),
+    // 0532… gibi yerel biçimde girilse de wa.me'nin istediği 90532… hâline
+    // çevrilir; yoksa düğme görünür ama tıklayınca hata sayfası açardı.
+    whatsappNumber: normalizeWhatsapp(str(form, 'whatsappNumber')),
     showCallButton: bool(form, 'showCallButton'),
   }
 

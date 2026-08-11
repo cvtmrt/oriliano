@@ -4,6 +4,8 @@ import { getCurrentAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { getFieldMeta } from '@/lib/translation-queue'
 import { PageTitle } from '@/components/admin/ui'
+import LanguageHint from '@/components/admin/LanguageHint'
+import { translationConfigured } from '@/lib/translate'
 import TeamForm, { type TeamFormValues } from '@/components/admin/TeamForm'
 
 export const dynamic = 'force-dynamic'
@@ -43,6 +45,7 @@ export default async function TeamEditPage({ params }: { params: Promise<{ id: s
             </Link>
           }
         />
+        <LanguageHint configured={translationConfigured()} />
         <TeamForm values={emptyMember} meta={{}} />
       </>
     )
@@ -66,6 +69,7 @@ export default async function TeamEditPage({ params }: { params: Promise<{ id: s
           </Link>
         }
       />
+      <LanguageHint configured={translationConfigured()} />
       <TeamForm
         values={{
           id: member.id,

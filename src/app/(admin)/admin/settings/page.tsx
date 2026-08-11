@@ -3,8 +3,11 @@ import { getCurrentAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { getFieldMeta } from '@/lib/translation-queue'
 import { mailConfigured } from '@/lib/mail'
+import { whatsappLink } from '@/lib/phone'
 import { saveSettingsAction } from '../actions'
 import { PageTitle, Card, Banner } from '@/components/admin/ui'
+import LanguageHint from '@/components/admin/LanguageHint'
+import { translationConfigured } from '@/lib/translate'
 import SaveBar from '@/components/admin/SaveBar'
 import BilingualField from '@/components/admin/BilingualField'
 import MediaPicker from '@/components/admin/MediaPicker'
@@ -38,6 +41,7 @@ export default async function SettingsPage() {
   }
 
   const mailReady = mailConfigured()
+  const waLink = whatsappLink(settings.whatsappNumber, settings.whatsappTextTr)
   const meta = await getFieldMeta('SiteSetting', '1').catch(() => ({}) as Record<string, { status: string }>)
 
   return (
@@ -46,6 +50,8 @@ export default async function SettingsPage() {
         title="Genel Ayarlar"
         description="Site adı, logo, iletişim bilgileri ve sosyal medya. Bu bilgiler üst menü, alt bilgi, iletişim sayfası ve yapılandırılmış veride (SEO) kullanılır."
       />
+
+      <LanguageHint configured={translationConfigured()} />
 
       <form action={saveSettingsAction} className="space-y-6">
         <Card title="Kimlik">
@@ -115,7 +121,18 @@ export default async function SettingsPage() {
               <label className="field-label" htmlFor="phone">
                 Telefon
               </label>
-              <input id="phone" name="phone" defaultValue={settings.phone} className="field-input" />
+              <input
+                id="phone"
+                name="phone"
+                defaultValue={settings.phone}
+                placeholder="+90 (312) 123 45 67"
+                className="field-input"
+              />
+              <p className="mt-1.5 text-xs text-graphite-500">
+                Sitede <strong>yazdığınız gibi görünür</strong>; boşluk ve parantez serbest.
+                Tıklanabilir arama bağlantısı otomatik üretilir. Bu numara üst menüde, alt bilgide,
+                iletişim sayfasında ve &quot;Ara&quot; düğmesinde kullanılır.
+              </p>
             </div>
             <div>
               <label className="field-label" htmlFor="phoneSecondary">
@@ -125,14 +142,29 @@ export default async function SettingsPage() {
                 id="phoneSecondary"
                 name="phoneSecondary"
                 defaultValue={settings.phoneSecondary}
+                placeholder="+90 (312) 123 45 68"
                 className="field-input"
               />
+              <p className="mt-1.5 text-xs text-graphite-500">
+                Opsiyonel. Girilirse iletişim sayfasında birincinin altında görünür.
+              </p>
             </div>
             <div className="sm:col-span-2">
               <label className="field-label" htmlFor="email">
                 E-posta
               </label>
-              <input id="email" name="email" type="email" defaultValue={settings.email} className="field-input" />
+              <input
+                id="email"
+                name="email"
+                type="email"
+                defaultValue={settings.email}
+                placeholder="info@cetinerlegal.com"
+                className="field-input"
+              />
+              <p className="mt-1.5 text-xs text-graphite-500">
+                Tek adres. Form bildirimlerinin gideceği adresi ayrıca aşağıdan
+                belirleyebilirsiniz; boş bırakırsanız bu adres kullanılır.
+              </p>
             </div>
           </div>
 
@@ -146,7 +178,7 @@ export default async function SettingsPage() {
               valueEn={settings.addressEn}
               status={meta.address?.status}
               target={{ entity: 'SiteSetting', entityId: '1', field: 'address' }}
-              help="Satır sonları korunur. Adresler çeviride olduğu gibi bırakılır."
+              help="Her satırı ayrı yazın (Enter ile); site aynı biçimde gösterir. Örnek: “Kızılırmak Mah. 1450. Sok. No: 5 Kat: 3” alt satır “Çankaya / Ankara”. Adresler çeviride olduğu gibi bırakılır."
             />
             <BilingualField
               name="workingHours"
@@ -155,7 +187,7 @@ export default async function SettingsPage() {
               valueEn={settings.workingHoursEn}
               status={meta.workingHours?.status}
               target={{ entity: 'SiteSetting', entityId: '1', field: 'workingHours' }}
-              help="Örnek: Pazartesi – Cuma, 09:00 – 18:00"
+              help="Serbest metin, yazdığınız gibi görünür. Örnek: “Pazartesi – Cuma, 09:00 – 18:00” veya “Hafta içi 09:00–18:00, Cumartesi randevu ile”."
             />
           </div>
         </Card>
@@ -183,17 +215,31 @@ export default async function SettingsPage() {
                 <label className="field-label" htmlFor="mapLat">
                   Enlem (opsiyonel)
                 </label>
-                <input id="mapLat" name="mapLat" defaultValue={settings.mapLat} className="field-input" />
+                <input
+                  id="mapLat"
+                  name="mapLat"
+                  defaultValue={settings.mapLat}
+                  placeholder="39.9208"
+                  className="field-input"
+                />
               </div>
               <div>
                 <label className="field-label" htmlFor="mapLng">
                   Boylam (opsiyonel)
                 </label>
-                <input id="mapLng" name="mapLng" defaultValue={settings.mapLng} className="field-input" />
+                <input
+                  id="mapLng"
+                  name="mapLng"
+                  defaultValue={settings.mapLng}
+                  placeholder="32.8541"
+                  className="field-input"
+                />
               </div>
             </div>
             <p className="text-xs text-graphite-500">
-              Enlem/boylam girilirse arama motorlarına konum bilgisi de sunulur.
+              Google Haritalar&apos;da konuma sağ tıklayınca en üstte çıkan iki sayıdır
+              (<code>39.9208, 32.8541</code>): soldaki enlem, sağdaki boylam. Nokta kullanın,
+              virgül değil. Girilirse arama motorlarına konum bilgisi de sunulur.
             </p>
           </div>
         </Card>
@@ -308,9 +354,28 @@ export default async function SettingsPage() {
               className="field-input"
             />
             <p className="mt-1.5 text-xs text-graphite-500">
-              Ülke koduyla, yalnız rakam: <code>905321234567</code>. Boş bırakılırsa WhatsApp
-              düğmesi görünmez.
+              <code>0532 123 45 67</code> gibi alışık olduğunuz biçimde yazabilirsiniz; kaydederken
+              WhatsApp&apos;ın istediği <code>905321234567</code> biçimine çevrilir. Boş bırakılırsa
+              WhatsApp düğmesi görünmez.
             </p>
+            {waLink ? (
+              <p className="mt-2 text-xs text-graphite-600">
+                Şu anki bağlantı:{' '}
+                <a
+                  href={waLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="break-all font-mono text-navy-700 underline"
+                >
+                  {waLink}
+                </a>{' '}
+                — tıklayıp doğru numaraya gittiğini kontrol edebilirsiniz.
+              </p>
+            ) : (
+              <p className="mt-2 text-xs text-amber-700">
+                Numara girilmediği için sitede WhatsApp düğmesi görünmüyor.
+              </p>
+            )}
           </div>
 
           <div className="mt-5">
@@ -357,14 +422,16 @@ export default async function SettingsPage() {
                   id={key}
                   name={key}
                   defaultValue={(settings as unknown as Record<string, string>)[key]}
-                  placeholder="https://…"
+                  placeholder={`https://${key === 'x' ? 'x.com' : key + '.com'}/kullaniciadi`}
                   className="field-input"
                 />
               </div>
             ))}
           </div>
           <p className="mt-4 text-xs text-graphite-500">
-            Boş bırakılan hesaplar alt bilgide gösterilmez.
+            <strong>Kullanıcı adı değil, tam adres yazın</strong> —{' '}
+            <code>@cetinerhukuk</code> değil <code>https://instagram.com/cetinerhukuk</code>.
+            Adres tarayıcıdan kopyalanabilir. Boş bırakılan hesaplar alt bilgide gösterilmez.
           </p>
         </Card>
 
@@ -380,8 +447,10 @@ export default async function SettingsPage() {
             className="field-input"
           />
           <p className="mt-1.5 text-xs text-graphite-500">
+            <code>https://</code> ile başlasın, <strong>sonunda eğik çizgi olmasın</strong>:{' '}
+            <code>https://cetinerlegal.com</code> (doğru), <code>cetinerlegal.com/</code> (yanlış).
             Kanonik adresler, hreflang etiketleri, sitemap ve paylaşım görselleri bu adrese göre
-            üretilir. Sonunda eğik çizgi olmamalı.
+            üretilir; yanlış girilirse arama motorlarına yanlış adres bildirilir.
           </p>
         </Card>
 

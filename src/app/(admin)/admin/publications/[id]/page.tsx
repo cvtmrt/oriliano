@@ -4,6 +4,8 @@ import { getCurrentAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { getFieldMeta } from '@/lib/translation-queue'
 import { PageTitle } from '@/components/admin/ui'
+import LanguageHint from '@/components/admin/LanguageHint'
+import { translationConfigured } from '@/lib/translate'
 import PublicationForm, { type PublicationFormValues } from '@/components/admin/PublicationForm'
 
 export const dynamic = 'force-dynamic'
@@ -50,6 +52,7 @@ export default async function PublicationEditPage({
             </Link>
           }
         />
+        <LanguageHint configured={translationConfigured()} />
         <PublicationForm values={emptyPublication} meta={{}} />
       </>
     )
@@ -72,6 +75,7 @@ export default async function PublicationEditPage({
           </Link>
         }
       />
+      <LanguageHint configured={translationConfigured()} />
       <PublicationForm
         values={{
           id: item.id,

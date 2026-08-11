@@ -5,6 +5,8 @@ import { prisma } from '@/lib/prisma'
 import { getFieldMeta } from '@/lib/translation-queue'
 import { saveTextsAction, translateGroupAction } from '../../actions'
 import { PageTitle, Card, Banner } from '@/components/admin/ui'
+import LanguageHint from '@/components/admin/LanguageHint'
+import { translationConfigured } from '@/lib/translate'
 import SaveBar from '@/components/admin/SaveBar'
 import BilingualField from '@/components/admin/BilingualField'
 import MediaPicker from '@/components/admin/MediaPicker'
@@ -48,6 +50,8 @@ export default async function ContentGroupPage({
           </Link>
         }
       />
+
+      <LanguageHint configured={translationConfigured()} />
 
       <form action={translateGroupAction} className="mb-6">
         <input type="hidden" name="group" value={group} />
