@@ -19,8 +19,15 @@ export default function ServiceCard({
     <StaggerItem as="li" className="group">
       <Link
         href={to}
-        className="flex h-full flex-col border border-paper-line bg-white p-7 transition-[border-color,box-shadow] duration-300 hover:border-navy-200 hover:shadow-lift focus-visible:border-navy-300"
+        className="relative flex h-full flex-col overflow-hidden border border-paper-line bg-white p-7 transition-[border-color,box-shadow] duration-300 hover:border-navy-200 hover:shadow-lift focus-visible:border-navy-300"
       >
+        {/* Hover'da üst kenardan soldan sağa açılan ince altın çizgi —
+            transform'u yalnızca CSS yönetiyor, Motion bu elemana dokunmuyor. */}
+        <span
+          className="absolute inset-x-0 top-0 h-[2px] origin-left scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100"
+          style={{ backgroundColor: 'var(--accent)' }}
+          aria-hidden
+        />
         <span className="inline-flex h-11 w-11 items-center justify-center rounded-sm border border-paper-line text-navy-700 transition-colors duration-300 group-hover:border-navy-700 group-hover:bg-navy-700 group-hover:text-white">
           <ServiceIcon name={icon} />
         </span>

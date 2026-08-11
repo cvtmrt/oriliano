@@ -46,18 +46,36 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   return (
     <>
       {/* ---------------------------------------------------------------- Hero */}
-      <section className="relative overflow-hidden border-b border-paper-line">
-        <div className="absolute inset-0">
-          <SmartImage
-            src={hero.src}
-            alt={hero.alt}
-            ratio="h-full"
-            className="h-full w-full"
-            priority
-            sizes="100vw"
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-br from-navy-950/92 via-navy-900/85 to-navy-800/70" />
+      {/* Görsel yüklüyse fotoğraf + koyu örtü; değilse müşteri isteğiyle düz
+          lacivert zemin (sitenin hazır tonları, doku ve ikon yok). */}
+      <section className="relative overflow-hidden border-b border-paper-line bg-navy-950">
+        {hero.src ? (
+          <>
+            <div className="absolute inset-0">
+              <SmartImage
+                src={hero.src}
+                alt={hero.alt}
+                ratio="h-full"
+                className="h-full w-full"
+                priority
+                sizes="100vw"
+              />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-br from-navy-950/92 via-navy-900/85 to-navy-800/70" />
+          </>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-b from-navy-900 to-navy-950" aria-hidden />
+        )}
+
+        {/* Alt kenarda, ortada yoğunlaşan çok ince altın çizgi */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-px opacity-60"
+          style={{
+            background:
+              'linear-gradient(90deg, transparent 0%, var(--accent) 35%, var(--accent) 65%, transparent 100%)',
+          }}
+          aria-hidden
+        />
 
         <div className="container relative flex min-h-[78vh] flex-col justify-center py-20 text-white sm:min-h-[80vh] lg:py-28">
           <div className="max-w-3xl">
@@ -95,23 +113,37 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       </section>
 
       {/* ------------------------------------------------------------ Tanıtım */}
+      {/* Görsel yüklenmediyse boş bir kutu göstermek yerine metin tek kolonda
+          rahatça akıyor; panelden görsel gelince iki kolona dönüyor. */}
       <section className="container py-20 lg:py-28">
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          <Reveal direction="right">
-            <SmartImage
-              src={introImage.src}
-              alt={introImage.alt}
-              ratio="aspect-[5/4]"
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              className="border border-paper-line"
-            />
-          </Reveal>
+        {introImage.src ? (
+          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+            <Reveal direction="right">
+              <SmartImage
+                src={introImage.src}
+                alt={introImage.alt}
+                ratio="aspect-[5/4]"
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="border border-paper-line"
+              />
+            </Reveal>
 
-          <div>
-            <SectionHeading
-              eyebrow={t('home.intro.eyebrow')}
-              title={t('home.intro.title')}
-            />
+            <div>
+              <SectionHeading
+                eyebrow={t('home.intro.eyebrow')}
+                title={t('home.intro.title')}
+              />
+              <Reveal delay={140}>
+                <div
+                  className="prose-legal mt-6"
+                  dangerouslySetInnerHTML={{ __html: t('home.intro.body') }}
+                />
+              </Reveal>
+            </div>
+          </div>
+        ) : (
+          <div className="max-w-3xl">
+            <SectionHeading eyebrow={t('home.intro.eyebrow')} title={t('home.intro.title')} />
             <Reveal delay={140}>
               <div
                 className="prose-legal mt-6"
@@ -119,7 +151,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               />
             </Reveal>
           </div>
-        </div>
+        )}
       </section>
 
       {/* ----------------------------------------------------------- Hizmetler */}
@@ -204,6 +236,15 @@ async function CtaBand({
   const bg = await getImage('home.cta.background', locale)
   return (
     <section className="relative overflow-hidden bg-navy-900">
+      {/* Hero'nun alt çizgisiyle aynı dil: üst kenarda ince altın vurgu */}
+      <div
+        className="absolute inset-x-0 top-0 h-px opacity-60"
+        style={{
+          background:
+            'linear-gradient(90deg, transparent 0%, var(--accent) 35%, var(--accent) 65%, transparent 100%)',
+        }}
+        aria-hidden
+      />
       {bg.src ? (
         <>
           <div className="absolute inset-0">
