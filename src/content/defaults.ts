@@ -676,8 +676,10 @@ export const settingsExample = {
   youtube: '',
   // Harita bilerek boş: sahte bir adresi haritada göstermek yanıltıcı olur.
   mapEmbedUrl: '',
-  // WhatsApp numarası bilerek boş — uydurma numara birine ait olabilir.
-  whatsappNumber: '',
+  // Abone kısmı tamamen sıfır: hiçbir operatörde tahsis edilmeyen, bakar bakmaz
+  // "örnek" olduğu anlaşılan bir numara. Rastgele bir numara yazsaydık gerçek
+  // birine düşebilirdi. Böylece WhatsApp baloncuğu örnek veride de görünüyor.
+  whatsappNumber: '+90 (500) 000 00 00',
   whatsappTextTr: 'Merhaba, web siteniz üzerinden yazıyorum. Bir konuda danışmak istiyorum.',
   whatsappTextEn: 'Hello, I am writing via your website. I would like to consult you on a matter.',
   autoReplyTr:

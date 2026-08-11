@@ -331,6 +331,43 @@ export default async function SettingsPage() {
           title="Hızlı iletişim düğmeleri"
           description="Sayfanın sağ altında sabit duran WhatsApp ve arama düğmeleri. Mobil ziyaretçilerin çoğu form doldurmak yerine arıyor."
         >
+          {/* Hangi düğmenin gerçekten sitede olduğu, alanları tek tek okumadan
+              görünsün: "açık ama numara yok" sessiz bir tuzaktı. */}
+          <div className="mb-4 rounded-md border border-graphite-200 bg-graphite-50 px-3.5 py-3 text-xs leading-relaxed">
+            <span className="font-medium text-graphite-700">Şu an sitede görünen:</span>
+            <ul className="mt-1.5 space-y-1">
+              <li className={waLink && settings.floatingEnabled ? 'text-green-700' : 'text-amber-700'}>
+                {waLink && settings.floatingEnabled ? '✓' : '✗'} WhatsApp düğmesi
+                {!settings.floatingEnabled
+                  ? ' — sabit düğmeler kapalı'
+                  : !waLink
+                    ? ' — numara girilmedi'
+                    : ''}
+              </li>
+              <li
+                className={
+                  settings.showCallButton && settings.phone && settings.floatingEnabled
+                    ? 'text-green-700'
+                    : 'text-amber-700'
+                }
+              >
+                {settings.showCallButton && settings.phone && settings.floatingEnabled ? '✓' : '✗'}{' '}
+                Arama düğmesi
+                {!settings.floatingEnabled
+                  ? ' — sabit düğmeler kapalı'
+                  : !settings.showCallButton
+                    ? ' — kapalı'
+                    : !settings.phone
+                      ? ' — telefon numarası girilmedi'
+                      : ''}
+              </li>
+            </ul>
+            <p className="mt-2 text-graphite-500">
+              Düğmeler sayfa biraz aşağı kaydırılınca beliriyor; en tepedeyken ve sayfanın en
+              altındayken gizleniyor.
+            </p>
+          </div>
+
           <label className="flex min-h-[44px] items-center gap-3 text-sm text-graphite-700">
             <input
               type="checkbox"
