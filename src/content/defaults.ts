@@ -30,6 +30,10 @@ export interface MediaSlotDefault {
   order: number
   altTr: string
   altEn: string
+  /** Panelden görsel yüklenene kadar gösterilen paket tasarım görseli
+      (public/defaults/). Yoksa yuva boş kalır — ör. anasayfa hero'su
+      müşteri isteğiyle düz lacivert. */
+  bundled?: { src: string; width: number; height: number }
 }
 
 let textOrder = 0
@@ -388,21 +392,35 @@ const m = (
   label: string,
   altTr: string,
   altEn: string,
-): MediaSlotDefault => ({ key, group, label, order: slotOrder++, altTr, altEn })
+  bundled?: { width: number; height: number },
+): MediaSlotDefault => ({
+  key,
+  group,
+  label,
+  order: slotOrder++,
+  altTr,
+  altEn,
+  ...(bundled ? { bundled: { src: `/defaults/${key}.webp`, ...bundled } } : {}),
+})
+
+const HERO = { width: 1920, height: 1080 }
+const BODY = { width: 1500, height: 1200 }
 
 export const mediaSlotDefaults: MediaSlotDefault[] = [
+  // Anasayfa hero'suna bilerek paket görsel verilmedi — müşteri isteği:
+  // fotoğraf yüklenene kadar düz lacivert kalsın.
   m('home.hero.image', 'home', 'Anasayfa hero görseli', 'Büro çalışma alanı', 'Office working area'),
-  m('home.intro.image', 'home', 'Anasayfa tanıtım görseli', 'Görüşme masası', 'Meeting table'),
-  m('home.cta.background', 'home', 'Anasayfa alt CTA arka planı', 'Arka plan dokusu', 'Background texture'),
-  m('about.hero.image', 'about', 'Hakkımızda hero görseli', 'Büro girişi', 'Office entrance'),
-  m('about.body.image', 'about', 'Hakkımızda bölüm görseli', 'Kütüphane rafı', 'Library shelf'),
-  m('services.hero.image', 'services', 'Hizmetler hero görseli', 'Dosya ve mevzuat', 'Files and legislation'),
-  m('legalServices.hero.image', 'legalServices', 'Avukatlık ve Danışmanlık hero görseli', 'Sözleşme incelemesi', 'Contract review'),
-  m('mediation.hero.image', 'mediation', 'Arabuluculuk hero görseli', 'Görüşme odası', 'Meeting room'),
-  m('team.hero.image', 'team', 'Ekibimiz hero görseli', 'Ekip çalışma alanı', 'Team working area'),
-  m('contact.hero.image', 'contact', 'İletişim hero görseli', 'Büro dış görünüm', 'Office exterior'),
-  m('publications.hero.image', 'publications', 'Yayınlar hero görseli', 'Yayın arşivi', 'Publication archive'),
-  m('seo.defaultOg', 'seo', 'Varsayılan paylaşım görseli (OG)', 'Çetiner Hukuk ve Danışmanlık', 'Çetiner Hukuk ve Danışmanlık'),
+  m('home.intro.image', 'home', 'Anasayfa tanıtım görseli', 'Lacivert ve altın tasarım kompozisyonu', 'Navy and gold design composition', BODY),
+  m('home.cta.background', 'home', 'Anasayfa alt CTA arka planı', 'Arka plan dokusu', 'Background texture', { width: 1920, height: 800 }),
+  m('about.hero.image', 'about', 'Hakkımızda hero görseli', 'Sütun motifli tasarım görseli', 'Column motif design graphic', HERO),
+  m('about.body.image', 'about', 'Hakkımızda bölüm görseli', 'Kitaplık motifli tasarım görseli', 'Bookshelf motif design graphic', BODY),
+  m('services.hero.image', 'services', 'Hizmetler hero görseli', 'Izgara motifli tasarım görseli', 'Grid motif design graphic', HERO),
+  m('legalServices.hero.image', 'legalServices', 'Avukatlık ve Danışmanlık hero görseli', 'Sözleşme motifli tasarım görseli', 'Contract motif design graphic', HERO),
+  m('mediation.hero.image', 'mediation', 'Arabuluculuk hero görseli', 'Kesişen daireler motifli tasarım görseli', 'Intersecting circles design graphic', HERO),
+  m('team.hero.image', 'team', 'Ekibimiz hero görseli', 'Daire motifli tasarım görseli', 'Circle motif design graphic', HERO),
+  m('contact.hero.image', 'contact', 'İletişim hero görseli', 'Halka motifli tasarım görseli', 'Ring motif design graphic', HERO),
+  m('publications.hero.image', 'publications', 'Yayınlar hero görseli', 'Yayın rafı motifli tasarım görseli', 'Publication shelf design graphic', HERO),
+  m('seo.defaultOg', 'seo', 'Varsayılan paylaşım görseli (OG)', 'Çetiner Hukuk ve Danışmanlık', 'Çetiner Hukuk ve Danışmanlık', { width: 1200, height: 630 }),
 ]
 
 // ---------------------------------------------------------------------------

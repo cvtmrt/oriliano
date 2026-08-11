@@ -11,6 +11,7 @@ import SaveBar from '@/components/admin/SaveBar'
 import BilingualField from '@/components/admin/BilingualField'
 import MediaPicker from '@/components/admin/MediaPicker'
 import SlotAltFields from '@/components/admin/SlotAltFields'
+import { mediaSlotDefaultMap } from '@/content/defaults'
 
 export const dynamic = 'force-dynamic'
 
@@ -65,10 +66,18 @@ export default async function ContentGroupPage({
         <input type="hidden" name="group" value={group} />
 
         {slots.length > 0 ? (
-          <Card title="Görseller" description="Her yuva ayrı ayrı değiştirilebilir.">
+          <Card
+            title="Görseller"
+            description="Her yuva ayrı ayrı değiştirilebilir. Görsel yüklemediğiniz yuvalarda site, markaya uygun hazır tasarım görselini gösterir; kendi fotoğrafınızı yüklediğinizde onun yerine geçer."
+          >
             {slots.map((slot) => (
               <div key={slot.id}>
-                <MediaPicker name={`media__${slot.id}`} label={slot.label} current={slot.media} />
+                <MediaPicker
+                  name={`media__${slot.id}`}
+                  label={slot.label}
+                  current={slot.media}
+                  fallbackSrc={mediaSlotDefaultMap[slot.key]?.bundled?.src}
+                />
                 <SlotAltFields
                   slotId={slot.id}
                   altTr={slot.altTr}

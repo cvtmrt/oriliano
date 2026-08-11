@@ -19,11 +19,14 @@ export default function MediaPicker({
   label,
   current,
   help,
+  fallbackSrc,
 }: {
   name: string
   label: string
   current: MediaValue | null
   help?: string
+  /** Yuva boşken sitede gösterilen paket tasarım görseli (varsa) */
+  fallbackSrc?: string
 }) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [value, setValue] = useState<MediaValue | null>(current)
@@ -81,6 +84,14 @@ export default function MediaPicker({
               alt=""
               className="h-full w-full object-contain"
             />
+          ) : fallbackSrc ? (
+            <div className="relative h-full w-full">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={fallbackSrc} alt="" className="h-full w-full object-cover opacity-80" />
+              <span className="absolute inset-x-0 bottom-0 bg-navy-950/80 px-1 py-0.5 text-center text-[0.6rem] text-white/90">
+                paket tasarım görseli
+              </span>
+            </div>
           ) : (
             <span className="text-[0.7rem] text-graphite-400">Görsel yok</span>
           )}

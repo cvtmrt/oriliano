@@ -100,7 +100,19 @@ export async function getImage(key: string, locale: Locale): Promise<ResolvedMed
       ? pick(locale, def.altTr, def.altEn)
       : ''
 
-  if (!slot?.media) return { src: null, alt, width: null, height: null }
+  if (!slot?.media) {
+    // Panelden görsel yüklenmemiş: varsa paket tasarım görseline düş.
+    // (Anasayfa hero'su gibi bilerek boş bırakılan yuvalarda bundled yoktur.)
+    if (def?.bundled) {
+      return {
+        src: def.bundled.src,
+        alt,
+        width: def.bundled.width,
+        height: def.bundled.height,
+      }
+    }
+    return { src: null, alt, width: null, height: null }
+  }
   return {
     src: mediaUrl(slot.media.filename),
     alt,

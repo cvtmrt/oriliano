@@ -36,8 +36,10 @@ export default function PageHero({
         </>
       ) : null}
 
+      {/* Sabit min-yükseklik: TR/EN arasında başlık satır sayısı değişince
+          hero'nun boyu oynamasın — iki dilde de aynı yükseklik. */}
       <div
-        className={`container relative py-16 sm:py-20 lg:py-28 ${
+        className={`container relative flex min-h-[21rem] flex-col justify-center py-16 sm:min-h-[24rem] sm:py-20 lg:min-h-[27rem] lg:py-24 ${
           hasImage ? 'text-white' : ''
         }`}
       >
