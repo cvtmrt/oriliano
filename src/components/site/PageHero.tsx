@@ -1,4 +1,4 @@
-import { Reveal, RevealOnMount, TextReveal } from '@/components/motion'
+import { Parallax, Reveal, RevealOnMount, TextReveal } from '@/components/motion'
 import SmartImage from './SmartImage'
 
 /**
@@ -22,16 +22,20 @@ export default function PageHero({
     <section className="relative overflow-hidden border-b border-paper-line bg-paper-soft">
       {hasImage ? (
         <>
-          <div className="absolute inset-0">
-            <SmartImage
-              src={image!.src}
-              alt={image!.alt}
-              ratio="h-full"
-              className="h-full w-full"
-              imageClassName="kenburns"
-              priority
-              sizes="100vw"
-            />
+          <div className="absolute inset-0 overflow-hidden">
+            {/* Görsel bölümden %16 uzun: parallax kayması kenar boşluğu açmaz.
+                Parallax'ın transform'u Motion'da, kenburns img'de — ayrı elemanlar. */}
+            <Parallax className="absolute -inset-y-[8%] inset-x-0">
+              <SmartImage
+                src={image!.src}
+                alt={image!.alt}
+                ratio="h-full"
+                className="h-full w-full"
+                imageClassName="kenburns"
+                priority
+                sizes="100vw"
+              />
+            </Parallax>
           </div>
           {/* /72 Tailwind opasite skalasında yok — sınıf üretilmiyordu ve örtü
               hiç uygulanmıyordu; 5'in katı olmalı. */}

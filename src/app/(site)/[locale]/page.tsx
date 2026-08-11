@@ -5,7 +5,7 @@ import { isLocale, pick, type Locale } from '@/lib/i18n'
 import { href, serviceHref } from '@/lib/nav'
 import { getImage, getServices, getT, serviceSlug } from '@/lib/content'
 import { buildMetadata } from '@/lib/seo'
-import { Reveal, RevealOnMount, Stagger, StaggerItem, TextReveal } from '@/components/motion'
+import { Parallax, Reveal, RevealOnMount, Stagger, StaggerItem, TextReveal } from '@/components/motion'
 import SmartImage from '@/components/site/SmartImage'
 import SectionHeading from '@/components/site/SectionHeading'
 import ServiceCard from '@/components/site/ServiceCard'
@@ -80,15 +80,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </div>
         )}
 
-        {/* Alt kenarda, ortada yoğunlaşan çok ince altın çizgi */}
-        <div
-          className="absolute inset-x-0 bottom-0 h-px opacity-60"
-          style={{
-            background:
-              'linear-gradient(90deg, transparent 0%, var(--accent) 35%, var(--accent) 65%, transparent 100%)',
-          }}
-          aria-hidden
-        />
+        {/* Alt kenarda, ışığı yavaşça gezen ince altın çizgi */}
+        <div className="gold-hairline absolute inset-x-0 bottom-0" aria-hidden />
 
         {/* Mobilde vh yerine sabit rem: küçük ekranda uzun Türkçe başlık 78vh'i
             aşınca bölüm metinle birlikte büyüyor ve TR/EN yükseklikleri
@@ -135,13 +128,17 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         {introImage.src ? (
           <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
             <Reveal direction="right">
-              <SmartImage
-                src={introImage.src}
-                alt={introImage.alt}
-                ratio="aspect-[5/4]"
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                className="border border-paper-line"
-              />
+              <div className="overflow-hidden border border-paper-line">
+                {/* Kart içinde hafif ters parallax — fotoğraf %12 büyük tutuluyor */}
+                <Parallax amount={26} className="-my-[6%]">
+                  <SmartImage
+                    src={introImage.src}
+                    alt={introImage.alt}
+                    ratio="aspect-[5/4]"
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                  />
+                </Parallax>
+              </div>
             </Reveal>
 
             <div>
@@ -252,15 +249,8 @@ async function CtaBand({
   const bg = await getImage('home.cta.background', locale)
   return (
     <section className="relative overflow-hidden bg-navy-900">
-      {/* Hero'nun alt çizgisiyle aynı dil: üst kenarda ince altın vurgu */}
-      <div
-        className="absolute inset-x-0 top-0 h-px opacity-60"
-        style={{
-          background:
-            'linear-gradient(90deg, transparent 0%, var(--accent) 35%, var(--accent) 65%, transparent 100%)',
-        }}
-        aria-hidden
-      />
+      {/* Hero'nun alt çizgisiyle aynı dil: üst kenarda gezinen altın ışık */}
+      <div className="gold-hairline absolute inset-x-0 top-0" aria-hidden />
       {bg.src ? (
         <>
           <div className="absolute inset-0">

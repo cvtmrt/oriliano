@@ -403,8 +403,8 @@ const m = (
   ...(bundled ? { bundled: { src: `/defaults/${key}.webp`, ...bundled } } : {}),
 })
 
-const HERO = { width: 1920, height: 1080 }
-const BODY = { width: 1500, height: 1200 }
+const HERO = { width: 2400, height: 1350 }
+const BODY = { width: 1600, height: 1280 }
 
 export const mediaSlotDefaults: MediaSlotDefault[] = [
   // Anasayfa hero'suna bilerek paket görsel verilmedi — müşteri isteği:

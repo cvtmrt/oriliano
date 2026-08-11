@@ -73,11 +73,29 @@
     @apply btn bg-navy-700 text-white hover:bg-navy-800;
   }
   .btn-accent {
-    @apply btn text-white;
+    @apply btn relative overflow-hidden text-white;
     background-color: var(--accent);
   }
   .btn-accent:hover {
-    filter: brightness(0.92);
+    filter: brightness(0.94);
+  }
+  /* Hover'da soldan sağa süpüren ince ışıltı */
+  .btn-accent::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 42%,
+      rgba(255, 255, 255, 0.32) 50%,
+      transparent 58%
+    );
+    transform: translateX(-130%);
+    transition: transform 0.65s ease;
+    pointer-events: none;
+  }
+  .btn-accent:hover::after {
+    transform: translateX(130%);
   }
   .btn-outline {
     @apply btn border border-navy-200 bg-transparent text-navy-800 hover:border-navy-700 hover:bg-navy-50;
@@ -212,6 +230,30 @@
   will-change: transform;
 }
 
+/* Hero/CTA kenarındaki altın çizgi: ışık şeridi yavaşça çizgi boyunca gezer. */
+.gold-hairline {
+  height: 1px;
+  opacity: 0.65;
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--accent) 30%,
+    #e8d4ae 50%,
+    var(--accent) 70%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: hairline-pan 9s linear infinite;
+}
+@keyframes hairline-pan {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
 /* Altın ayraç çizgisi soldan sağa çizilir (hero başlığının altında). */
 @keyframes rule-grow {
   from {
@@ -230,7 +272,11 @@
   .kenburns,
   .drift-a,
   .drift-b,
-  .rule-grow {
+  .rule-grow,
+  .gold-hairline {
     animation: none !important;
+  }
+  .btn-accent::after {
+    display: none;
   }
 }

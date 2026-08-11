@@ -1,7 +1,14 @@
 'use client'
 
-import { motion, useReducedMotion, type Variants, type HTMLMotionProps } from 'framer-motion'
-import type { ReactNode } from 'react'
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  type Variants,
+  type HTMLMotionProps,
+} from 'framer-motion'
+import { useRef, type ReactNode } from 'react'
 
 /**
  * TEK HAREKET KAYNAĞI.
@@ -67,11 +74,12 @@ export function Reveal({
     <Comp
       className={className}
       data-reveal
-      initial={{ opacity: 0, x: offset.x, y: offset.y }}
+      initial={{ opacity: 0, x: offset.x, y: offset.y, filter: 'blur(7px)' }}
       whileInView={{
         opacity: 1,
         x: 0,
         y: 0,
+        filter: 'blur(0px)',
         transition: { duration: DURATION.base, ease: EASE_OUT, delay: delay / 1000 },
       }}
       viewport={{ once, amount }}
@@ -105,11 +113,12 @@ export function RevealOnMount({
     <Comp
       className={className}
       data-reveal
-      initial={{ opacity: 0, x: offset.x, y: offset.y }}
+      initial={{ opacity: 0, x: offset.x, y: offset.y, filter: 'blur(7px)' }}
       animate={{
         opacity: 1,
         x: 0,
         y: 0,
+        filter: 'blur(0px)',
         transition: { duration: DURATION.slow, ease: EASE_OUT, delay: delay / 1000 },
       }}
     >
@@ -124,8 +133,13 @@ const staggerParent: Variants = {
 }
 
 const staggerChild: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  show: { opacity: 1, y: 0, transition: { duration: DURATION.base, ease: EASE_OUT } },
+  hidden: { opacity: 0, y: 16, filter: 'blur(6px)' },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { duration: DURATION.base, ease: EASE_OUT },
+  },
 }
 
 export function Stagger({
@@ -240,6 +254,42 @@ export function TextReveal({
         ))}
       </motion.span>
     </Tag>
+  )
+}
+
+/**
+ * Kaydırmaya bağlı yumuşak parallax. Görsel, bölümden %16 daha uzun tutulup
+ * ters yönde kaydırılır — kenarlarda boşluk açılmaz.
+ *
+ * DİKKAT: transform'u yalnızca Motion yönetir (style={{y}}); bu sarmalayıcıya
+ * CSS transform/animasyon VERME. İçerideki <img>'e uygulanan kenburns ayrı
+ * eleman olduğu için çakışmaz.
+ */
+export function Parallax({
+  children,
+  className,
+  amount = 46,
+}: {
+  children: ReactNode
+  className?: string
+  amount?: number
+}) {
+  const reduce = useReducedMotion()
+  const ref = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
+  const y = useTransform(scrollYProgress, [0, 1], [-amount, amount])
+
+  if (reduce) {
+    return (
+      <div ref={ref} className={className}>
+        {children}
+      </div>
+    )
+  }
+  return (
+    <motion.div ref={ref} style={{ y }} className={className}>
+      {children}
+    </motion.div>
   )
 }
 
