@@ -95,38 +95,62 @@ async function geminiGenerate(
   let lastError = ''
 
   for (const model of models) {
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
-        body: JSON.stringify(body),
-      },
-    )
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
+          body: JSON.stringify(body),
+        },
+      )
 
-    if (res.ok) {
-      const json = (await res.json()) as {
-        candidates?: { content?: { parts?: { text?: string }[] }; finishReason?: string }[]
-        promptFeedback?: { blockReason?: string }
+      if (res.ok) {
+        const json = (await res.json()) as {
+          candidates?: { content?: { parts?: { text?: string }[] }; finishReason?: string }[]
+          promptFeedback?: { blockReason?: string }
+        }
+        if (json.promptFeedback?.blockReason) {
+          throw new Error(`Gemini isteği reddetti: ${json.promptFeedback.blockReason}`)
+        }
+        const text = (json.candidates?.[0]?.content?.parts ?? [])
+          .map((p) => p.text ?? '')
+          .join('')
+          .trim()
+        if (!text) throw new Error('Gemini boş yanıt döndürdü.')
+        return text
       }
-      if (json.promptFeedback?.blockReason) {
-        throw new Error(`Gemini isteği reddetti: ${json.promptFeedback.blockReason}`)
+
+      const detail = (await res.text().catch(() => '')).slice(0, 300)
+      lastError = `${res.status} ${detail}`
+
+      // 429 = ücretsiz katmanın dakika sınırı, 5xx = geçici sunucu hatası.
+      // Toplu çeviride sınıra takılmak olağan; bunu kalıcı başarısızlık saymak
+      // yanlış olur. Google yanıtında "retryDelay" veriyorsa ona uyulur.
+      if ((res.status === 429 || res.status >= 500) && attempt < 2) {
+        await sleep(retryAfterMs(detail) ?? 4000 * (attempt + 1))
+        continue
       }
-      const text = (json.candidates?.[0]?.content?.parts ?? [])
-        .map((p) => p.text ?? '')
-        .join('')
-        .trim()
-      if (!text) throw new Error('Gemini boş yanıt döndürdü.')
-      return text
+      break
     }
 
-    const detail = (await res.text().catch(() => '')).slice(0, 300)
-    lastError = `${res.status} ${detail}`
-    // Model adı yanlışsa bir sonrakini dene; başka hatada hemen çık.
-    if (res.status !== 404) break
+    // 404 → model emekli olmuş olabilir, 429 → bu modelin kotası dolmuş
+    // olabilir; ikisinde de listedeki bir sonraki modeli denemek mantıklı.
+    if (!lastError.startsWith('404') && !lastError.startsWith('429')) break
   }
 
   throw new Error(`Gemini çağrısı başarısız: ${lastError}`)
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((r) => setTimeout(r, ms))
+}
+
+/** Google'ın hata gövdesindeki RetryInfo alanı: "retryDelay": "31s" */
+function retryAfterMs(detail: string): number | null {
+  const match = detail.match(/"retryDelay"\s*:\s*"(\d+(?:\.\d+)?)s"/)
+  if (!match) return null
+  return Math.min(60_000, Math.ceil(parseFloat(match[1]) * 1000) + 500)
 }
 
 export function hashSource(text: string): string {

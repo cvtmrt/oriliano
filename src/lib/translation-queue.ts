@@ -309,6 +309,10 @@ export async function runQueue(maxBatches = 8): Promise<{ processed: number; fai
         }
         await backoff(next.attempts)
       }
+
+      // Ücretsiz katmanda dakika başına istek sınırı var; gruplar arasında kısa
+      // bir ara vermek toplu çeviride 429 yağmurunu önlüyor.
+      await new Promise((r) => setTimeout(r, 1200))
     }
   } finally {
     running = false
