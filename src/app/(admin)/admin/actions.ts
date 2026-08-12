@@ -11,6 +11,7 @@ import {
   enqueueEntity,
   enqueueTranslation,
   enqueueAllMissing,
+  enqueueAllAuto,
   kickQueue,
   lockFieldManual,
   type EntityName,
@@ -589,6 +590,13 @@ export async function deleteMediaAction(form: FormData): Promise<void> {
 export async function translateMissingAction(): Promise<void> {
   await requireAdmin()
   await enqueueAllMissing()
+  revalidatePath('/admin/tools')
+}
+
+/** "Tüm İngilizce metinleri yeniden çevir" — elle yazılanlara dokunmaz */
+export async function retranslateAllAction(): Promise<void> {
+  await requireAdmin()
+  await enqueueAllAuto()
   revalidatePath('/admin/tools')
 }
 

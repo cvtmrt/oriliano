@@ -5,6 +5,7 @@ import { queueStats } from '@/lib/translation-queue'
 import {
   clearSeedDataAction,
   loadSeedDataAction,
+  retranslateAllAction,
   retryFailedTranslationsAction,
   translateMissingAction,
 } from '../actions'
@@ -71,6 +72,23 @@ export default async function ToolsPage() {
           <form action={translateMissingAction}>
             <SaveBar savedLabel="Sıraya alındı" note="çeviri arka planda sürüyor">Eksikleri çevir</SaveBar>
           </form>
+        </Card>
+
+        <Card
+          title="Tüm İngilizce metinleri yeniden çevir"
+          description="Var olan otomatik çevirilerin üzerine yenisini yazar. Terim sözlüğüne bir şey eklediğinizde veya bir çeviri yanlış/eksik göründüğünde kullanın. Elle yazdığınız (kilitli) alanlara dokunmaz."
+        >
+          <p className="mb-4 text-sm text-graphite-600">
+            Yüzlerce alan olabildiği için birkaç dakika sürebilir; arka planda kendi kendine
+            ilerler, sayfada beklemeniz gerekmez. Yukarıdaki &quot;sırada bekleyen&quot; sayısı
+            azalarak sıfırlanır.
+          </p>
+          <ConfirmButton
+            action={retranslateAllAction}
+            confirmText="Tüm otomatik İngilizce metinler yeniden üretilecek. Elle yazdığınız kilitli alanlara dokunulmaz. Devam edilsin mi?"
+            label="Hepsini yeniden çevir"
+            variant="secondary"
+          />
         </Card>
 
         {failedList.length > 0 ? (

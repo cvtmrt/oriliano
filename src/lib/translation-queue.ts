@@ -314,6 +314,19 @@ export async function runQueue(maxBatches = 8): Promise<{ processed: number; fai
     running = false
   }
 
+  // Kuyrukta iş kaldıysa kendini yeniden tetikle. Bir çağrı en fazla `maxBatches`
+  // grup işliyor; toplu yeniden çeviride yüzlerce alan olabiliyor ve kullanıcının
+  // düğmeye tekrar tekrar basması gerekmesin istiyoruz. Kalıcı başarısızlar
+  // attempts >= MAX_ATTEMPTS ile sorgudan düştüğü için döngü kendiliğinden biter.
+  const remaining = await prisma.translationJob.count({
+    where: { doneAt: null, attempts: { lt: MAX_ATTEMPTS } },
+  })
+  if (remaining > 0) {
+    setTimeout(() => {
+      runQueue().catch((err) => console.error('[translation] kuyruk hatası:', err))
+    }, 1500)
+  }
+
   return { processed, failed }
 }
 
@@ -422,6 +435,61 @@ export async function enqueueAllMissing(): Promise<number> {
       const en = String((settings as unknown as Record<string, unknown>)[`${field}En`] ?? '')
       if (tr.trim() && !en.trim()) {
         if ((await enqueueTranslation('SiteSetting', '1', field, tr)) === 'queued') queued++
+      }
+    }
+  }
+
+  kickQueue()
+  return queued
+}
+
+/**
+ * "Tüm İngilizce metinleri yeniden çevir" — çeviri kuralları iyileştirildiğinde
+ * ya da sözlüğe terim eklendiğinde eski otomatik çevirileri tazelemek için.
+ *
+ * Elle yazılmış (MANUAL) alanlara DOKUNMAZ; onlar kilitli kalır. Türkçesi boş
+ * olan alanlar atlanır.
+ */
+export async function enqueueAllAuto(): Promise<number> {
+  const locked = new Set(
+    (
+      await prisma.fieldMeta.findMany({
+        where: { status: 'MANUAL' },
+        select: { entity: true, entityId: true, field: true },
+      })
+    ).map((m) => `${m.entity}|${m.entityId}|${m.field}`),
+  )
+
+  const rows: { entity: EntityName; id: string; row: Record<string, unknown> }[] = []
+  const collect = (entity: EntityName, list: unknown[]) => {
+    for (const row of list) {
+      const record = row as unknown as Record<string, unknown>
+      rows.push({ entity, id: String(record.id), row: record })
+    }
+  }
+
+  collect('LocalizedText', await prisma.localizedText.findMany())
+  collect('MediaSlot', await prisma.mediaSlot.findMany())
+  collect('MenuItem', await prisma.menuItem.findMany())
+  collect('Service', await prisma.service.findMany())
+  collect('TeamMember', await prisma.teamMember.findMany())
+  collect('Publication', await prisma.publication.findMany())
+  collect('SeoMeta', await prisma.seoMeta.findMany())
+
+  const settings = await prisma.siteSetting.findUnique({ where: { id: 1 } })
+  if (settings) {
+    rows.push({ entity: 'SiteSetting', id: '1', row: settings as unknown as Record<string, unknown> })
+  }
+
+  let queued = 0
+  for (const { entity, id, row } of rows) {
+    for (const field of entitySpecs[entity].fields) {
+      if (locked.has(`${entity}|${id}|${field}`)) continue
+      const { tr } = entitySpecs[entity].columns(field)
+      const source = String(row[tr] ?? '')
+      if (!source.trim()) continue
+      if ((await enqueueTranslation(entity, id, field, source, { force: true })) === 'queued') {
+        queued++
       }
     }
   }
