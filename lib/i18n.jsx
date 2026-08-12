@@ -217,4 +217,16 @@ export const txt = {
     en: "The page you are looking for was not found. Head back home to explore the work.",
   },
   backHome: { tr: "Ana sayfaya dön", en: "Back to home" },
+
+  // Çerez onayı + gizlilik
+  consent: {
+    body: {
+      tr: "Bu sitede reklam performansını ölçmek için Meta Pixel kullanılıyor. Yalnızca kabul edersen çalışır.",
+      en: "This site uses the Meta Pixel to measure ad performance. It only runs if you accept.",
+    },
+    accept: { tr: "Kabul Et", en: "Accept" },
+    reject: { tr: "Reddet", en: "Decline" },
+    more: { tr: "Gizlilik", en: "Privacy" },
+  },
+  privacyLink: { tr: "Gizlilik", en: "Privacy" },
 };

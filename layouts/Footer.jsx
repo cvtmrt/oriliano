@@ -92,6 +92,9 @@ export function Footer() {
             © {new Date().getFullYear()} {site.fullName}. {t(txt.rights)}
           </p>
           <div className="flex items-center gap-6">
+            <a href="/gizlilik" className="font-mono text-xs uppercase tracking-ultra text-steel hover:text-chalk" data-cursor>
+              {t(txt.privacyLink)}
+            </a>
             <a href="#top" className="font-mono text-xs uppercase tracking-ultra text-ash hover:text-chalk" data-cursor>
               {t(txt.backToTop)}
             </a>

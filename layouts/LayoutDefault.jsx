@@ -7,6 +7,7 @@ import { ScrollProgress } from "../components/anim/Interactive.jsx";
 import { Preloader } from "../components/anim/Preloader.jsx";
 import { PageCurtain } from "../components/anim/PageCurtain.jsx";
 import { ClientOnly } from "../components/ClientOnly.jsx";
+import { Consent } from "../components/Consent.jsx";
 import { LangProvider } from "../lib/i18n.jsx";
 
 export default function Layout({ children }) {
@@ -21,6 +22,7 @@ export default function Layout({ children }) {
         <Preloader />
         <PageCurtain />
         <ClientOnly><ScrollProgress /></ClientOnly>
+        <ClientOnly><Consent /></ClientOnly>
         <div id="top" className="flex min-h-screen flex-col bg-night">
           <Header />
           <main id="main" className="flex-1">{children}</main>
