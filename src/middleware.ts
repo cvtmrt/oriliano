@@ -30,7 +30,38 @@ function preferredLocale(request: NextRequest): Locale {
   return defaultLocale
 }
 
+/**
+ * Kanonik alan adı dışındaki her konak (Railway'in `*.up.railway.app` adresi,
+ * eski alan adları) arama motorlarına kapatılır. Yönlendirme YAPMIYORUZ:
+ * Railway'in sağlık kontrolü 2xx bekliyor, 3xx dönersek dağıtım "unhealthy"
+ * olur. Başlık yeterli — Google `X-Robots-Tag`'i saygı gösterir, sayfa yine
+ * normal açılır.
+ */
+function canonicalHost(): string | null {
+  const raw = process.env.SITE_URL?.trim()
+  if (!raw) return null
+  try {
+    return new URL(raw).host.toLowerCase()
+  } catch {
+    return null
+  }
+}
+
 export function middleware(request: NextRequest) {
+  const response = handle(request)
+
+  const canonical = canonicalHost()
+  const host = request.headers.get('host')?.toLowerCase().split(':')[0]
+  const offCanonical = Boolean(canonical && host && host !== canonical)
+
+  if (offCanonical || process.env.DISALLOW_INDEXING === 'true') {
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow')
+  }
+
+  return response
+}
+
+function handle(request: NextRequest) {
   const { pathname, search } = request.nextUrl
 
   // Panel kapısı: anahtarsız istek giriş formunu bile görmesin.

@@ -49,7 +49,10 @@ export async function buildMetadata(
   languages['x-default'] = `${base}${href(routeKey, 'tr', options.slugMap?.tr)}`
 
   const image = options.ogImage ?? fallbackOg.src
-  const noindex = options.noindex ?? seo.row?.noindex ?? false
+  // Yayın öncesi ortamda robots.txt'in yanında sayfa etiketi de kapalı olsun;
+  // böylece açılış tek değişkene (DISALLOW_INDEXING) bakar.
+  const preview = process.env.DISALLOW_INDEXING === 'true'
+  const noindex = preview || (options.noindex ?? seo.row?.noindex ?? false)
 
   return {
     title,
