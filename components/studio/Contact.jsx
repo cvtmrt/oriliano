@@ -49,8 +49,19 @@ export function Contact() {
           </div>
         </Reveal>
 
+        {/* Kapanış künyesi — Instagram burada: siteye gelenlerin çoğu oradan
+            geliyor, takibe dönmesi için çıkışta da adres görünsün. */}
         <p className="mt-14 font-mono text-xs uppercase tracking-ultra text-steel">
-          {site.email} · {site.location}
+          {site.email} ·{" "}
+          <a
+            href={site.instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-chalk"
+          >
+            @{site.instagram}
+          </a>{" "}
+          · {site.location}
         </p>
       </div>
     </section>

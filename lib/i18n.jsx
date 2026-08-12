@@ -58,6 +58,7 @@ export const txt = {
   nav: [
     { href: "#work", label: { tr: "İşler", en: "Work" } },
     { href: "#services", label: { tr: "Hizmetler", en: "Services" } },
+    { href: "#studio", label: { tr: "Studio", en: "Studio" } },
     { href: "#contact", label: { tr: "İletişim", en: "Contact" } },
   ],
 
@@ -92,15 +93,60 @@ export const txt = {
       sub: { tr: "Markaları dijitalde premium gösteren, iş getiren projeler.", en: "Projects that make brands look premium and drive business." },
     },
     services: {
-      index: { tr: "02 / Hizmetler", en: "02 / Services" },
-      title: { tr: "Hizmetler", en: "Services" },
+      index: { tr: "02 / Yetkinlikler", en: "02 / Capabilities" },
+      title: { tr: "Yetkinlikler", en: "Capabilities" },
       sub: { tr: "Strateji, tasarım, yazılım ve büyüme; tek ekipten.", en: "Strategy, design, development and growth; from one team." },
     },
-    contact: { index: { tr: "03 / İletişim", en: "03 / Contact" } },
+    studio: {
+      index: { tr: "03 / Studio", en: "03 / Studio" },
+      title: { tr: "Studio", en: "Studio" },
+      sub: { tr: "Markanın arkasındaki kişi ve çalışma biçimi.", en: "The person behind the brand and how the work happens." },
+    },
+    contact: { index: { tr: "04 / İletişim", en: "04 / Contact" } },
+  },
+
+  // ── Studio (hakkında) ──────────────────────────────────────────
+  studio: {
+    // Ana ifade — brief'teki konumlandırma cümlesi.
+    statement: {
+      tr: "Tek kişilik ajans gibi değil, küçük ama hızlı bir dijital stüdyo gibi çalışıyorum.",
+      en: "I don't work like a one-man agency; I work like a small but fast digital studio.",
+    },
+    body: {
+      tr: "Strateji, tasarım, yazılım, yayına alma ve büyüme tek elden ilerliyor. Araya ajans katmanı girmediği için karar hızlı veriliyor, iş erken canlıya çıkıyor ve yayından sonra da sahipsiz kalmıyor.",
+      en: "Strategy, design, development, launch and growth all move through one pair of hands. With no agency layer in between, decisions happen fast, work goes live early and nothing is left unattended after launch.",
+    },
+    // Çalışma aşamaları — süslü "süreç" bölümü değil, tek satırlık şerit.
+    phases: [
+      { tr: "Strateji", en: "Strategy" },
+      { tr: "Tasarım", en: "Design" },
+      { tr: "Yazılım", en: "Development" },
+      { tr: "Yayın", en: "Launch" },
+      { tr: "Büyüme", en: "Growth" },
+    ],
+    // Kanıt — yalnız doğrulanabilir bilgiler.
+    facts: [
+      { value: "15+", label: { tr: "Teslim edilen proje", en: "Delivered projects" } },
+      { value: "6", label: { tr: "Seçilmiş iş", en: "Selected work" } },
+      { value: "CTIS", label: { tr: "Bilkent Üniversitesi mezunu", en: "Bilkent University graduate" } },
+      { value: "Ankara", label: { tr: "Merkez, tüm Türkiye'ye", en: "Based here, working Türkiye-wide" } },
+    ],
+  },
+
+  // ── Stüdyodan (Instagram) ──────────────────────────────────────
+  fromStudio: {
+    index: { tr: "Stüdyodan", en: "From the Studio" },
+    title: { tr: "Stüdyodan", en: "From the Studio" },
+    sub: {
+      tr: "İşletmelerin dijitalde takıldığı yerler üzerine kısa notlar.",
+      en: "Short notes on where businesses get stuck online.",
+    },
+    follow: { tr: "Instagram'da takip et", en: "Follow on Instagram" },
   },
 
   // Proje kartları
-  viewCase: { tr: "Detaylara bak →", en: "Take a closer look →" },
+  // Ok işareti bileşende ayrıca basılır (animasyonlu) — metne ok EKLEME.
+  viewCase: { tr: "Detaylara bak", en: "Take a closer look" },
   ownProduct: { tr: "Kendi Ürünümüz", en: "Own Product" },
 
   // Case (detay) sayfası

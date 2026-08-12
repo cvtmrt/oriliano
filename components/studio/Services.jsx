@@ -1,19 +1,33 @@
-import { useState } from "react";
+import { useState, useId } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Tilt } from "../anim/Interactive.jsx";
-import { SectionHead, Reveal } from "./_shared.jsx";
-import { services } from "../../data/services.js";
+import { SectionHead } from "./_shared.jsx";
+import { serviceGroups } from "../../data/services.js";
 import { useT, txt } from "../../lib/i18n.jsx";
 
 // ────────────────────────────────────────────────────────────────
-// HİZMETLER — interaktif liste. Masaüstünde solda sticky ÖNİZLEME kartı,
-// sağda hizmet listesi; satırın üstüne gelince önizleme o hizmete geçer.
-// Mobilde: dokunINCA açılan akordeon.
+// YETKİNLİKLER — 4 kümeli editoryal indeks.
+// Masaüstü: solda sticky küme indeksi (Kurulum / Büyüme / Zekâ / Deneyim),
+// sağda seçili kümenin hizmetleri büyük tipografiyle. Satıra gelince
+// açıklama satır altında açılır — ayrı önizleme kartı YOK (jenerik durur).
+// Mobil: kümeler yatay şerit, altında aynı liste.
+// Tüm hareket transform/opacity; kümeler arası geçiş yükseklik zıplatmaz.
 // ────────────────────────────────────────────────────────────────
+
+const ease = [0.16, 1, 0.3, 1];
 
 export function Services() {
   const t = useT();
-  const [active, setActive] = useState(0);
+  const [group, setGroup] = useState(0);
+  const [row, setRow] = useState(0);
+  const panelId = useId();
+
+  const active = serviceGroups[group];
+
+  // Küme değişince ilk satırı seçili yap — boş açıklama alanı kalmasın.
+  const pickGroup = (i) => {
+    setGroup(i);
+    setRow(0);
+  };
 
   return (
     <section className="bg-night py-24 sm:py-32">
@@ -25,88 +39,167 @@ export function Services() {
           sub={t(txt.sec.services.sub)}
         />
 
-        <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
-          {/* Sticky önizleme (yalnız masaüstü) */}
-          <div className="hidden lg:block">
-            <div className="sticky top-28">
-              <Tilt max={4}>
-              <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-ink/10 bg-gradient-to-br from-graphite to-iron shadow-soft">
-                <div className="pointer-events-none absolute inset-0 bg-radial-glow opacity-70" />
+        <div className="grid gap-12 lg:grid-cols-[0.62fr_1.38fr] lg:gap-20">
+          {/* ── Küme indeksi ─────────────────────────────────────── */}
+          <div>
+            <div className="lg:sticky lg:top-32">
+              {/* Masaüstü: dikey indeks */}
+              <ul className="hidden lg:flex lg:flex-col" role="tablist" aria-orientation="vertical">
+                {serviceGroups.map((g, i) => {
+                  const on = group === i;
+                  return (
+                    <li key={g.key}>
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={on}
+                        aria-controls={`${panelId}-${g.key}`}
+                        onMouseEnter={() => pickGroup(i)}
+                        onFocus={() => pickGroup(i)}
+                        onClick={() => pickGroup(i)}
+                        data-cursor
+                        className="group flex w-full items-baseline gap-4 border-b border-ink/10 py-4 text-left"
+                      >
+                        <span
+                          className={`font-mono text-[0.65rem] tabular-nums transition-colors duration-300 ${
+                            on ? "text-glow" : "text-steel"
+                          }`}
+                        >
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span
+                          className={`font-display text-2xl font-extrabold uppercase tracking-tightest transition-all duration-500 ease-out-expo ${
+                            on
+                              ? "translate-x-1 text-chalk"
+                              : "text-steel group-hover:translate-x-1 group-hover:text-ash"
+                          }`}
+                        >
+                          {t(g.label)}
+                        </span>
+                        <span
+                          className={`ml-auto text-glow transition-all duration-500 ease-out-expo ${
+                            on ? "translate-x-0 opacity-100" : "-translate-x-2 opacity-0"
+                          }`}
+                          aria-hidden="true"
+                        >
+                          →
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+
+              {/* Küme vaadi — indeksin altında, sessiz editoryal not */}
+              <div className="mt-6 hidden min-h-[3.5rem] lg:block">
                 <AnimatePresence mode="wait">
-                  <motion.div
-                    key={services[active].no}
-                    initial={{ opacity: 0, y: 24 }}
+                  <motion.p
+                    key={active.key}
+                    initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -18 }}
-                    transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute inset-0 flex flex-col justify-between p-8 sm:p-10"
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.4, ease }}
+                    className="max-w-[22ch] text-sm leading-relaxed text-ash"
                   >
-                    <span className="font-mono text-sm text-glow">{services[active].no} / {services.length}</span>
-                    <div>
-                      <span className="block font-display text-[7rem] font-black leading-none tracking-tightest text-gradient">
-                        {services[active].no}
-                      </span>
-                      <h3 className="mt-4 font-display text-3xl font-extrabold uppercase tracking-tightest text-chalk">
-                        {t(services[active].title)}
-                      </h3>
-                      <p className="mt-4 max-w-sm text-base leading-relaxed text-ash">
-                        {t(services[active].desc)}
-                      </p>
-                    </div>
-                  </motion.div>
+                    {t(active.blurb)}
+                  </motion.p>
                 </AnimatePresence>
               </div>
-              </Tilt>
+
+              {/* Mobil: yatay küme şeridi */}
+              <div
+                className="-mx-6 flex gap-2 overflow-x-auto px-6 pb-1 lg:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                role="tablist"
+              >
+                {serviceGroups.map((g, i) => {
+                  const on = group === i;
+                  return (
+                    <button
+                      key={g.key}
+                      type="button"
+                      role="tab"
+                      aria-selected={on}
+                      aria-controls={`${panelId}-${g.key}`}
+                      onClick={() => pickGroup(i)}
+                      className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-2 font-mono text-[0.7rem] uppercase tracking-widest transition-colors duration-300 ${
+                        on
+                          ? "border-glow/60 bg-glow/10 text-glow"
+                          : "border-ink/15 text-steel"
+                      }`}
+                    >
+                      {t(g.label)}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
-          {/* Liste */}
-          <ul className="flex flex-col border-t border-ink/10">
-            {services.map((s, i) => {
-              const on = active === i;
-              return (
-                <li key={s.no} className="border-b border-ink/10">
-                  <Reveal delay={i * 0.04}>
-                  <button
-                    type="button"
-                    onMouseEnter={() => setActive(i)}
-                    onFocus={() => setActive(i)}
-                    onClick={() => setActive(on ? -1 : i)}
-                    data-cursor
-                    className="group flex w-full items-center gap-5 py-5 text-left transition-colors sm:py-6"
-                  >
-                    <span className={`font-mono text-xs transition-colors ${on ? "text-glow" : "text-steel"}`}>
-                      {s.no}
-                    </span>
-                    <span
-                      className={`flex-1 font-display text-2xl font-bold uppercase tracking-tight transition-all duration-500 ease-out-expo sm:text-3xl ${
-                        on ? "translate-x-1 text-glow" : "text-chalk group-hover:text-glow"
-                      }`}
-                    >
-                      {t(s.title)}
-                    </span>
-                    <span
-                      className={`text-glow transition-all duration-500 ease-out-expo ${
-                        on ? "translate-x-0 opacity-100" : "-translate-x-2 opacity-0"
-                      }`}
-                    >
-                      →
-                    </span>
-                  </button>
+          {/* ── Seçili kümenin hizmetleri ────────────────────────── */}
+          <div
+            id={`${panelId}-${active.key}`}
+            role="tabpanel"
+            aria-label={t(active.label)}
+            className="border-t border-ink/10"
+          >
+            <AnimatePresence mode="wait">
+              <motion.ul
+                key={active.key}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.28, ease }}
+              >
+                {active.items.map((s, i) => {
+                  const on = row === i;
+                  return (
+                    <li key={s.no} className="border-b border-ink/10">
+                      <button
+                        type="button"
+                        onMouseEnter={() => setRow(i)}
+                        onFocus={() => setRow(i)}
+                        onClick={() => setRow(on ? -1 : i)}
+                        aria-expanded={on}
+                        data-cursor
+                        className="group flex w-full items-baseline gap-5 py-5 text-left sm:py-6"
+                      >
+                        <span
+                          className={`font-mono text-[0.65rem] tabular-nums transition-colors duration-300 ${
+                            on ? "text-glow" : "text-steel"
+                          }`}
+                        >
+                          {s.no}
+                        </span>
+                        <span
+                          className={`flex-1 font-display text-[1.6rem] font-bold uppercase leading-[1.05] tracking-tightest transition-all duration-500 ease-out-expo sm:text-4xl ${
+                            on
+                              ? "translate-x-1 text-chalk"
+                              : "text-steel group-hover:translate-x-1 group-hover:text-ash"
+                          }`}
+                        >
+                          {t(s.title)}
+                        </span>
+                      </button>
 
-                  {/* Mobil akordeon açıklaması */}
-                  <div
-                    className={`overflow-hidden transition-all duration-500 ease-out-expo lg:hidden ${
-                      on ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
-                    }`}
-                  >
-                    <p className="pb-5 text-sm leading-relaxed text-ash">{t(s.desc)}</p>
-                  </div>
-                  </Reveal>
-                </li>
-              );
-            })}
-          </ul>
+                      {/* Açıklama — grid-rows tekniğiyle yumuşak açılış,
+                          max-h tahmini yok (uzun metinler kırpılmaz). */}
+                      <div
+                        className={`grid transition-[grid-template-rows,opacity] duration-500 ease-out-expo motion-reduce:transition-none ${
+                          on ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                        }`}
+                      >
+                        <div className="overflow-hidden">
+                          <p className="max-w-2xl pb-6 pl-[calc(0.65rem+1.25rem)] text-sm leading-relaxed text-ash sm:text-base">
+                            {t(s.desc)}
+                          </p>
+                        </div>
+                      </div>
+                    </li>
+                  );
+                })}
+              </motion.ul>
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </section>

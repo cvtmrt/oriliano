@@ -224,6 +224,52 @@ export const projects = [
       { shot: "/images/case-incek-sandvic-qr.jpg", caption: { tr: "Temassız menü ve yol tarifi için markalı QR deneyimi", en: "Branded QR experience for contactless menu access and directions" } },
     ],
   },
+  {
+    slug: "my-yapi",
+    index: "06",
+    name: "MY YAPI",
+    category: { tr: "İnşaat & Yapı Malzemeleri Sitesi", en: "Construction & Building Materials Site" },
+    year: "2026",
+    url: "https://myyapiinsaat.com.tr",
+    urlLabel: "myyapiinsaat.com.tr",
+    summary: {
+      tr: "Ankara Çankaya'da inşaat, taahhüt ve yapı malzemeleri alanında çalışan MY YAPI için kömür-amber dilinde, teklif almaya odaklı kurumsal bir site.",
+      en: "A charcoal-and-amber corporate site focused on quote requests for MY YAPI, working in construction, contracting and building materials in Çankaya, Ankara.",
+    },
+    scope: [
+      { tr: "Web Tasarım", en: "Web Design" },
+      { tr: "Hizmet Mimarisi", en: "Service Architecture" },
+      { tr: "Ürün Kataloğu", en: "Product Catalog" },
+      { tr: "Yerel SEO", en: "Local SEO" },
+      { tr: "Ölçümleme", en: "Analytics" },
+    ],
+    shot: "/images/work-myyapi.jpg",
+    caseStudy: {
+      problem: {
+        tr: "İnşaattan dekorasyona, malzeme tedariğinden imalata kadar çok geniş bir hizmet yelpazesi vardı; bunu ziyaretçiyi boğmadan anlatmak ve her sayfadan teklif talebine taşımak gerekiyordu.",
+        en: "The service range was very broad — from construction to decoration, material supply to manufacturing; it had to be told without overwhelming visitors and channelled into quote requests from every page.",
+      },
+      build: {
+        tr: "Hizmetler, ürünler, projeler ve hizmet bölgeleri olarak ayrılmış bir mimari; numaralı hizmet kartları, marka ve kategori kataloğu, her ekranda duran telefon CTA'sı ve sabit WhatsApp erişimi.",
+        en: "An architecture split into services, products, projects and service areas; numbered service cards, a brand and category catalog, a phone CTA present on every screen and persistent WhatsApp access.",
+      },
+      design: {
+        tr: "Kömür siyahı zemin üzerinde amber vurgu; sahadan gerçek fotoğraflar, kalın başlıklar ve sektörün alıştığı şablon görünümünden bilinçli olarak uzaklaşan sakin bir yerleşim.",
+        en: "An amber accent over charcoal black; real photography from the field, heavy headlines and a calm layout that deliberately steps away from the template look common in the sector.",
+      },
+      value: {
+        tr: "Yerel aramalarda konumlanan, hizmet genişliğini net anlatan ve ziyaretçiyi tek dokunuşta telefon veya WhatsApp'a taşıyan bir teklif kanalı.",
+        en: "A quote channel that ranks in local search, communicates the breadth of services clearly and moves visitors to phone or WhatsApp in a single tap.",
+      },
+      tech: ["React", "Vite", "Yerel SEO", "Google Tag Manager", "Responsive UI"],
+    },
+    gallery: [
+      {
+        shot: "/images/case-myyapi-hizmetler.jpg",
+        caption: { tr: "Numaralı hizmet kartlarıyla uçtan uca yapı çözümleri", en: "End-to-end building solutions in numbered service cards" },
+      },
+    ],
+  },
 ];
 
 // Slug ile tek proje bul (case sayfası için).
