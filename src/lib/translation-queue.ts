@@ -207,8 +207,44 @@ export async function enqueueEntity(
 // ---------------------------------------------------------------------------
 const MAX_ATTEMPTS = 3
 const STALE_CLAIM_MS = 3 * 60 * 1000
+/** Bir tur bu kadar sürdüyse işçi takılmış sayılır, kilit devralınır. */
+const STALE_RUN_MS = 5 * 60 * 1000
 
-let running = false
+let runningSince: number | null = null
+
+/**
+ * Sırada "yazılıyor" görünen ama karşılığında canlı bir iş kalmamış alanları
+ * kurtarır.
+ *
+ * Böyle bir şey olabiliyor: süreç, işi yazdıktan sonra ama durumu güncellemeden
+ * yeniden başlarsa FieldMeta PENDING'de kalır, TranslationJob ise bitmiş
+ * görünür. O alan bir daha hiçbir zaman kuyruğa girmez ve panelde sonsuza kadar
+ * "İngilizcesi yazılıyor…" yazar. Burada güncel Türkçe metinle yeniden sıraya
+ * alıyoruz — kaynak boşsa alan zaten AUTO'ya düşüyor.
+ */
+async function resumeOrphans(): Promise<void> {
+  const pendingMeta = await prisma.fieldMeta.findMany({ where: { status: 'PENDING' }, take: 200 })
+  if (pendingMeta.length === 0) return
+
+  for (const meta of pendingMeta) {
+    const job = await prisma.translationJob.findUnique({
+      where: {
+        entity_entityId_field: { entity: meta.entity, entityId: meta.entityId, field: meta.field },
+      },
+    })
+    if (job && !job.doneAt && job.attempts < MAX_ATTEMPTS) continue // iş canlı, dokunma
+
+    const spec = entitySpecs[meta.entity as EntityName]
+    if (!spec) continue
+    const row = await spec.read(meta.entityId).catch(() => null)
+    if (!row) continue
+
+    const source = String(row[spec.columns(meta.field).tr] ?? '')
+    await enqueueTranslation(meta.entity as EntityName, meta.entityId, meta.field, source, {
+      force: true,
+    })
+  }
+}
 
 async function backoff(attempt: number): Promise<void> {
   const ms = Math.min(30_000, 800 * 2 ** attempt) + Math.floor(Math.random() * 400)
@@ -220,9 +256,14 @@ async function backoff(attempt: number): Promise<void> {
  * çevrilir (hem daha hızlı hem daha tutarlı).
  */
 export async function runQueue(maxBatches = 8): Promise<{ processed: number; failed: number }> {
-  if (running) return { processed: 0, failed: 0 }
+  // Kilit süresizce tutulmaz: bir tur beklenenden uzun sürdüyse (ağ takılması,
+  // düşmüş bir istek) devralınır. Yoksa tek bir asılı çağrı bütün kuyruğu
+  // kalıcı olarak durdururdu.
+  if (runningSince !== null && Date.now() - runningSince < STALE_RUN_MS) {
+    return { processed: 0, failed: 0 }
+  }
   if (!translationConfigured()) return { processed: 0, failed: 0 }
-  running = true
+  runningSince = Date.now()
 
   let processed = 0
   let failed = 0
@@ -233,6 +274,9 @@ export async function runQueue(maxBatches = 8): Promise<{ processed: number; fai
       where: { doneAt: null, claimedAt: { lt: new Date(Date.now() - STALE_CLAIM_MS) } },
       data: { claimedAt: null },
     })
+
+    // Karşılığında iş kalmamış "yazılıyor" alanlarını yeniden sıraya al.
+    await resumeOrphans()
 
     for (let batch = 0; batch < maxBatches; batch++) {
       const next = await prisma.translationJob.findFirst({
@@ -315,7 +359,7 @@ export async function runQueue(maxBatches = 8): Promise<{ processed: number; fai
       await new Promise((r) => setTimeout(r, 1200))
     }
   } finally {
-    running = false
+    runningSince = null
   }
 
   // Kuyrukta iş kaldıysa kendini yeniden tetikle. Bir çağrı en fazla `maxBatches`

@@ -96,14 +96,32 @@ async function geminiGenerate(
 
   for (const model of models) {
     for (let attempt = 0; attempt < 3; attempt++) {
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
-          body: JSON.stringify(body),
-        },
-      )
+      // Zaman aşımı şart: yanıtsız kalan bir istek kuyruk işçisini kilitli
+      // tutar (runQueue tek seferde bir tur çalışıyor) ve panelde alanlar
+      // sonsuza kadar "yazılıyor…" görünür. 90 sn en uzun toplu çeviri için
+      // fazlasıyla yeterli.
+      let res: Response
+      try {
+        res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
+            body: JSON.stringify(body),
+            signal: AbortSignal.timeout(90_000),
+          },
+        )
+      } catch (err) {
+        lastError =
+          (err as Error).name === 'TimeoutError'
+            ? 'İstek zaman aşımına uğradı (90 sn).'
+            : `Ağ hatası: ${(err as Error).message}`.slice(0, 200)
+        if (attempt < 2) {
+          await sleep(2000 * (attempt + 1))
+          continue
+        }
+        break
+      }
 
       if (res.ok) {
         const json = (await res.json()) as {

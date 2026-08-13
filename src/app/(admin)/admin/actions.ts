@@ -12,6 +12,7 @@ import {
   enqueueTranslation,
   enqueueAllMissing,
   enqueueAllAuto,
+  entitySpecs,
   kickQueue,
   lockFieldManual,
   type EntityName,
@@ -616,11 +617,16 @@ export async function retryFailedTranslationsAction(): Promise<void> {
   await requireAdmin()
   const failed = await prisma.fieldMeta.findMany({ where: { status: 'FAILED' } })
   for (const meta of failed) {
-    await prisma.translationJob.updateMany({
-      where: { entity: meta.entity, entityId: meta.entityId, field: meta.field },
-      data: { attempts: 0, doneAt: null, claimedAt: null, lastError: null },
-    })
-    await prisma.fieldMeta.update({ where: { id: meta.id }, data: { status: 'PENDING', error: null } })
+    // İş satırını tazelemek yetmez: silinmiş olabilir, o zaman `updateMany` hiç
+    // satır bulamaz ve alan sessizce PENDING'de asılı kalırdı. Güncel Türkçe
+    // metinle baştan sıraya almak her iki durumda da doğru sonucu veriyor.
+    const entity = meta.entity as EntityName
+    const spec = entitySpecs[entity]
+    if (!spec) continue
+    const row = await spec.read(meta.entityId).catch(() => null)
+    if (!row) continue
+    const source = String(row[spec.columns(meta.field).tr] ?? '')
+    await enqueueTranslation(entity, meta.entityId, meta.field, source, { force: true })
   }
   kickQueue()
   revalidatePath('/admin/tools')

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { logoutAction } from '@/app/(admin)/admin/actions'
+import TranslationTicker from './TranslationTicker'
 
 const nav = [
   { href: '/admin', label: 'Genel Bakış', exact: true },
@@ -113,6 +114,9 @@ export default function AdminShell({
       </aside>
 
       <main className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-10 lg:py-10">{children}</main>
+
+      {/* Panel açıkken çeviri kuyruğunu sürer; kuyruk boşsa hiçbir şey göstermez. */}
+      <TranslationTicker />
     </div>
   )
 }
