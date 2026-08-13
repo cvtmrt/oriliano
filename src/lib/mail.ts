@@ -1,4 +1,5 @@
 import 'server-only'
+import { randomUUID } from 'crypto'
 import nodemailer, { type Transporter } from 'nodemailer'
 
 /**
@@ -150,6 +151,147 @@ async function sendViaSmtp(options: {
 }
 
 /**
+ * MESAJIN KENDİSİ — neden elle kuruluyor
+ *
+ * Bu iş önce nodemailer'ın MailComposer'ına yaptırılıyordu. O, gövdeyi
+ * quoted-printable'a çeviriyor: "Koç" → "Ko=C3=A7", `style="..."` →
+ * `style=3D"..."`. Kurallara uygun bir mesaj ve giden posta için doğru olan
+ * da bu. Ama kutuya doğrudan yazılan bu mesajlarda Outlook kodlamayı
+ * çözmüyor, gövdeyi ham hâliyle gösteriyordu — Türkçe harfler ve HTML
+ * etiketleri okunmaz hâldeydi. (Sunucu tarafı doğruydu: hem ham kaynak hem
+ * IMAP'in bildirdiği gövde yapısı "quoted-printable" diyordu, sunucunun
+ * kendi çözümü de düzgün çalışıyordu.)
+ *
+ * Çözüm kodlamayı düzeltmek değil, hiç kodlamamak: IMAP bağlantısı 8 bit
+ * temiz olduğu için gövde olduğu gibi UTF-8 yazılıp `8bit` deniyor. Ortada
+ * çözülecek bir şey kalmayınca hangi istemci olursa olsun doğru görüyor.
+ *
+ * Bu yalnızca IMAP yolunda geçerli. SMTP'de nodemailer'ın kendi kodlaması
+ * kullanılmaya devam ediyor; orada sunucu 8 bit kabul etmeyebilir.
+ */
+
+/** Başlıkta ASCII dışı karakter varsa RFC 2047 ile kodlar (Subject, ad soyad). */
+function encodeHeaderValue(value: string): string {
+  if (!/[^ -~]/.test(value)) return value
+
+  // Kodlanmış her parça en fazla 75 karakter olabilir; `=?UTF-8?B?` + `?=`
+  // payı düşülünce base64'e 60 karakter kalıyor, o da 45 bayt ham veri.
+  const words: string[] = []
+  let chunk = ''
+  for (const char of value) {
+    if (Buffer.byteLength(chunk + char) > 45) {
+      words.push(chunk)
+      chunk = ''
+    }
+    chunk += char
+  }
+  if (chunk) words.push(chunk)
+
+  // Katlanan satırın devamı boşlukla başlar.
+  return words.map((w) => `=?UTF-8?B?${Buffer.from(w, 'utf8').toString('base64')}?=`).join('\r\n ')
+}
+
+/** "Çetiner Hukuk <info@x.com>" → görünen ad kodlanır, adres olduğu gibi kalır. */
+function encodeAddressValue(value: string): string {
+  const match = value.match(/^\s*(.*?)\s*<([^>]+)>\s*$/)
+  if (!match) return value
+  const [, name, address] = match
+  if (!name) return `<${address}>`
+  return `${encodeHeaderValue(name.replace(/^"|"$/g, ''))} <${address}>`
+}
+
+/**
+ * Satırlar 998 baytı geçemez (RFC 5322). Kodlama kullanmadığımız için bunu
+ * kendimiz gözetiyoruz: uzun satırlar boşluktan bölünüyor. HTML'de boşluk
+ * zaten anlamsız; düz metinde de uzun paragrafın sarılması normal görünür.
+ */
+function wrapLongLines(body: string, limit = 900): string {
+  return body
+    .split('\n')
+    .map((line) => {
+      if (Buffer.byteLength(line) <= limit) return line
+      const out: string[] = []
+      let current = ''
+      for (const word of line.split(' ')) {
+        if (current && Buffer.byteLength(`${current} ${word}`) > limit) {
+          out.push(current)
+          current = word
+        } else {
+          current = current ? `${current} ${word}` : word
+        }
+      }
+      if (current) out.push(current)
+      return out.join('\n')
+    })
+    .join('\n')
+}
+
+function rfc5322Date(date: Date): string {
+  // "Thu, 13 Aug 2026 14:02:52 GMT" → sondaki bölge adı sayıya çevriliyor.
+  return date.toUTCString().replace(/GMT$/, '+0000')
+}
+
+function buildMimeMessage(options: {
+  from: string
+  to: string[]
+  subject: string
+  text: string
+  html?: string
+  replyTo?: string
+}): Buffer {
+  const crlf = (value: string) => wrapLongLines(value).replace(/\r?\n/g, '\r\n')
+  const domain = options.from.match(/@([^>\s]+)/)?.[1] || 'localhost'
+  const headers = [
+    `From: ${encodeAddressValue(options.from)}`,
+    `To: ${options.to.join(', ')}`,
+    ...(options.replyTo ? [`Reply-To: ${options.replyTo}`] : []),
+    `Subject: ${encodeHeaderValue(options.subject)}`,
+    `Date: ${rfc5322Date(new Date())}`,
+    `Message-ID: <${randomUUID()}@${domain}>`,
+    'MIME-Version: 1.0',
+  ]
+
+  if (!options.html) {
+    return Buffer.from(
+      [
+        ...headers,
+        'Content-Type: text/plain; charset=utf-8',
+        'Content-Transfer-Encoding: 8bit',
+        '',
+        crlf(options.text),
+        '',
+      ].join('\r\n'),
+      'utf8',
+    )
+  }
+
+  // Sınır dizgisi gövdede rastlanamayacak kadar benzersiz olmalı.
+  const boundary = `=_cetiner_${randomUUID()}`
+  return Buffer.from(
+    [
+      ...headers,
+      `Content-Type: multipart/alternative; boundary="${boundary}"`,
+      '',
+      `--${boundary}`,
+      'Content-Type: text/plain; charset=utf-8',
+      'Content-Transfer-Encoding: 8bit',
+      '',
+      crlf(options.text),
+      '',
+      `--${boundary}`,
+      'Content-Type: text/html; charset=utf-8',
+      'Content-Transfer-Encoding: 8bit',
+      '',
+      crlf(options.html),
+      '',
+      `--${boundary}--`,
+      '',
+    ].join('\r\n'),
+    'utf8',
+  )
+}
+
+/**
  * IMAP ile doğrudan kutuya bırakma.
  *
  * Mesaj bir posta sunucusuna teslim edilmiyor; MIME olarak kurulup kutunun
@@ -165,19 +307,8 @@ async function deliverViaImap(options: {
   replyTo?: string
 }): Promise<SendResult> {
   const { ImapFlow } = await import('imapflow')
-  const MailComposer = (await import('nodemailer/lib/mail-composer')).default
 
-  const raw = await new MailComposer({
-    from: mailFrom(),
-    to: options.to,
-    subject: options.subject,
-    text: options.text,
-    ...(options.html ? { html: options.html } : {}),
-    ...(options.replyTo ? { replyTo: options.replyTo } : {}),
-    date: new Date(),
-  })
-    .compile()
-    .build()
+  const raw = buildMimeMessage({ ...options, from: mailFrom() })
 
   const client = new ImapFlow({
     host: imapHost(),
@@ -193,7 +324,9 @@ async function deliverViaImap(options: {
 
   try {
     await client.connect()
-    const result = await client.append('INBOX', raw, [])
+    // Kutu içi tarih de veriliyor; yoksa sunucunun saati esas alınır ve
+    // sıralama mesajın kendi tarihinden kayabilir.
+    const result = await client.append('INBOX', raw, [], new Date())
     return { ok: true, id: result && 'uid' in result ? String(result.uid) : undefined }
   } catch (err) {
     return { ok: false, error: (err as Error).message.slice(0, 250) }
