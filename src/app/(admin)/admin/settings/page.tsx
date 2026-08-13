@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import { getCurrentAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { getFieldMeta } from '@/lib/translation-queue'
-import { mailConfigured } from '@/lib/mail'
+import { mailConfigured, mailProviderLabel } from '@/lib/mail'
 import { whatsappLink } from '@/lib/phone'
 import { saveSettingsAction } from '../actions'
 import { PageTitle, Card, Banner } from '@/components/admin/ui'
@@ -248,22 +248,18 @@ export default async function SettingsPage() {
           title="Form bildirimleri"
           description="İletişim formu doldurulduğunda e-posta gelsin. Mesaj her hâlükârda Gelen Kutusu'na kaydedilir; bu ayar yalnızca haber verilip verilmeyeceğini belirler."
         >
-          {!mailReady ? (
+          {mailReady ? (
+            <Banner type="info">
+              Gönderim yolu: <strong>{mailProviderLabel()}</strong>
+            </Banner>
+          ) : (
             <Banner type="warn">
-              E-posta gönderimi kapalı: <code>RESEND_API_KEY</code> ortam değişkeni tanımlı değil.
-              Anahtarı{' '}
-              <a
-                href="https://resend.com/api-keys"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline"
-              >
-                resend.com
-              </a>{' '}
-              üzerinden ücretsiz alıp Railway&apos;e ekleyin. Eklenene kadar aşağıdaki ayarlar
+              E-posta gönderimi kapalı. Railway ortam değişkenlerine ya kendi posta kutunuzun SMTP
+              bilgilerini (<code>SMTP_HOST</code>, <code>SMTP_USER</code>, <code>SMTP_PASS</code>)
+              ya da bir <code>RESEND_API_KEY</code> ekleyin. Eklenene kadar aşağıdaki ayarlar
               kaydedilir ama e-posta gitmez.
             </Banner>
-          ) : null}
+          )}
 
           <label className="flex min-h-[44px] items-center gap-3 text-sm text-graphite-700">
             <input

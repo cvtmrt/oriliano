@@ -1,34 +1,116 @@
 import 'server-only'
+import nodemailer, { type Transporter } from 'nodemailer'
 
 /**
- * E-POSTA GÖNDERİMİ — Resend
+ * E-POSTA GÖNDERİMİ — SMTP veya Resend
  *
- * Ek paket yok, resmî REST uç noktasına `fetch` ile gidiliyor.
+ * İKİ SAĞLAYICI DESTEKLENİYOR:
  *
- * Sır/anahtar ayrımı bilinçli:
- *   - `RESEND_API_KEY` ve `MAIL_FROM` ortam değişkeninde durur. Anahtarı
- *     veritabanına ve panele koymuyoruz.
- *   - Kime gideceği, açık/kapalı olması ve otomatik yanıt metni panelden
- *     yönetilir; bunlar sır değil, günlük ayar.
+ *   smtp    — SMTP_HOST/PORT/USER/PASS. Firmanın kendi posta kutusundan
+ *             gönderir (Turhost). DNS'e dokunmak gerekmez, alan adı zaten
+ *             o sunucuda barınıyor; SPF de hâlihazırda Turhost'u yetkilendiriyor,
+ *             yani postalar spam'e düşmeden gider. Varsayılan tercih.
+ *   resend  — RESEND_API_KEY. Ayrı bir servis; alan adı doğrulaması için
+ *             DNS'e DKIM kaydı eklemek gerekir.
  *
- * Anahtar tanımlı değilse gönderim sessizce atlanır — form yine çalışır ve
- * mesaj panelin gelen kutusuna düşer. Panelde bu durum uyarı olarak görünür.
+ * İkisi de tanımlıysa SMTP kullanılır. Hiçbiri tanımlı değilse gönderim
+ * sessizce atlanır — form yine çalışır ve mesaj panelin gelen kutusuna düşer.
+ * Panelde bu durum uyarı olarak görünür.
+ *
+ * Sır/anahtar ayrımı bilinçli: şifreler ve anahtarlar yalnızca ortam
+ * değişkeninde durur, veritabanına ve panele yazılmaz. Kime gideceği,
+ * açık/kapalı olması ve otomatik yanıt metni ise panelden yönetilir —
+ * bunlar sır değil, günlük ayar.
  */
 
 export const MAIL_FROM_FALLBACK = 'Çetiner Hukuk <onboarding@resend.dev>'
 
+export type MailProvider = 'smtp' | 'resend'
+
+function smtpHost(): string {
+  return process.env.SMTP_HOST?.trim() || ''
+}
+
+export function activeMailProvider(): MailProvider | null {
+  if (smtpHost()) return 'smtp'
+  if (process.env.RESEND_API_KEY) return 'resend'
+  return null
+}
+
 export function mailConfigured(): boolean {
-  return Boolean(process.env.RESEND_API_KEY)
+  return activeMailProvider() !== null
+}
+
+/** Panelde göstermek için okunabilir ad. */
+export function mailProviderLabel(): string {
+  const provider = activeMailProvider()
+  if (provider === 'smtp') return `Kendi posta sunucunuz (${smtpHost()})`
+  if (provider === 'resend') return 'Resend'
+  return 'kapalı'
 }
 
 export function mailFrom(): string {
-  return process.env.MAIL_FROM?.trim() || MAIL_FROM_FALLBACK
+  const explicit = process.env.MAIL_FROM?.trim()
+  if (explicit) return explicit
+  // SMTP'de gönderen, kimlik doğrulanan kutuyla aynı olmalı — sunucular
+  // başka bir adresten göndermeyi çoğunlukla reddeder.
+  const user = process.env.SMTP_USER?.trim()
+  if (smtpHost() && user) return `Çetiner Hukuk <${user}>`
+  return MAIL_FROM_FALLBACK
 }
 
 export interface SendResult {
   ok: boolean
   error?: string
   id?: string
+}
+
+// Bağlantı havuzu: her mesajda yeni TLS el sıkışması yapmak yerine açık
+// bağlantı yeniden kullanılıyor.
+let transporter: Transporter | null = null
+
+function getTransporter(): Transporter {
+  if (!transporter) {
+    const port = Number(process.env.SMTP_PORT || 465)
+    transporter = nodemailer.createTransport({
+      host: smtpHost(),
+      port,
+      // 465 örtük TLS ister; 587 düz başlayıp STARTTLS'e yükselir.
+      secure: port === 465,
+      auth: {
+        user: process.env.SMTP_USER?.trim() || '',
+        pass: process.env.SMTP_PASS || '',
+      },
+      pool: true,
+      maxConnections: 2,
+      connectionTimeout: 15_000,
+      greetingTimeout: 10_000,
+      socketTimeout: 20_000,
+    })
+  }
+  return transporter
+}
+
+async function sendViaSmtp(options: {
+  to: string[]
+  subject: string
+  text: string
+  html?: string
+  replyTo?: string
+}): Promise<SendResult> {
+  try {
+    const info = await getTransporter().sendMail({
+      from: mailFrom(),
+      to: options.to,
+      subject: options.subject,
+      text: options.text,
+      ...(options.html ? { html: options.html } : {}),
+      ...(options.replyTo ? { replyTo: options.replyTo } : {}),
+    })
+    return { ok: true, id: info.messageId }
+  } catch (err) {
+    return { ok: false, error: (err as Error).message.slice(0, 250) }
+  }
 }
 
 export async function sendMail(options: {
@@ -38,11 +120,19 @@ export async function sendMail(options: {
   html?: string
   replyTo?: string
 }): Promise<SendResult> {
-  const key = process.env.RESEND_API_KEY
-  if (!key) return { ok: false, error: 'RESEND_API_KEY tanımlı değil.' }
+  const provider = activeMailProvider()
+  if (!provider) {
+    return { ok: false, error: 'E-posta gönderimi yapılandırılmamış.' }
+  }
 
   const to = options.to.map((t) => t.trim()).filter(Boolean)
   if (to.length === 0) return { ok: false, error: 'Alıcı adresi yok.' }
+
+  if (provider === 'smtp') {
+    return sendViaSmtp({ ...options, to })
+  }
+
+  const key = process.env.RESEND_API_KEY as string
 
   try {
     const res = await fetch('https://api.resend.com/emails', {

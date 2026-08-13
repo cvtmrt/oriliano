@@ -13,7 +13,12 @@ export async function POST() {
 
   if (!mailConfigured()) {
     return NextResponse.json(
-      { ok: false, error: 'RESEND_API_KEY tanımlı değil. Railway ortam değişkenlerine ekleyin.' },
+      {
+        ok: false,
+        error:
+          'E-posta gönderimi kapalı. Railway ortam değişkenlerine SMTP_HOST/SMTP_USER/SMTP_PASS ' +
+          '(kendi posta kutunuz) veya RESEND_API_KEY ekleyin.',
+      },
       { status: 400 },
     )
   }
