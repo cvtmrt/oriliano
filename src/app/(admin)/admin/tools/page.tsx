@@ -130,8 +130,9 @@ export default async function ToolsPage() {
           description="Kurulumla gelen ve hiç dokunulmamış yer tutucu içerikleri siler. Bir kaydı bir kez düzenlediyseniz o kayıt artık örnek sayılmaz ve silinmez."
         >
           <p className="mb-4 text-sm text-graphite-600">
-            Örnek işaretli kayıtlar: {seededTexts} metin, {seededServices} hizmet, {seededTeam} ekip
-            üyesi, {seededPubs} yayın.
+            Örnek işaretli kayıtlar: {seededServices} hizmet, {seededTeam} ekip üyesi,{' '}
+            {seededPubs} yayın. Bunlardan yalnızca <strong>hiç düzenlenmemiş</strong> olanlar
+            silinir. Sayfa metinleri, görsel yuvaları ve sözlük silinmez.
           </p>
 
           {totalSeeded === 0 ? (

@@ -658,19 +658,33 @@ export async function retryFailedTranslationsAction(): Promise<void> {
 }
 
 /**
- * "Örnek verileri temizle" — seed'in eklediği kayıtları siler.
- * Elle girilen/düzenlenen içeriğe dokunmaz (seeded=false olanlar kalır).
+ * "Örnek verileri temizle" — kurulumla gelen yer tutucuları siler.
+ *
+ * İKİ KOŞUL birden aranıyor: kayıt seed'den gelmiş OLACAK **ve** hiç
+ * düzenlenmemiş olacak (`updatedAt === createdAt`). Tek başına `seeded`
+ * yetmiyordu: düzenlenen kayıtta da bu işaret duruyor, dolayısıyla düğme
+ * kullanıcının üstünde saatlerce çalıştığı hizmet ve ekip kayıtlarını
+ * silebiliyordu. Artık dokunulmuş her kayıt korunuyor.
  */
 export async function clearSeedDataAction(): Promise<void> {
   await requireAdmin()
 
-  await prisma.service.deleteMany({ where: { seeded: true } })
-  await prisma.teamMember.deleteMany({ where: { seeded: true } })
-  await prisma.publication.deleteMany({ where: { seeded: true } })
-  await prisma.localizedText.deleteMany({ where: { seeded: true } })
-  await prisma.mediaSlot.deleteMany({ where: { seeded: true } })
-  await prisma.seoMeta.deleteMany({ where: { seeded: true } })
-  await prisma.glossaryTerm.deleteMany({ where: { seeded: true } })
+  await prisma.service.deleteMany({
+    where: { seeded: true, updatedAt: { equals: prisma.service.fields.createdAt } },
+  })
+  await prisma.teamMember.deleteMany({
+    where: { seeded: true, updatedAt: { equals: prisma.teamMember.fields.createdAt } },
+  })
+  await prisma.publication.deleteMany({
+    where: { seeded: true, updatedAt: { equals: prisma.publication.fields.createdAt } },
+  })
+  // Metin, görsel yuvası, SEO ve sözlük kayıtları ARTIK SİLİNMİYOR. Bunlar
+  // "yer tutucu içerik" değil, panelin düzenleme alanlarıdır:
+  //   • metinler silinirse panelde düzenlenecek alan kalmaz,
+  //   • görsel yuvaları silinirse yüklenmiş fotoğrafların bağlantısı kopar,
+  //   • sözlük ve SEO kayıtlarında düzenlenmiş olanı ayırt edecek bir tarih
+  //     alanı yok, yani doğrusunu silmeme garantisi veremiyoruz.
+  // Silinecek tek şey, hiç dokunulmamış örnek hizmet/ekip/yayın kartlarıdır.
 
   // Ayarlar tek satır olduğu için silinmez; yalnızca DEĞERİ HÂLÂ ÖRNEK OLAN
   // alanlar boşaltılır. Gerçek bilgi girdiyseniz ona dokunulmaz.
@@ -681,10 +695,9 @@ export async function clearSeedDataAction(): Promise<void> {
       const current = String((settings as unknown as Record<string, unknown>)[field] ?? '')
       if (current && current === settingsExample[field]) reset[field] = ''
     }
-    await prisma.siteSetting.update({
-      where: { id: 1 },
-      data: { ...reset, seedVersion: null },
-    })
+    // `seedVersion` BİLEREK korunuyor: sıfırlansaydı bir sonraki "yükle"
+    // yeniden tam kurulum sayılır ve silinen her şey geri gelirdi.
+    await prisma.siteSetting.update({ where: { id: 1 }, data: reset })
   }
 
   refreshSite()
