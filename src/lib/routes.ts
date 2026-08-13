@@ -34,7 +34,8 @@ const segments: Record<RouteKey, { file: string; url: Segments }> = {
   mediation: { file: 'mediation', url: { tr: 'arabuluculuk', en: 'mediation' } },
   team: { file: 'team', url: { tr: 'ekibimiz', en: 'team' } },
   contact: { file: 'contact', url: { tr: 'iletisim', en: 'contact' } },
-  publications: { file: 'publications', url: { tr: 'yayinlar', en: 'publications' } },
+  // Dosya adı `publications` kalıyor (app dizini), görünen adres "Makaleler".
+  publications: { file: 'publications', url: { tr: 'makaleler', en: 'articles' } },
 }
 
 /** Varsayılan menü sırası — seed bunu kullanır, sonrası panelden. */
