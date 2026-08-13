@@ -36,8 +36,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       entries.push({
         url: `${base}${href(key, locale)}`,
         lastModified: settings.updatedAt,
-        changeFrequency: key === 'home' ? 'weekly' : 'monthly',
-        priority: key === 'home' ? 1 : 0.8,
+        // Yasal metin nadiren değişir ve aranan bir sayfa değil; taranmasını
+        // istiyoruz ama sıralamada içerik sayfalarının önüne geçmesin.
+        changeFrequency: key === 'home' ? 'weekly' : key === 'privacy' ? 'yearly' : 'monthly',
+        priority: key === 'home' ? 1 : key === 'privacy' ? 0.3 : 0.8,
         alternates: alternates(key),
       })
     }

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { isLocale, pick, type Locale } from '@/lib/i18n'
 import { getImage, getSettings, getT } from '@/lib/content'
 import { buildMetadata } from '@/lib/seo'
+import { href } from '@/lib/routes'
 import PageHero from '@/components/site/PageHero'
 import ContactForm from '@/components/site/ContactForm'
 import { Reveal } from '@/components/motion'
@@ -109,6 +110,10 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
                     success: t('contact.form.success'),
                     error: t('contact.form.error'),
                     consent: t('contact.form.consent'),
+                  }}
+                  privacy={{
+                    href: href('privacy', locale),
+                    label: t('contact.form.privacyLink'),
                   }}
                 />
               </div>

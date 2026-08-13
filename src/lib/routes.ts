@@ -16,6 +16,7 @@ export const routeKeys = [
   'team',
   'contact',
   'publications',
+  'privacy',
 ] as const
 
 export type RouteKey = (typeof routeKeys)[number]
@@ -36,6 +37,11 @@ const segments: Record<RouteKey, { file: string; url: Segments }> = {
   contact: { file: 'contact', url: { tr: 'iletisim', en: 'contact' } },
   // Dosya adı `publications` kalıyor (app dizini), görünen adres "Makaleler".
   publications: { file: 'publications', url: { tr: 'makaleler', en: 'articles' } },
+  // Yasal metin: menüde değil, alt bilgide bağlantısı var.
+  privacy: {
+    file: 'privacy',
+    url: { tr: 'gizlilik-ve-kvkk', en: 'privacy-and-data-protection' },
+  },
 }
 
 /** Varsayılan menü sırası — seed bunu kullanır, sonrası panelden. */

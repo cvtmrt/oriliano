@@ -123,9 +123,17 @@ export default async function Footer({ locale, menu }: { locale: Locale; menu: M
       <div className="border-t border-navy-800">
         <div className="container flex flex-col gap-4 py-7 text-xs leading-relaxed text-navy-300 md:flex-row md:items-start md:justify-between">
           <p className="max-w-2xl">{t('footer.disclaimer')}</p>
-          <p className="shrink-0">
-            © {year} {name}. {t('footer.copyright')}
-          </p>
+          <div className="flex shrink-0 flex-col gap-2 md:items-end">
+            <Link
+              href={href('privacy', locale)}
+              className="link-underline transition-colors hover:text-white"
+            >
+              {t('footer.privacy')}
+            </Link>
+            <p>
+              © {year} {name}. {t('footer.copyright')}
+            </p>
+          </div>
         </div>
       </div>
     </footer>

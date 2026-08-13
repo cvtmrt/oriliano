@@ -47,9 +47,13 @@ const HINTS = {
 export default function ContactForm({
   locale,
   labels,
+  privacy,
 }: {
   locale: Locale
   labels: ContactFormLabels
+  /** Aydınlatma metnine bağlantı — KVKK'nın aradığı "bilgilendirme" formun
+      dibinde tek tıkla ulaşılabilir olsun diye. */
+  privacy?: { href: string; label: string }
 }) {
   const [state, setState] = useState<State>('idle')
   const [message, setMessage] = useState('')
@@ -187,7 +191,17 @@ export default function ContactForm({
         </p>
       </div>
 
-      <p className="text-xs leading-relaxed text-graphite-500">{labels.consent}</p>
+      <p className="text-xs leading-relaxed text-graphite-500">
+        {labels.consent}
+        {privacy ? (
+          <>
+            {' '}
+            <a href={privacy.href} className="link-underline text-navy-900">
+              {privacy.label}
+            </a>
+          </>
+        ) : null}
+      </p>
 
       <div className="flex flex-wrap items-center gap-4">
         <button type="submit" className="btn-primary min-w-[10rem]" disabled={disabled}>

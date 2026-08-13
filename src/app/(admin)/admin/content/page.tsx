@@ -15,6 +15,10 @@ const groupLabels: Record<string, { title: string; description: string }> = {
   team: { title: 'Ekibimiz', description: 'Liste sayfası başlıkları' },
   contact: { title: 'İletişim', description: 'Başlıklar, form etiketleri ve KVKK notu' },
   publications: { title: 'Yayınlar', description: 'Liste sayfası başlıkları ve boş liste metni' },
+  privacy: {
+    title: 'Gizlilik ve KVKK',
+    description: 'Aydınlatma metni, çerez politikası ve başvuru yolu — tüm bölümler',
+  },
   footer: { title: 'Alt Bilgi', description: 'Alt bilgi metinleri ve yasal uyarı' },
   common: { title: 'Ortak Metinler', description: 'Butonlar ve 404 sayfası' },
   seo: { title: 'Paylaşım Görseli', description: 'Varsayılan sosyal medya görseli' },
@@ -29,6 +33,7 @@ const order = [
   'team',
   'contact',
   'publications',
+  'privacy',
   'footer',
   'common',
   'seo',

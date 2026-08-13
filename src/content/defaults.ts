@@ -339,6 +339,15 @@ export const textDefaults: TextDefault[] = [
     'The information you submit through this form is processed solely to assess your request. Submitting the form does not create an attorney–client relationship.',
   ),
 
+  t(
+    'contact.form.privacyLink',
+    'contact',
+    'Form: Aydınlatma metni bağlantısı',
+    'SHORT',
+    'Aydınlatma metnini okuyun.',
+    'Read the data protection notice.',
+  ),
+
   // --- Yayınlar ---
   t('publications.hero.eyebrow', 'publications', 'Üst etiket', 'SHORT', 'Yayınlar', 'Publications'),
   t('publications.hero.title', 'publications', 'Sayfa başlığı', 'LONG', 'Yazılar ve değerlendirmeler', 'Articles and commentary'),
@@ -359,8 +368,151 @@ export const textDefaults: TextDefault[] = [
     'This section is being prepared. Our publications will appear here soon.',
   ),
 
+  // --- Gizlilik / KVKK ---
+  //
+  // Metin sitenin GERÇEK işleyişine göre yazıldı: iletişim formu ad-soyad,
+  // e-posta, telefon, konu, mesaj ve IP kaydediyor; sitede analiz/reklam
+  // çerezi, üçüncü taraf komut dosyası ve dışarıdan yazı tipi yok; barındırma
+  // yurt dışında, e-posta Türkiye'de. Bir alan değişirse bu metin de
+  // güncellenmeli — yanlış aydınlatma metni, metinsiz olmaktan kötüdür.
+  t('privacy.hero.eyebrow', 'privacy', 'Üst etiket', 'SHORT', 'Yasal Bilgilendirme', 'Legal Information'),
+  t(
+    'privacy.hero.title',
+    'privacy',
+    'Sayfa başlığı',
+    'LONG',
+    'Gizlilik ve Çerez Politikası, KVKK Aydınlatma Metni',
+    'Privacy and Cookie Policy, Data Protection Notice',
+  ),
+  t(
+    'privacy.hero.subtitle',
+    'privacy',
+    'Sayfa alt başlığı',
+    'LONG',
+    'Bu sitede kişisel verilerinizin hangi hâllerde işlendiğini, kimlerle paylaşıldığını ve haklarınızı nasıl kullanabileceğinizi açıklıyoruz.',
+    'This page explains when your personal data is processed on this website, with whom it is shared, and how you can exercise your rights.',
+  ),
+  t('privacy.updated', 'privacy', 'Yürürlük tarihi', 'SHORT', 'Yürürlük tarihi: 13 Ağustos 2026', 'Effective date: 13 August 2026'),
+  t('privacy.toc.title', 'privacy', 'İçindekiler başlığı', 'SHORT', 'İçindekiler', 'Contents'),
+  t(
+    'privacy.intro',
+    'privacy',
+    'Giriş metni',
+    'RICH',
+    '<p>Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu (“KVKK”) uyarınca hazırlanmıştır ve internet sitemizi ziyaret eden, iletişim formunu kullanan kişileri aydınlatmak amacı taşır. Gizlilik politikası, çerez politikası ve aydınlatma metni, okumayı kolaylaştırmak için tek bir sayfada birleştirilmiştir.</p><p>Sitede yer alan bilgiler genel bilgilendirme amaçlıdır; hukuki görüş niteliği taşımaz. Formun doldurulması avukat–müvekkil ilişkisi kurmaz.</p>',
+    '<p>This notice has been prepared under Turkish Law No. 6698 on the Protection of Personal Data (“KVKK”) and is intended to inform visitors to our website and users of our contact form. The privacy policy, cookie policy and data protection notice are combined on a single page for ease of reading.</p><p>The information on this site is for general information purposes only and does not constitute legal advice. Completing the form does not create an attorney–client relationship.</p>',
+  ),
+  t('privacy.controller.title', 'privacy', '1. Veri sorumlusu — başlık', 'SHORT', 'Veri sorumlusu', 'Data controller'),
+  t(
+    'privacy.controller.body',
+    'privacy',
+    '1. Veri sorumlusu — metin',
+    'RICH',
+    '<p>Kişisel verileriniz, veri sorumlusu sıfatıyla aşağıda iletişim bilgileri yer alan hukuk büromuz tarafından işlenmektedir. Büromuz 1136 sayılı Avukatlık Kanunu uyarınca faaliyet gösterir. Avukatın sır saklama yükümlülüğü (Avukatlık Kanunu m. 36) kişisel verilerinizin korunmasında meslekî bir güvence oluşturur.</p>',
+    '<p>Your personal data is processed by our law office, whose contact details appear below, acting as data controller. Our office operates under Turkish Attorneyship Law No. 1136. An attorney’s duty of confidentiality (Article 36 of the Attorneyship Law) provides a professional safeguard for the protection of your personal data.</p>',
+  ),
+  t('privacy.data.title', 'privacy', '2. İşlenen veriler — başlık', 'SHORT', 'İşlenen kişisel veriler', 'Personal data we process'),
+  t(
+    'privacy.data.body',
+    'privacy',
+    '2. İşlenen veriler — metin',
+    'RICH',
+    '<p>Sitede üyelik yoktur; kişisel veri yalnızca iletişim formunu doldurduğunuzda işlenir:</p><ul><li><strong>Kimlik ve iletişim verileri:</strong> ad soyad, e-posta adresi, telefon numarası.</li><li><strong>Talep içeriği:</strong> konu ve mesaj alanlarına yazdıklarınız.</li><li><strong>İşlem güvenliği verileri:</strong> formu gönderdiğiniz bağlantının IP adresi, gönderim tarihi ve saati, sitede kullandığınız dil.</li></ul><p>Formda istenmeyen bilgileri paylaşmamanızı öneririz. Sağlık, ceza mahkûmiyeti, biyometrik veri gibi özel nitelikli kişisel verilerin ve dosyanıza ilişkin ayrıntıların ilk temasta form yerine, kuracağımız doğrudan iletişimde paylaşılması daha güvenlidir.</p>',
+    '<p>The site has no membership system; personal data is processed only when you complete the contact form:</p><ul><li><strong>Identity and contact data:</strong> full name, email address, telephone number.</li><li><strong>Content of your request:</strong> the subject and message you write.</li><li><strong>Transaction security data:</strong> the IP address of the connection used to submit the form, the date and time of submission, and the site language you selected.</li></ul><p>Please do not share information that is not requested. Special categories of personal data — such as health data, criminal convictions or biometric data — and the details of your matter are better shared in direct communication with us rather than through the form at first contact.</p>',
+  ),
+  t('privacy.purpose.title', 'privacy', '3. Amaçlar — başlık', 'SHORT', 'İşleme amaçları', 'Purposes of processing'),
+  t(
+    'privacy.purpose.body',
+    'privacy',
+    '3. Amaçlar — metin',
+    'RICH',
+    '<ul><li>Talebinizin değerlendirilmesi ve size dönüş yapılması.</li><li>Hukuki hizmet talebi hâlinde görüşme ayarlanması ve ön değerlendirme yapılması.</li><li>Meslekî yükümlülük gereği menfaat çatışması bulunup bulunmadığının kontrol edilmesi.</li><li>Mevzuattan doğan yükümlülüklerin yerine getirilmesi ve yetkili mercilere karşı ispat yükümlülüğü.</li><li>Sitenin güvenliğinin sağlanması, otomatik ve kötü niyetli form gönderimlerinin önlenmesi.</li></ul><p>Kişisel verileriniz pazarlama, profilleme veya reklam amacıyla kullanılmaz; üçüncü kişilere satılmaz.</p>',
+    '<ul><li>Assessing your request and responding to you.</li><li>Arranging a meeting and carrying out a preliminary assessment where legal services are requested.</li><li>Checking for conflicts of interest as required by professional obligations.</li><li>Fulfilling statutory obligations and meeting the burden of proof before competent authorities.</li><li>Ensuring the security of the website and preventing automated or malicious form submissions.</li></ul><p>Your personal data is not used for marketing, profiling or advertising, and is never sold to third parties.</p>',
+  ),
+  t('privacy.legal.title', 'privacy', '4. Hukuki sebep — başlık', 'SHORT', 'Hukuki sebepler ve toplama yöntemi', 'Legal grounds and method of collection'),
+  t(
+    'privacy.legal.body',
+    'privacy',
+    '4. Hukuki sebep — metin',
+    'RICH',
+    '<p>Verileriniz, internet sitesi üzerinden elektronik ortamda, kısmen otomatik yolla toplanır. İşlemenin hukuki sebepleri KVKK m. 5/2’de sayılan şu hâllerdir:</p><ul><li><strong>(c)</strong> Bir sözleşmenin kurulması veya ifasıyla doğrudan doğruya ilgili olması — talebinizin görüşülmesi ve vekâlet ilişkisinin kurulması aşaması.</li><li><strong>(ç)</strong> Veri sorumlusunun hukuki yükümlülüğünü yerine getirmesi.</li><li><strong>(e)</strong> Bir hakkın tesisi, kullanılması veya korunması için veri işlemenin zorunlu olması.</li><li><strong>(f)</strong> Temel hak ve özgürlüklerinize zarar vermemek kaydıyla meşru menfaatlerimiz — site güvenliği ve kötüye kullanımın önlenmesi.</li></ul><p>Bu sebeplerden hiçbirinin bulunmadığı bir işleme söz konusu olursa, işlem yalnızca açık rızanızla yapılır ve rızanızı dilediğiniz zaman geri alabilirsiniz.</p>',
+    '<p>Your data is collected electronically through the website by partly automated means. Processing is based on the following grounds set out in Article 5/2 of the KVKK:</p><ul><li><strong>(c)</strong> Processing is directly related to the conclusion or performance of a contract — the stage of discussing your request and establishing a mandate.</li><li><strong>(ç)</strong> Compliance with the controller’s legal obligations.</li><li><strong>(e)</strong> Processing is necessary for the establishment, exercise or protection of a right.</li><li><strong>(f)</strong> Our legitimate interests, provided that your fundamental rights and freedoms are not harmed — website security and the prevention of misuse.</li></ul><p>Where none of these grounds applies, processing takes place only with your explicit consent, which you may withdraw at any time.</p>',
+  ),
+  t('privacy.transfer.title', 'privacy', '5. Aktarım — başlık', 'SHORT', 'Kimlerle paylaşılıyor', 'Who we share data with'),
+  t(
+    'privacy.transfer.body',
+    'privacy',
+    '5. Aktarım — metin',
+    'RICH',
+    '<p>Kişisel verileriniz kural olarak üçüncü kişilerle paylaşılmaz. Sitenin ve e-posta altyapısının işletilebilmesi için yalnızca aşağıdaki hizmet sağlayıcılardan yararlanılır:</p><ul><li><strong>Barındırma:</strong> internet sitesi ve veritabanı, sunucuları yurt dışında bulunan bir bulut altyapısı sağlayıcısında barındırılmaktadır. Bu kapsamda form kayıtları yurt dışındaki sunucularda saklanır ve aktarım KVKK m. 9 çerçevesinde gerçekleşir.</li><li><strong>E-posta:</strong> formdan gelen bildirimler, alan adımıza bağlı ve Türkiye’de bulunan e-posta sunucusunda saklanır.</li></ul><p>Bunun dışında verileriniz, yalnızca kanunen açıkça yetkili kılınmış kamu kurum ve kuruluşları ile adli mercilerin usulüne uygun talebi hâlinde, KVKK m. 8 ve m. 9 çerçevesinde paylaşılabilir. Avukatın sır saklama yükümlülüğü saklıdır.</p>',
+    '<p>As a rule, your personal data is not shared with third parties. We rely on the following service providers solely to operate the website and email infrastructure:</p><ul><li><strong>Hosting:</strong> the website and database are hosted with a cloud infrastructure provider whose servers are located abroad. Form records are therefore stored on servers outside Türkiye, and such transfers take place within the framework of Article 9 of the KVKK.</li><li><strong>Email:</strong> notifications from the form are stored on the email server linked to our domain, located in Türkiye.</li></ul><p>Beyond this, your data may be shared only upon a duly submitted request from public authorities or judicial bodies expressly authorised by law, within the framework of Articles 8 and 9 of the KVKK. The attorney’s duty of confidentiality is reserved.</p>',
+  ),
+  t('privacy.retention.title', 'privacy', '6. Saklama — başlık', 'SHORT', 'Saklama süresi', 'Retention period'),
+  t(
+    'privacy.retention.body',
+    'privacy',
+    '6. Saklama — metin',
+    'RICH',
+    '<p>Form üzerinden ilettiğiniz mesajlar, talebinizin sonuçlandırılması için gereken süre boyunca saklanır. Görüşme sonucunda vekâlet ilişkisi kurulmazsa mesajınız en geç bir yıl içinde silinir.</p><p>Vekâlet ilişkisi kurulması hâlinde dosyanıza ilişkin veriler, Avukatlık Kanunu ile ilgili mevzuatta öngörülen saklama süreleri ve işin niteliğine göre uygulanacak zamanaşımı süreleri boyunca muhafaza edilir. Süre dolduğunda kişisel veriler silinir, yok edilir veya anonim hâle getirilir.</p>',
+    '<p>Messages submitted through the form are retained for as long as necessary to conclude your request. If no mandate is established following the initial discussion, your message is deleted within one year at the latest.</p><p>Where a mandate is established, data relating to your file is retained for the periods prescribed by the Attorneyship Law and related legislation, and for the limitation periods applicable to the nature of the matter. Once these periods expire, personal data is deleted, destroyed or anonymised.</p>',
+  ),
+  t('privacy.security.title', 'privacy', '7. Güvenlik — başlık', 'SHORT', 'Veri güvenliği', 'Data security'),
+  t(
+    'privacy.security.body',
+    'privacy',
+    '7. Güvenlik — metin',
+    'RICH',
+    '<p>Site ve form trafiği TLS (https) ile şifrelenir. Mesajların görüntülendiği yönetim paneline yalnızca yetkili büro çalışanları, ayrı bir erişim anahtarı ve parola ile ulaşabilir; panel arama motorlarına kapalıdır. Yetkisiz erişim, kayıp ve değiştirmeye karşı KVKK m. 12 uyarınca gerekli teknik ve idari tedbirler alınır. Büro çalışanları meslekî sır saklama yükümlülüğü altındadır.</p>',
+    '<p>Website and form traffic is encrypted with TLS (https). The administration panel where messages are viewed is accessible only to authorised staff using a separate access key and password, and is closed to search engines. Appropriate technical and organisational measures are taken against unauthorised access, loss and alteration in accordance with Article 12 of the KVKK. Our staff are bound by professional confidentiality.</p>',
+  ),
+  t('privacy.rights.title', 'privacy', '8. Haklar — başlık', 'SHORT', 'KVKK m. 11 kapsamındaki haklarınız', 'Your rights under Article 11 of the KVKK'),
+  t(
+    'privacy.rights.body',
+    'privacy',
+    '8. Haklar — metin',
+    'RICH',
+    '<p>Veri sorumlusuna başvurarak şu haklarınızı kullanabilirsiniz:</p><ul><li>Kişisel verilerinizin işlenip işlenmediğini öğrenme.</li><li>İşlenmişse buna ilişkin bilgi talep etme.</li><li>İşlenme amacını ve amacına uygun kullanılıp kullanılmadığını öğrenme.</li><li>Yurt içinde veya yurt dışında verilerin aktarıldığı üçüncü kişileri bilme.</li><li>Eksik veya yanlış işlenmiş olması hâlinde düzeltilmesini isteme.</li><li>KVKK m. 7’deki şartlar çerçevesinde silinmesini veya yok edilmesini isteme.</li><li>Düzeltme, silme ve yok etme işlemlerinin verilerin aktarıldığı üçüncü kişilere bildirilmesini isteme.</li><li>Münhasıran otomatik sistemlerle analiz edilmesi suretiyle aleyhinize bir sonuç ortaya çıkmasına itiraz etme.</li><li>Kanuna aykırı işleme sebebiyle zarara uğramanız hâlinde zararın giderilmesini talep etme.</li></ul>',
+    '<p>By applying to the data controller you may exercise the following rights:</p><ul><li>To learn whether your personal data is being processed.</li><li>To request information if it has been processed.</li><li>To learn the purpose of processing and whether the data is used in line with that purpose.</li><li>To know the third parties to whom the data is transferred, in Türkiye or abroad.</li><li>To request rectification where the data is incomplete or inaccurate.</li><li>To request erasure or destruction under the conditions in Article 7 of the KVKK.</li><li>To request that rectification, erasure and destruction be notified to third parties to whom the data was transferred.</li><li>To object to a result to your detriment arising from analysis carried out solely by automated systems.</li><li>To claim compensation where you suffer damage due to unlawful processing.</li></ul>',
+  ),
+  t('privacy.apply.title', 'privacy', '9. Başvuru — başlık', 'SHORT', 'Başvuru yolu', 'How to apply'),
+  t(
+    'privacy.apply.body',
+    'privacy',
+    '9. Başvuru — metin',
+    'RICH',
+    '<p>Başvurunuzu, Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ uyarınca; büro adresimize yazılı olarak, kayıtlı elektronik posta (KEP) adresi, güvenli elektronik imza, mobil imza ya da daha önce bize bildirdiğiniz ve sistemimizde kayıtlı bulunan e-posta adresiniz üzerinden iletebilirsiniz.</p><p>Başvurunuzda ad soyadınız, başvuru yazılı ise imzanız, T.C. kimlik numaranız (yabancılar için uyruk ve pasaport numarası), tebligata esas adresiniz, varsa e-posta adresiniz ve telefonunuz ile talep konunuz yer almalıdır.</p><p>Talebiniz en geç <strong>otuz gün</strong> içinde sonuçlandırılır. İşlem ayrıca bir maliyet gerektirmiyorsa ücret alınmaz; gerektirmesi hâlinde Kişisel Verileri Koruma Kurulu’nca belirlenen tarifedeki ücret uygulanır. Başvurunuzun reddedilmesi veya yanıtı yetersiz bulmanız hâlinde, yanıtı öğrendiğiniz tarihten itibaren otuz ve her hâlde başvuru tarihinden itibaren altmış gün içinde Kişisel Verileri Koruma Kurulu’na şikâyette bulunabilirsiniz.</p>',
+    '<p>You may submit your application in accordance with the Communiqué on the Procedures and Principles of Application to the Data Controller: in writing to our office address, via a registered electronic mail (KEP) address, secure electronic signature, mobile signature, or the email address you have previously notified to us and which is registered in our system.</p><p>Your application should state your full name, your signature if made in writing, your Turkish ID number (nationality and passport number for foreign nationals), your address for service, your email address and telephone number if any, and the subject of your request.</p><p>Your request will be concluded within <strong>thirty days</strong> at the latest. No fee is charged unless the process entails an additional cost; where it does, the tariff set by the Personal Data Protection Board applies. If your application is rejected or you find the response insufficient, you may lodge a complaint with the Personal Data Protection Board within thirty days of learning of the response and, in any event, within sixty days of the date of application.</p>',
+  ),
+  t('privacy.cookies.title', 'privacy', '10. Çerezler — başlık', 'SHORT', 'Çerezler', 'Cookies'),
+  t(
+    'privacy.cookies.body',
+    'privacy',
+    '10. Çerezler — metin',
+    'RICH',
+    '<p>Bu sitenin herkese açık bölümlerinde reklam, profilleme veya ziyaretçi analizi amaçlı çerez <strong>kullanılmamaktadır</strong>. Sayfalarda üçüncü taraf izleme komut dosyası yer almaz; yazı tipleri de dâhil olmak üzere tüm kaynaklar kendi sunucumuzdan sunulur. Bu nedenle sayfayı açmanız, üçüncü bir tarafa istek gönderilmesine yol açmaz.</p><p>Yalnızca yönetim paneline giriş yapan büro yetkililerinin tarayıcısında, oturumun sürdürülmesi için zorunlu teknik çerezler saklanır. Bu çerezler ziyaretçileri kapsamaz ve içerik kişiselleştirme amacı taşımaz.</p>',
+    '<p>No advertising, profiling or visitor analytics cookies are used on the public sections of this website. The pages contain no third-party tracking scripts; all resources, including fonts, are served from our own server. Opening a page therefore does not cause any request to be sent to a third party.</p><p>Strictly necessary technical cookies are stored only in the browsers of authorised staff who sign in to the administration panel, in order to maintain the session. These cookies do not concern visitors and are not used to personalise content.</p>',
+  ),
+  t(
+    'privacy.cookies.map',
+    'privacy',
+    '10. Çerezler — harita notu (harita yerleştirildiğinde görünür)',
+    'RICH',
+    '<p>İletişim sayfasında konumumuzu gösteren bir harita yerleştirmesi kullanılmaktadır. Bu bölümü görüntülediğinizde, harita sağlayıcısı tarafınca gönderilen IP adresi gibi teknik verileri kendi politikaları kapsamında işleyebilir ve çerez yerleştirebilir.</p>',
+    '<p>An embedded map showing our location is used on the contact page. When you view that section, the map provider may process technical data such as your IP address and may set cookies under its own policies.</p>',
+  ),
+  t('privacy.changes.title', 'privacy', '11. Değişiklikler — başlık', 'SHORT', 'Metindeki değişiklikler', 'Changes to this notice'),
+  t(
+    'privacy.changes.body',
+    'privacy',
+    '11. Değişiklikler — metin',
+    'RICH',
+    '<p>Mevzuattaki gelişmeler veya sitenin işleyişindeki değişiklikler nedeniyle bu metin güncellenebilir. Güncel sürüm her zaman bu sayfada yayımlanır; yürürlük tarihi sayfanın başında belirtilir.</p>',
+    '<p>This notice may be updated in light of legislative developments or changes in how the website operates. The current version is always published on this page, and the effective date is stated at the top.</p>',
+  ),
+
   // --- Alt bilgi ---
   t('footer.about.title', 'footer', 'Alt bilgi: kısa tanıtım başlığı', 'SHORT', 'Çetiner Hukuk ve Danışmanlık', 'Çetiner Hukuk ve Danışmanlık'),
+  t('footer.privacy', 'footer', 'Alt bilgi: yasal metin bağlantısı', 'SHORT', 'Gizlilik ve KVKK', 'Privacy and Data Protection'),
   t(
     'footer.about.body',
     'footer',
@@ -835,6 +987,15 @@ export const seoDefaults: {
     titleEn: 'Publications',
     descTr: 'Mevzuat değişiklikleri ve uygulamadaki gelişmelere ilişkin değerlendirmeler.',
     descEn: 'Commentary on legislative changes and developments in practice.',
+  },
+  {
+    routeKey: 'privacy',
+    titleTr: 'Gizlilik ve Çerez Politikası, KVKK Aydınlatma Metni',
+    titleEn: 'Privacy and Cookie Policy, Data Protection Notice',
+    descTr:
+      'İletişim formu aracılığıyla işlenen kişisel veriler, saklama süreleri, çerez kullanımı ve KVKK kapsamındaki haklarınız.',
+    descEn:
+      'Personal data processed through the contact form, retention periods, cookie use and your rights under Turkish data protection law.',
   },
 ]
 
