@@ -146,7 +146,19 @@ paylaşım görsellerini besliyor.** Şu an `https://cetinerlegal.com` (www'suz)
 yazıyor — düzeltilmezse Google'a sitenin adresi olarak yönlendirme sayfası
 bildirilir.
 
-Panel girişi: `https://www.cetinerlegal.com/admin?k=msam3csdb8h8rta5hdn3w7emiaue`
+Panel girişi: `https://www.cetinerlegal.com/admin?k=<ANAHTAR>`
+
+> ⚠️ **Anahtar bu dosyaya yazılmayacak.** Bu depo herkese açık; buraya yazılan
+> her şey GitHub üzerinden aranabilir hâle gelir ve git geçmişinden de bir daha
+> tam olarak silinmez. Güncel anahtarın tek adresi Railway'deki
+> `ADMIN_GATE_KEY` değişkeni:
+>
+> ```powershell
+> railway variables --service cetiner-hukuk --kv | Select-String ADMIN_GATE_KEY
+> ```
+>
+> Anahtar bir yere sızarsa yenisini üretip aynı değişkene yazmak yeterli;
+> eski bağlantı o anda ölür.
 
 ### 3b. Arama motorlarını içeri alma
 
