@@ -13,15 +13,29 @@ import {
 } from '@/content/defaults'
 
 /**
- * ÖRNEK VERİ YÜKLEME — idempotent.
+ * ÖRNEK VERİ YÜKLEME — iki kipli.
  *
  * Hem `npm run db:seed` komutu hem panelin "Örnek verileri yükle" düğmesi
  * bu fonksiyonu çağırır. Panelde de olması gerekiyor çünkü Railway'de
  * veritabanı yalnızca özel ağdan erişilebilir; dışarıdan seed atılamıyor.
  *
- * Var olan kayıtların İÇERİĞİNE dokunmaz — yalnızca eksik kayıtları ekler ve
- * teknik alanları (grup, etiket, sıra) günceller. Bu yüzden defalarca
- * çalıştırmak güvenlidir.
+ * ÖNEMLİ — neden iki kip var:
+ *
+ * Eskiden bu fonksiyon her çalıştığında hizmet, ekip, sözlük ve menü
+ * kayıtlarını `upsert` ediyordu. "İçeriğe dokunmuyor" doğruydu ama SİLİNMİŞ
+ * kayıt için yanlıştı: kullanıcının panelden sildiği örnek ekip üyeleri ve
+ * hizmetler geri geliyor, boş bıraktığı ayar alanları örnek değerlerle
+ * doluyordu. Canlı sitede "Av. Ad Soyad" kartlarının yeniden belirmesi bu
+ * yüzden yaşandı.
+ *
+ * Artık:
+ *   • İLK KURULUM (ayar kaydı yok ya da `seedVersion` boş): her şey yüklenir.
+ *   • SONRAKİ ÇALIŞTIRMALAR: yalnızca kodla gelen YENİ METİN ANAHTARLARI ve
+ *     görsel yuvaları eklenir. Hizmet/ekip/sözlük/menü/SEO kayıtlarına ve
+ *     ayarlara hiç dokunulmaz — silinen silinmiş kalır.
+ *
+ * Yani düğmenin işlevi zamanla değişiyor: kurulumda "örnek veri", sonrasında
+ * "yeni sürümle gelen metin alanlarını panele işle".
  */
 export interface SeedResult {
   texts: number
@@ -33,12 +47,18 @@ export interface SeedResult {
   seo: number
   glossary: number
   settingsCreated: boolean
+  /** false ise yalnızca metin/görsel tanımları eklendi. */
+  full: boolean
 }
 
 export async function runSeed(prisma: PrismaClient): Promise<SeedResult> {
   let settingsCreated = false
 
   const existingSettings = await prisma.siteSetting.findUnique({ where: { id: 1 } })
+
+  // Daha önce kurulmuş bir site mi? Örnek veriler yalnızca ilk kurulumda
+  // yüklenir; sonrasında bu kayıtların sahibi kullanıcıdır.
+  const full = !existingSettings || !existingSettings.seedVersion
   if (!existingSettings) {
     await prisma.siteSetting.create({
       data: {
@@ -52,9 +72,10 @@ export async function runSeed(prisma: PrismaClient): Promise<SeedResult> {
       },
     })
     settingsCreated = true
-  } else {
-    // Var olan kayıtta YALNIZCA boş alanları doldur — elle girilen gerçek
-    // bilgiye asla dokunma.
+  } else if (full) {
+    // Ayar kaydı var ama hiç seed edilmemiş: boş alanları örnekle doldur.
+    // Bir kez kurulduktan sonra burası bir daha çalışmaz — boş bırakılan alan
+    // bir tercihtir, eksiklik değil.
     const fill: Record<string, string> = {}
     for (const field of settingsExampleFields) {
       const current = String((existingSettings as unknown as Record<string, unknown>)[field] ?? '')
@@ -101,6 +122,23 @@ export async function runSeed(prisma: PrismaClient): Promise<SeedResult> {
       },
       update: { group: def.group, label: def.label, order: def.order },
     })
+  }
+
+  // Buradan aşağısı YALNIZCA ilk kurulumda çalışır. Bu kayıtlar panelden
+  // silinebiliyor; tekrar yazmak, kullanıcının kararını geri almak olur.
+  if (!full) {
+    return {
+      texts: textDefaults.length,
+      newTexts,
+      slots: mediaSlotDefaults.length,
+      menu: 0,
+      services: 0,
+      team: 0,
+      seo: 0,
+      glossary: 0,
+      settingsCreated,
+      full,
+    }
   }
 
   for (const [index, def] of menuDefaults.entries()) {
@@ -194,5 +232,6 @@ export async function runSeed(prisma: PrismaClient): Promise<SeedResult> {
     seo: seoDefaults.length,
     glossary: glossaryDefaults.length,
     settingsCreated,
+    full,
   }
 }

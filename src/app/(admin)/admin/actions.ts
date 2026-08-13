@@ -223,7 +223,7 @@ export async function saveTextsAction(form: FormData): Promise<void> {
 
     if (tr === row.tr && en === row.en) continue
 
-    await prisma.localizedText.update({ where: { id: row.id }, data: { tr, en } })
+    await prisma.localizedText.update({ where: { id: row.id }, data: { tr, en, seeded: false } })
 
     if (manual) {
       await lockFieldManual('LocalizedText', row.id, 'value')
@@ -343,7 +343,9 @@ export async function saveServiceAction(form: FormData): Promise<void> {
   let serviceId = id
   try {
     if (id) {
-      await prisma.service.update({ where: { id }, data: base })
+      // Elle düzenlenen kayıt artık "örnek veri" değildir: `seeded` işareti
+      // kalkıyor ki "Örnek verileri sil" düğmesi bu kaydı silmesin.
+      await prisma.service.update({ where: { id }, data: { ...base, seeded: false } })
     } else {
       const created = await prisma.service.create({ data: base })
       serviceId = created.id
@@ -404,7 +406,7 @@ export async function saveTeamMemberAction(form: FormData): Promise<void> {
   let memberId = id
   try {
     if (id) {
-      await prisma.teamMember.update({ where: { id }, data: base })
+      await prisma.teamMember.update({ where: { id }, data: { ...base, seeded: false } })
     } else {
       const created = await prisma.teamMember.create({ data: base })
       memberId = created.id
@@ -469,7 +471,7 @@ export async function savePublicationAction(form: FormData): Promise<void> {
   let pubId = id
   try {
     if (id) {
-      await prisma.publication.update({ where: { id }, data: base })
+      await prisma.publication.update({ where: { id }, data: { ...base, seeded: false } })
     } else {
       const created = await prisma.publication.create({ data: base })
       pubId = created.id

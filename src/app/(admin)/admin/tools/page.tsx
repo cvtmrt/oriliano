@@ -113,21 +113,21 @@ export default async function ToolsPage() {
         ) : null}
 
         <Card
-          title="Örnek verileri yükle"
-          description="Sayfa metinleri, görsel yuvaları, menü, 10 hizmet, 4 ekip üyesi, SEO kayıtları ve terim sözlüğü. Var olan kayıtların içeriğine dokunmaz — istediğiniz kadar çalıştırabilirsiniz."
+          title="Eksik metin alanlarını yükle"
+          description="Yeni sürümle gelen sayfa metinlerini ve görsel yuvalarını panele işler. Kurulum tamamlandığı için hizmet, ekip, menü, sözlük ve ayarlara ARTIK DOKUNMAZ — sildikleriniz geri gelmez."
         >
           <p className="mb-4 text-sm text-graphite-600">
             Şu an veritabanında: {seededTexts + nonSeededTexts} metin, {serviceCount} hizmet,{' '}
             {teamCount} ekip üyesi.
           </p>
           <form action={loadSeedDataAction}>
-            <SaveBar variant="secondary" savedLabel="Örnek veriler yüklendi">Örnek verileri yükle</SaveBar>
+            <SaveBar variant="secondary" savedLabel="Eksik alanlar yüklendi">Eksik metin alanlarını yükle</SaveBar>
           </form>
         </Card>
 
         <Card
           title="Örnek verileri temizle"
-          description="Kurulumla gelen yer tutucu içerikleri siler. Sizin eklediğiniz veya düzenlediğiniz kayıtlara dokunmaz."
+          description="Kurulumla gelen ve hiç dokunulmamış yer tutucu içerikleri siler. Bir kaydı bir kez düzenlediyseniz o kayıt artık örnek sayılmaz ve silinmez."
         >
           <p className="mb-4 text-sm text-graphite-600">
             Örnek işaretli kayıtlar: {seededTexts} metin, {seededServices} hizmet, {seededTeam} ekip
