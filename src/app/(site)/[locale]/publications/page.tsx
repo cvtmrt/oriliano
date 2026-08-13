@@ -5,6 +5,7 @@ import { isLocale, pick, type Locale } from '@/lib/i18n'
 import { getImage, getPublications, getT, isRouteVisible, publicationSlug } from '@/lib/content'
 import { publicationHref } from '@/lib/nav'
 import { buildMetadata } from '@/lib/seo'
+import { formatLongDate } from '@/lib/date'
 import PageHero from '@/components/site/PageHero'
 import { Stagger, StaggerItem } from '@/components/motion'
 
@@ -68,11 +69,7 @@ export default async function PublicationsPage({
                         dateTime={item.publishedAt.toISOString()}
                         className="shrink-0 text-xs uppercase tracking-wider text-graphite-500 sm:w-32"
                       >
-                        {item.publishedAt.toLocaleDateString(locale === 'tr' ? 'tr-TR' : 'en-GB', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                        })}
+                        {formatLongDate(item.publishedAt, locale)}
                       </time>
                     ) : (
                       <span className="shrink-0 sm:w-32" />

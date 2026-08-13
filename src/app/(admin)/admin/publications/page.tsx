@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { getCurrentAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { formatDate } from '@/lib/date'
 import { deletePublicationAction } from '../actions'
 import { PageTitle, Empty, Banner } from '@/components/admin/ui'
 import DeleteButton from '@/components/admin/DeleteButton'
@@ -60,7 +61,7 @@ export default async function PublicationsAdminPage() {
                   </Link>
                   <p className="mt-0.5 text-xs text-graphite-500">
                     {item.publishedAt
-                      ? item.publishedAt.toLocaleDateString('tr-TR')
+                      ? formatDate(item.publishedAt)
                       : 'Tarih yok'}
                     {item.author ? ` · ${item.author}` : ''}
                   </p>

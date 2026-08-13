@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { getCurrentAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { formatDateTime } from '@/lib/date'
 import { deleteMessageAction, toggleMessageReadAction } from '../actions'
 import { PageTitle, Empty } from '@/components/admin/ui'
 import DeleteButton from '@/components/admin/DeleteButton'
@@ -57,7 +58,7 @@ export default async function MessagesPage() {
                         {message.phone}
                       </a>
                     ) : null}
-                    <span>{message.createdAt.toLocaleString('tr-TR')}</span>
+                    <span>{formatDateTime(message.createdAt)}</span>
                     <span className="uppercase">{message.locale}</span>
                   </p>
                 </div>

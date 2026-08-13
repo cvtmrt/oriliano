@@ -13,6 +13,7 @@ import {
 } from '@/lib/content'
 import { href, publicationHref } from '@/lib/nav'
 import { buildMetadata, jsonLdScript } from '@/lib/seo'
+import { formatLongDate } from '@/lib/date'
 import { htmlToText } from '@/lib/html'
 import Breadcrumbs from '@/components/site/Breadcrumbs'
 import SmartImage from '@/components/site/SmartImage'
@@ -93,11 +94,7 @@ export default async function PublicationDetailPage({
             <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs uppercase tracking-wider text-graphite-500">
               {item.publishedAt ? (
                 <time dateTime={item.publishedAt.toISOString()}>
-                  {item.publishedAt.toLocaleDateString(locale === 'tr' ? 'tr-TR' : 'en-GB', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
+                  {formatLongDate(item.publishedAt, locale)}
                 </time>
               ) : null}
               {item.author ? <span>{item.author}</span> : null}
