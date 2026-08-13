@@ -49,6 +49,16 @@ function canonicalHost(): string | null {
 
 export function middleware(request: NextRequest) {
   const response = handle(request)
+  const { pathname } = request.nextUrl
+
+  // Panel ve API her koşulda arama motorlarına kapalı — yayın anahtarından
+  // ve konaktan bağımsız. Anahtarsız istek zaten 404 alıyor, yani taranacak
+  // bir şey yok; bu başlık ikinci kat güvence.
+  if (pathname === '/admin' || pathname.startsWith('/admin/') || pathname.startsWith('/api')) {
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive, nosnippet')
+    response.headers.set('Cache-Control', 'private, no-store')
+    return response
+  }
 
   const canonical = canonicalHost()
   const host = request.headers.get('host')?.toLowerCase().split(':')[0]
