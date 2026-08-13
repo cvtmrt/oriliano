@@ -42,6 +42,10 @@ export async function POST() {
   })
 
   if (!result.ok) {
+    // Loga da yaz: hata yalnızca ekranda kalırsa sorun sonradan
+    // incelenemiyor, her seferinde kullanıcıya "ne yazıyordu" diye sormak
+    // gerekiyor.
+    console.error('[mail-test] gönderilemedi:', result.error)
     return NextResponse.json({ ok: false, error: result.error }, { status: 502 })
   }
   return NextResponse.json({ ok: true, to: recipients })

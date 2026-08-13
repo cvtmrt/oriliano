@@ -2,20 +2,31 @@ import 'server-only'
 import nodemailer, { type Transporter } from 'nodemailer'
 
 /**
- * E-POSTA GÖNDERİMİ — SMTP veya Resend
+ * E-POSTA BİLDİRİMİ — IMAP, SMTP veya Resend
  *
- * İKİ SAĞLAYICI DESTEKLENİYOR:
+ * ÜÇ YOL DESTEKLENİYOR:
  *
- *   smtp    — SMTP_HOST/PORT/USER/PASS. Firmanın kendi posta kutusundan
- *             gönderir (Turhost). DNS'e dokunmak gerekmez, alan adı zaten
- *             o sunucuda barınıyor; SPF de hâlihazırda Turhost'u yetkilendiriyor,
- *             yani postalar spam'e düşmeden gider. Varsayılan tercih.
- *   resend  — RESEND_API_KEY. Ayrı bir servis; alan adı doğrulaması için
- *             DNS'e DKIM kaydı eklemek gerekir.
+ *   imap    — IMAP_HOST/USER/PASS. Mesajı GÖNDERMİYOR, doğrudan firmanın
+ *             kendi posta kutusunun içine yazıyor. Outlook'ta normal bir gelen
+ *             mail gibi görünüyor.
  *
- * İkisi de tanımlıysa SMTP kullanılır. Hiçbiri tanımlı değilse gönderim
- * sessizce atlanır — form yine çalışır ve mesaj panelin gelen kutusuna düşer.
- * Panelde bu durum uyarı olarak görünür.
+ *             Neden var: bulut sağlayıcıları spam'i önlemek için giden SMTP
+ *             bağlantılarını kapatıyor (Railway de kapatıyor — 465 ve 587'ye
+ *             yapılan bağlantılar zaman aşımına uğruyor). IMAP portu genelde
+ *             açık kalıyor. Bu yolda mesaj Turhost'un dışına hiç çıkmıyor:
+ *             ne üçüncü taraf, ne yurt dışına aktarım, ne SPF/DKIM derdi.
+ *             Bir hukuk bürosu için en temiz seçenek bu.
+ *
+ *   smtp    — SMTP_HOST/PORT/USER/PASS. Klasik gönderim. Sağlayıcı giden
+ *             bağlantıya izin veriyorsa en doğal yol.
+ *
+ *   resend  — RESEND_API_KEY. HTTPS üzerinden gönderdiği için hiçbir port
+ *             engeline takılmıyor, ama mesaj üçüncü bir şirketin sunucusundan
+ *             geçiyor.
+ *
+ * Birden fazlası tanımlıysa sıra yukarıdaki gibi: önce IMAP, sonra SMTP,
+ * sonra Resend. Hiçbiri yoksa gönderim sessizce atlanır — form yine çalışır ve
+ * mesaj panelin gelen kutusuna düşer. Panelde bu durum uyarı olarak görünür.
  *
  * Sır/anahtar ayrımı bilinçli: şifreler ve anahtarlar yalnızca ortam
  * değişkeninde durur, veritabanına ve panele yazılmaz. Kime gideceği,
@@ -25,13 +36,27 @@ import nodemailer, { type Transporter } from 'nodemailer'
 
 export const MAIL_FROM_FALLBACK = 'Çetiner Hukuk <onboarding@resend.dev>'
 
-export type MailProvider = 'smtp' | 'resend'
+export type MailProvider = 'imap' | 'smtp' | 'resend'
 
 function smtpHost(): string {
   return process.env.SMTP_HOST?.trim() || ''
 }
 
+function imapHost(): string {
+  return process.env.IMAP_HOST?.trim() || ''
+}
+
+/** IMAP kimlik bilgileri verilmemişse SMTP'dekiler kullanılır — aynı kutu. */
+function imapUser(): string {
+  return process.env.IMAP_USER?.trim() || process.env.SMTP_USER?.trim() || ''
+}
+
+function imapPass(): string {
+  return process.env.IMAP_PASS || process.env.SMTP_PASS || ''
+}
+
 export function activeMailProvider(): MailProvider | null {
+  if (imapHost() && imapUser()) return 'imap'
   if (smtpHost()) return 'smtp'
   if (process.env.RESEND_API_KEY) return 'resend'
   return null
@@ -44,18 +69,29 @@ export function mailConfigured(): boolean {
 /** Panelde göstermek için okunabilir ad. */
 export function mailProviderLabel(): string {
   const provider = activeMailProvider()
+  if (provider === 'imap') return `Doğrudan posta kutunuza (${imapUser()})`
   if (provider === 'smtp') return `Kendi posta sunucunuz (${smtpHost()})`
   if (provider === 'resend') return 'Resend'
   return 'kapalı'
+}
+
+/**
+ * IMAP yolunda bildirim, kimlik doğrulanan kutunun içine yazılıyor. Yani
+ * "kime gidecek" sorusunun cevabı paneldeki adres değil, bu kutu. Panelde
+ * doğru bilgiyi göstermek için dışarı veriliyor.
+ */
+export function imapMailbox(): string | null {
+  return activeMailProvider() === 'imap' ? imapUser() : null
 }
 
 export function mailFrom(): string {
   const explicit = process.env.MAIL_FROM?.trim()
   if (explicit) return explicit
   // SMTP'de gönderen, kimlik doğrulanan kutuyla aynı olmalı — sunucular
-  // başka bir adresten göndermeyi çoğunlukla reddeder.
-  const user = process.env.SMTP_USER?.trim()
-  if (smtpHost() && user) return `Çetiner Hukuk <${user}>`
+  // başka bir adresten göndermeyi çoğunlukla reddeder. IMAP'ta teslim eden
+  // biz olduğumuz için böyle bir zorunluluk yok, yine de tutarlı duruyor.
+  const user = imapUser() || process.env.SMTP_USER?.trim()
+  if ((imapHost() || smtpHost()) && user) return `Çetiner Hukuk <${user}>`
   return MAIL_FROM_FALLBACK
 }
 
@@ -113,6 +149,59 @@ async function sendViaSmtp(options: {
   }
 }
 
+/**
+ * IMAP ile doğrudan kutuya bırakma.
+ *
+ * Mesaj bir posta sunucusuna teslim edilmiyor; MIME olarak kurulup kutunun
+ * INBOX'ına ekleniyor. Okunmamış işaretleniyor ki Outlook'ta yeni mail gibi
+ * belirsin. Zaman aşımı bilinçli olarak kısa: bağlantı engelliyse formun
+ * yanıtını bekletmenin anlamı yok, mesaj zaten panele kaydedilmiş oluyor.
+ */
+async function deliverViaImap(options: {
+  to: string[]
+  subject: string
+  text: string
+  html?: string
+  replyTo?: string
+}): Promise<SendResult> {
+  const { ImapFlow } = await import('imapflow')
+  const MailComposer = (await import('nodemailer/lib/mail-composer')).default
+
+  const raw = await new MailComposer({
+    from: mailFrom(),
+    to: options.to,
+    subject: options.subject,
+    text: options.text,
+    ...(options.html ? { html: options.html } : {}),
+    ...(options.replyTo ? { replyTo: options.replyTo } : {}),
+    date: new Date(),
+  })
+    .compile()
+    .build()
+
+  const client = new ImapFlow({
+    host: imapHost(),
+    port: Number(process.env.IMAP_PORT || 993),
+    secure: true,
+    auth: { user: imapUser(), pass: imapPass() },
+    logger: false,
+    // Bağlantı engelliyse hızlı vazgeç.
+    socketTimeout: 20_000,
+    greetingTimeout: 12_000,
+    connectionTimeout: 12_000,
+  })
+
+  try {
+    await client.connect()
+    const result = await client.append('INBOX', raw, [])
+    return { ok: true, id: result && 'uid' in result ? String(result.uid) : undefined }
+  } catch (err) {
+    return { ok: false, error: (err as Error).message.slice(0, 250) }
+  } finally {
+    await client.logout().catch(() => undefined)
+  }
+}
+
 export async function sendMail(options: {
   to: string[]
   subject: string
@@ -127,6 +216,10 @@ export async function sendMail(options: {
 
   const to = options.to.map((t) => t.trim()).filter(Boolean)
   if (to.length === 0) return { ok: false, error: 'Alıcı adresi yok.' }
+
+  if (provider === 'imap') {
+    return deliverViaImap({ ...options, to })
+  }
 
   if (provider === 'smtp') {
     return sendViaSmtp({ ...options, to })

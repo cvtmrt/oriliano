@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import { getCurrentAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { getFieldMeta } from '@/lib/translation-queue'
-import { mailConfigured, mailProviderLabel } from '@/lib/mail'
+import { imapMailbox, mailConfigured, mailProviderLabel } from '@/lib/mail'
 import { whatsappLink } from '@/lib/phone'
 import { saveSettingsAction } from '../actions'
 import { PageTitle, Card, Banner } from '@/components/admin/ui'
@@ -41,6 +41,7 @@ export default async function SettingsPage() {
   }
 
   const mailReady = mailConfigured()
+  const mailbox = imapMailbox()
   const waLink = whatsappLink(settings.whatsappNumber, settings.whatsappTextTr)
   const meta = await getFieldMeta('SiteSetting', '1').catch(() => ({}) as Record<string, { status: string }>)
 
@@ -251,6 +252,14 @@ export default async function SettingsPage() {
           {mailReady ? (
             <Banner type="info">
               Gönderim yolu: <strong>{mailProviderLabel()}</strong>
+              {mailbox ? (
+                <>
+                  {' '}
+                  — bildirimler doğrudan <strong>{mailbox}</strong> kutusuna yazılır. Aşağıdaki
+                  adres yalnızca mesajın &quot;Kime&quot; satırında görünür, teslim yerini
+                  değiştirmez.
+                </>
+              ) : null}
             </Banner>
           ) : (
             <Banner type="warn">
