@@ -20,6 +20,30 @@ export interface ContactFormLabels {
 
 type State = 'idle' | 'sending' | 'sent' | 'error'
 
+/**
+ * Alan ipuçları ve en kısa mesaj uzunluğu.
+ *
+ * Telefon biçimi bir metin değil bir örnek olduğu için panelden değil buradan
+ * geliyor; ziyaretçinin "başında sıfır olacak mı, +90 mı yazsam" diye
+ * duraksamaması için hem yer tutucuda hem alt satırda gösteriliyor.
+ */
+const MIN_MESSAGE = 10
+
+const HINTS = {
+  tr: {
+    phonePlaceholder: '0532 123 45 67',
+    phoneHelp: 'Başında sıfırla yazabilirsiniz. Yurt dışından: +90 532 123 45 67',
+    messageHelp: `En az ${MIN_MESSAGE} karakter.`,
+    messageShort: 'Mesajınız çok kısa. Talebinizi birkaç cümleyle anlatın.',
+  },
+  en: {
+    phonePlaceholder: '+90 532 123 45 67',
+    phoneHelp: 'Include the country code if you are calling from abroad.',
+    messageHelp: `At least ${MIN_MESSAGE} characters.`,
+    messageShort: 'Your message is too short. Please describe your request briefly.',
+  },
+} as const
+
 export default function ContactForm({
   locale,
   labels,
@@ -29,6 +53,7 @@ export default function ContactForm({
 }) {
   const [state, setState] = useState<State>('idle')
   const [message, setMessage] = useState('')
+  const hints = HINTS[locale] ?? HINTS.tr
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -40,6 +65,16 @@ export default function ContactForm({
     if ((data.get('website') as string)?.trim()) {
       setState('sent')
       setMessage(labels.success)
+      return
+    }
+
+    // Sunucuya gitmeden önce en sık takılan kural burada yakalanıyor: ziyaretçi
+    // hatayı anında ve alanın kendisinde görüyor.
+    const typed = String(data.get('message') ?? '').trim()
+    if (typed.length < MIN_MESSAGE) {
+      setState('error')
+      setMessage(hints.messageShort)
+      form.querySelector<HTMLTextAreaElement>('#cf-message')?.focus()
       return
     }
 
@@ -110,7 +145,20 @@ export default function ContactForm({
           <label className="field-label" htmlFor="cf-phone">
             {labels.phone}
           </label>
-          <input id="cf-phone" name="phone" type="tel" maxLength={40} className="field-input" autoComplete="tel" />
+          <input
+            id="cf-phone"
+            name="phone"
+            type="tel"
+            inputMode="tel"
+            maxLength={40}
+            placeholder={hints.phonePlaceholder}
+            aria-describedby="cf-phone-help"
+            className="field-input"
+            autoComplete="tel"
+          />
+          <p id="cf-phone-help" className="mt-1.5 text-xs text-graphite-500">
+            {hints.phoneHelp}
+          </p>
         </div>
         <div>
           <label className="field-label" htmlFor="cf-subject">
@@ -129,9 +177,14 @@ export default function ContactForm({
           name="message"
           required
           rows={6}
+          minLength={MIN_MESSAGE}
           maxLength={4000}
+          aria-describedby="cf-message-help"
           className="field-input resize-y"
         />
+        <p id="cf-message-help" className="mt-1.5 text-xs text-graphite-500">
+          {hints.messageHelp}
+        </p>
       </div>
 
       <p className="text-xs leading-relaxed text-graphite-500">{labels.consent}</p>

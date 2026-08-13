@@ -16,6 +16,34 @@ const schema = z.object({
   locale: z.enum(['tr', 'en']).optional().default('tr'),
 })
 
+/**
+ * Hangi alanın neden reddedildiğini söyleyen mesajlar.
+ *
+ * Önceden her doğrulama hatası tek bir "Lütfen form alanlarını kontrol edin"
+ * cümlesine düşüyordu. Ziyaretçi hangi alanı düzelteceğini bilemiyor ve
+ * çoğu zaman formu bırakıp gidiyor — bir hukuk bürosu için bu, kaybedilmiş
+ * müvekkil demek.
+ */
+const FIELD_ERRORS: Record<string, { tr: string; en: string }> = {
+  name: {
+    tr: 'Ad soyad alanına en az 2 karakter yazın.',
+    en: 'Please enter your full name (at least 2 characters).',
+  },
+  email: {
+    tr: 'Geçerli bir e-posta adresi girin. Örnek: ad@ornek.com',
+    en: 'Please enter a valid email address. Example: name@example.com',
+  },
+  phone: {
+    tr: 'Telefon numarası çok uzun. Örnek: 0532 123 45 67',
+    en: 'Phone number is too long. Example: +90 532 123 45 67',
+  },
+  subject: { tr: 'Konu alanı çok uzun.', en: 'The subject is too long.' },
+  message: {
+    tr: 'Mesajınız en az 10 karakter olmalı. Talebinizi birkaç cümleyle anlatın.',
+    en: 'Your message must be at least 10 characters. Please describe your request briefly.',
+  },
+}
+
 // Basit hız sınırı: aynı IP dakikada 3 mesaj. Tek container için yeterli.
 const hits = new Map<string, number[]>()
 const WINDOW_MS = 60_000
@@ -57,13 +85,17 @@ export async function POST(request: Request) {
   const parsed = schema.safeParse(payload)
   if (!parsed.success) {
     const locale = (payload as { locale?: string })?.locale === 'en' ? 'en' : 'tr'
+    const field = String(parsed.error.issues[0]?.path[0] ?? '')
+    const known = FIELD_ERRORS[field]
     return NextResponse.json(
       {
         ok: false,
-        error:
-          locale === 'en'
+        error: known
+          ? known[locale]
+          : locale === 'en'
             ? 'Please check the form fields.'
             : 'Lütfen form alanlarını kontrol edin.',
+        field: known ? field : undefined,
       },
       { status: 400 },
     )
