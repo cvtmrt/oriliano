@@ -241,12 +241,34 @@ function buildMimeMessage(options: {
 }): Buffer {
   const crlf = (value: string) => wrapLongLines(value).replace(/\r?\n/g, '\r\n')
   const domain = options.from.match(/@([^>\s]+)/)?.[1] || 'localhost'
+  const address = options.from.match(/<([^>]+)>/)?.[1] || options.from
+  const now = new Date()
+
+  /**
+   * Teslim izleri — mesaj önemsiz klasörüne düşmesin diye.
+   *
+   * Normal bir mail posta sunucusundan geçerken `Received` ve `Return-Path`
+   * kazanır. Biz kutuya doğrudan yazdığımız için bunlar hiç oluşmuyordu;
+   * üstüne gönderen ile alıcı da aynı adres. Outlook'un filtresi bu ikisini
+   * birlikte görünce mesajı sahtecilik sanıp önemsize atıyor.
+   *
+   * Aşağıdaki satırlar uydurma değil, mesajın gerçek yolunu anlatıyor: siteden
+   * üretildi, kutuya IMAP ile bırakıldı. Kendi kutumuza kendi yazdığımızı
+   * dürüstçe söylemek, hiçbir iz bırakmamaktan hem daha doğru hem daha güvenli.
+   */
+  const trace = [
+    `Received: by ${domain} (web sitesi iletisim formu) with IMAP; ${rfc5322Date(now)}`,
+    `Return-Path: <${address}>`,
+    `X-Mailer: ${domain} iletisim formu`,
+  ]
+
   const headers = [
+    ...trace,
     `From: ${encodeAddressValue(options.from)}`,
     `To: ${options.to.join(', ')}`,
     ...(options.replyTo ? [`Reply-To: ${options.replyTo}`] : []),
     `Subject: ${encodeHeaderValue(options.subject)}`,
-    `Date: ${rfc5322Date(new Date())}`,
+    `Date: ${rfc5322Date(now)}`,
     `Message-ID: <${randomUUID()}@${domain}>`,
     'MIME-Version: 1.0',
   ]
