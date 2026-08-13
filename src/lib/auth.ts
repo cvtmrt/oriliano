@@ -81,6 +81,39 @@ export async function login(
   return { ok: true }
 }
 
+/**
+ * Şifre değiştirme.
+ *
+ * Mevcut şifre yeniden soruluyor: açık unutulmuş bir oturumun başına geçen
+ * biri şifreyi değiştirip hesabı ele geçiremesin.
+ *
+ * Değişiklikten sonra bu tarayıcı dışındaki bütün oturumlar kapatılıyor —
+ * şifre zaten çoğunlukla "başkası girmiş olabilir" şüphesiyle değiştirilir,
+ * o hâlde diğer cihazlardaki açık oturumların ayakta kalması anlamsız olurdu.
+ */
+export async function changePassword(
+  currentPassword: string,
+  newPassword: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const user = await getCurrentAdmin()
+  if (!user) return { ok: false, error: 'Oturumunuz sona ermiş. Yeniden giriş yapın.' }
+
+  const valid = await bcrypt.compare(currentPassword, user.passwordHash)
+  if (!valid) return { ok: false, error: 'Mevcut şifreniz hatalı.' }
+
+  const hash = await bcrypt.hash(newPassword, 12)
+  await prisma.adminUser.update({ where: { id: user.id }, data: { passwordHash: hash } })
+
+  const store = await cookies()
+  const raw = store.get(COOKIE_NAME)?.value
+  const current = raw ? parseCookie(raw) : null
+  await prisma.adminSession.deleteMany({
+    where: { userId: user.id, ...(current ? { token: { not: current } } : {}) },
+  })
+
+  return { ok: true }
+}
+
 export async function logout(): Promise<void> {
   const store = await cookies()
   const raw = store.get(COOKIE_NAME)?.value

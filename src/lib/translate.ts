@@ -152,9 +152,14 @@ async function geminiGenerate(
       break
     }
 
-    // 404 → model emekli olmuş olabilir, 429 → bu modelin kotası dolmuş
-    // olabilir; ikisinde de listedeki bir sonraki modeli denemek mantıklı.
-    if (!lastError.startsWith('404') && !lastError.startsWith('429')) break
+    // Listedeki bir sonraki modele düşmenin mantıklı olduğu haller:
+    //   404 → model emekliye ayrılmış olabilir
+    //   429 → bu modelin dakika/gün kotası dolmuş olabilir
+    //   5xx → model o an aşırı yüklü ("experiencing high load")
+    // Üçü de modele özgü; yedekler ayrı kapasiteden besleniyor, biri
+    // cevap veremezken diğeri veriyor. Aynı modelde ısrar etmek yerine
+    // sıradakini denemek çeviriyi ayakta tutuyor.
+    if (!/^(?:404|429|5\d\d)/.test(lastError)) break
   }
 
   throw new Error(`Gemini çağrısı başarısız: ${lastError}`)

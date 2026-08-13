@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
-import { login, logout, requireAdmin } from '@/lib/auth'
+import { changePassword, login, logout, requireAdmin } from '@/lib/auth'
 import { sanitizeHtml } from '@/lib/html'
 import { deleteMedia } from '@/lib/media'
 import { slugify } from '@/lib/translate'
@@ -120,6 +120,29 @@ export async function loginAction(
     return { error: (err as Error).message }
   }
   redirect('/admin')
+}
+
+export type PasswordFormState = { error?: string; done?: boolean }
+
+export async function changePasswordAction(
+  _prev: PasswordFormState | undefined,
+  form: FormData,
+): Promise<PasswordFormState> {
+  await requireAdmin()
+
+  const current = String(form.get('currentPassword') ?? '')
+  const next = String(form.get('newPassword') ?? '')
+  const repeat = String(form.get('repeatPassword') ?? '')
+
+  if (!current || !next || !repeat) return { error: 'Üç alanı da doldurun.' }
+  if (next.length < 10) return { error: 'Yeni şifre en az 10 karakter olmalı.' }
+  if (next !== repeat) return { error: 'Yeni şifre ile tekrarı birbirini tutmuyor.' }
+  if (next === current) return { error: 'Yeni şifre eskisiyle aynı olamaz.' }
+
+  const result = await changePassword(current, next)
+  if (!result.ok) return { error: result.error }
+
+  return { done: true }
 }
 
 export async function logoutAction(): Promise<void> {

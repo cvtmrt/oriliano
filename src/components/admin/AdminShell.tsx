@@ -19,6 +19,7 @@ const nav = [
   { href: '/admin/settings', label: 'Genel Ayarlar' },
   { href: '/admin/glossary', label: 'Terim Sözlüğü' },
   { href: '/admin/tools', label: 'Araçlar' },
+  { href: '/admin/account', label: 'Hesabım' },
 ]
 
 export default function AdminShell({
