@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { site } from "../lib/site.js";
+import { initOutboundTracking } from "../lib/track.js";
 import { useT, txt } from "../lib/i18n.jsx";
 
 // ────────────────────────────────────────────────────────────────
@@ -32,6 +33,8 @@ function loadPixel(id) {
   })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
   window.fbq("init", id);
   window.fbq("track", "PageView");
+  // WhatsApp / e-posta / telefon tıklamaları da Contact olarak gitsin.
+  initOutboundTracking();
 }
 
 export function Consent() {
