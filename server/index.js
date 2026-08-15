@@ -16,6 +16,12 @@ async function startServer() {
   const app = express();
   app.use(compression());
 
+  // Instagram bio için temiz kısa link — UTM'li anasayfaya yönlendirir.
+  // Bio'da "orhankemalkoc.com/ig" görünür, GA4'te instagram/bio olarak ayrışır.
+  app.get("/ig", (_req, res) => {
+    res.redirect(302, "/?utm_source=instagram&utm_medium=organic&utm_campaign=bio");
+  });
+
   // SEO: robots.txt + sitemap.xml (site.url ve projelerle senkron).
   app.get("/robots.txt", (_req, res) => {
     res.type("text/plain").send(`User-agent: *\nAllow: /\nSitemap: ${site.url}/sitemap.xml\n`);
