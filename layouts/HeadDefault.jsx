@@ -45,6 +45,10 @@ export default function HeadDefault() {
       <meta name="robots" content="index, follow" />
       <link rel="canonical" href={site.url} />
 
+      {/* Meta (Facebook) alan adı doğrulaması — reklam hesabının bu alan adının
+          sahibi olduğunu kanıtlar; Aggregated Event Measurement'ı açar. */}
+      <meta name="facebook-domain-verification" content="mmwqlwbb86nj1xo2qqi2f8n75dqptc" />
+
       {/* Open Graph */}
       <meta property="og:type" content="website" />
       <meta property="og:site_name" content={site.fullName} />
