@@ -9,6 +9,10 @@
   .lenis.lenis-stopped { overflow: hidden; }
   html { scroll-behavior: smooth; }
 
+  /* Mobilde sayfanın yatay kaymasını keser. `hidden` yerine `clip`:
+     scroll container yaratmaz, sticky ve Lenis etkilenmez. */
+  html, body { overflow-x: clip; }
+
   body {
     @apply bg-night text-chalk antialiased;
     font-family: theme("fontFamily.sans");
