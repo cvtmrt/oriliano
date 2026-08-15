@@ -4,8 +4,52 @@
 // ────────────────────────────────────────────────────────────────
 export const projects = [
   {
-    slug: "tavaci-mehmet-efendi",
+    slug: "cetiner-hukuk",
     index: "01",
+    name: "Çetiner Hukuk",
+    category: { tr: "Kurumsal Hukuk Sitesi & İçerik Paneli", en: "Corporate Law Firm Site & Content Panel" },
+    year: "2026",
+    url: "https://www.cetinerlegal.com",
+    urlLabel: "cetinerlegal.com",
+    summary: {
+      tr: "Çetiner Hukuk için TR/EN iki dilli, sakin ve güven veren bir kurumsal site; tüm içerik avukatın kendi yönettiği panelden, otomatik İngilizce çeviriyle yayına çıkıyor.",
+      en: "A calm, trustworthy bilingual TR/EN corporate site for Çetiner Law; all content is published from the lawyer's own admin panel with automatic English translation.",
+    },
+    scope: [
+      { tr: "Web Tasarım", en: "Web Design" },
+      { tr: "Çok Dilli (TR/EN)", en: "Multilingual (TR/EN)" },
+      { tr: "Yönetim Paneli", en: "Admin Panel" },
+      { tr: "Arka Uç", en: "Backend" },
+      { tr: "SEO", en: "SEO" },
+    ],
+    shot: "/images/work-cetiner.jpg",
+    caseStudy: {
+      problem: {
+        tr: "Hukuk bürosunun çalışma alanlarını, ekibini ve arabuluculuk hizmetini iki dilde anlatan, içeriği avukatın kod bilmeden güncelleyebildiği güvenilir bir dijital adres gerekiyordu.",
+        en: "The law firm needed a trustworthy digital address presenting practice areas, team and mediation services in two languages, with content the lawyer could update without touching code.",
+      },
+      build: {
+        tr: "Çalışma alanları, hizmet sayfaları, ekip ve iletişim akışından oluşan site; her içeriğin panelden yönetildiği, Türkçe girilen metnin otomatik İngilizceye çevrildiği tam bir içerik sistemi ve e-posta bildirimli iletişim formu.",
+        en: "A site with practice areas, service pages, team and contact flow; a full content system where every piece is panel-managed and Turkish input is auto-translated to English, plus an email-notified contact form.",
+      },
+      design: {
+        tr: "Lacivert zemin üzerinde altın vurgu ve serif tipografi; hukuk sektörünün beklediği ağırbaşlılığı taşıyan, kalabalıktan uzak, okunabilirlik odaklı bir dil.",
+        en: "Gold accents and serif typography over deep navy; a restrained, readability-first language carrying the gravitas the legal sector expects.",
+      },
+      value: {
+        tr: "İki dilde profesyonel bir vitrin ve avukatın makale, hizmet ve ekip içeriğini dakikalar içinde kendisinin yayınlayabildiği, aramaya hazır canlı bir kurumsal site.",
+        en: "A professional storefront in two languages and a search-ready live corporate site where the lawyer publishes articles, services and team content in minutes.",
+      },
+      tech: ["Next.js", "Prisma", "PostgreSQL", "Admin Panel", "Auto TR→EN Translation", "SEO"],
+    },
+    gallery: [
+      { shot: "/images/case-cetiner-hizmetler.jpg", caption: { tr: "Panelden yönetilen çalışma alanları kataloğu", en: "Panel-managed practice area catalog" } },
+      { shot: "/images/case-cetiner-avukatlik.jpg", caption: { tr: "Avukatlık ve danışmanlık hizmet sayfası", en: "Litigation and advisory service page" } },
+    ],
+  },
+  {
+    slug: "tavaci-mehmet-efendi",
+    index: "02",
     name: "Tavacı Mehmet Efendi",
     category: { tr: "Restoran Web Deneyimi", en: "Restaurant Web Experience" },
     year: "2026",
@@ -49,7 +93,7 @@ export const projects = [
   },
   {
     slug: "akuport",
-    index: "02",
+    index: "03",
     name: "AküPort",
     category: { tr: "SEO & Yerel Hizmet Sitesi", en: "SEO & Local Service Website" },
     year: "2026",
@@ -93,7 +137,7 @@ export const projects = [
   },
   {
     slug: "bilye",
-    index: "03",
+    index: "04",
     name: "BilYe",
     category: { tr: "Restoran SaaS Platformu", en: "Restaurant SaaS Platform" },
     year: "2026",
@@ -138,7 +182,7 @@ export const projects = [
   },
   {
     slug: "gold-clover",
-    index: "04",
+    index: "05",
     name: "Gold Clover",
     category: { tr: "Etkinlik & Kuaför — İki Markalı Site", en: "Events & Salon — Two-Brand Site" },
     year: "2026",
@@ -182,7 +226,7 @@ export const projects = [
   },
   {
     slug: "incek-sandvic",
-    index: "05",
+    index: "06",
     name: "İncek Sandviç",
     category: { tr: "Restoran & Online Sipariş Sistemi", en: "Restaurant & Online Ordering System" },
     year: "2026",
@@ -226,7 +270,7 @@ export const projects = [
   },
   {
     slug: "my-yapi",
-    index: "06",
+    index: "07",
     name: "MY YAPI",
     category: { tr: "İnşaat & Yapı Malzemeleri Sitesi", en: "Construction & Building Materials Site" },
     year: "2026",
