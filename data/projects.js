@@ -314,6 +314,94 @@ export const projects = [
       },
     ],
   },
+  {
+    slug: "guga-labeltech",
+    index: "08",
+    name: "GUGA LABELTECH",
+    category: { tr: "RFID, RTLS & IoT Kurumsal Platformu", en: "RFID, RTLS & IoT Corporate Platform" },
+    year: "2026",
+    url: "https://www.gugalabeltech.com",
+    urlLabel: "gugalabeltech.com",
+    summary: {
+      tr: "RFID etiket ve donanım üretiminden IoT ve RTLS yazılımlarına uzanan GUGA LABELTECH çözümlerini, iki dilde çalışan kapsamlı bir kurumsal satış platformunda topladık.",
+      en: "We brought GUGA LABELTECH's offering — from RFID label and hardware production to IoT and RTLS software — into a comprehensive bilingual corporate sales platform.",
+    },
+    scope: [
+      { tr: "Web Tasarım", en: "Web Design" },
+      { tr: "Ürün Kataloğu", en: "Product Catalog" },
+      { tr: "Çözüm Mimarisi", en: "Solution Architecture" },
+      { tr: "Çok Dilli (TR/EN)", en: "Multilingual (TR/EN)" },
+      { tr: "İçerik Yönetimi", en: "Content Management" },
+    ],
+    shot: "/images/work-guga-labeltech.jpg",
+    caseStudy: {
+      problem: {
+        tr: "RFID, RTLS ve IoT altında çok sayıda sektör çözümü ile ürün ailesi vardı; teknik derinliği kaybetmeden bu geniş portföyü anlaşılır kılmak ve ziyaretçiyi doğru teklif akışına taşımak gerekiyordu.",
+        en: "There were many sector solutions and product families across RFID, RTLS and IoT; the challenge was to make this broad portfolio understandable without losing technical depth and guide visitors into the right quote flow.",
+      },
+      build: {
+        tr: "Ürün ve kategori kataloğu, sektöre özel çözüm sayfaları, referanslar, projeler, bilgi merkezi ve kurumsal içerikleri tek yapıda birleştiren; Türkçe ve İngilizce çalışan, panelden yönetilebilir kapsamlı bir platform.",
+        en: "A comprehensive, panel-managed platform in Turkish and English that unifies product categories, industry-specific solution pages, references, projects, a knowledge center and corporate content.",
+      },
+      design: {
+        tr: "Endüstriyel teknoloji hissini güçlendiren koyu zemin, elektrik mavisi vurgular, güçlü tipografi ve ürün görselleri; yoğun içeriği katmanlı ama rahat taranan bir düzende sunduk.",
+        en: "A dark foundation, electric-blue accents, bold typography and product imagery reinforce the industrial technology character, while layered layouts keep dense content easy to scan.",
+      },
+      value: {
+        tr: "Karmaşık bir teknoloji portföyünü sektör, çözüm ve ürün düzeyinde erişilebilir hale getiren; ulusal ve uluslararası ziyaretçileri nitelikli talebe dönüştüren canlı bir kurumsal satış kanalı.",
+        en: "A live corporate sales channel that makes a complex technology portfolio accessible by sector, solution and product, turning domestic and international visitors into qualified enquiries.",
+      },
+      tech: ["Next.js", "React", "Payload CMS", "TR/EN", "SEO", "Railway"],
+    },
+    gallery: [
+      { shot: "/images/case-guga-labeltech-cozumler.jpg", caption: { tr: "Sektöre göre ayrılan RFID, RTLS ve IoT çözüm kataloğu", en: "RFID, RTLS and IoT solution catalog organized by industry" } },
+      { shot: "/images/case-guga-labeltech-urunler.jpg", caption: { tr: "Kategori bazlı ürün ve donanım vitrini", en: "Category-based product and hardware showcase" } },
+    ],
+  },
+  {
+    slug: "pest-control-ilaclama",
+    index: "09",
+    name: "Pest Control İlaçlama",
+    category: { tr: "Yerel SEO & Hizmet Platformu", en: "Local SEO & Service Platform" },
+    year: "2026",
+    url: "https://pestcontrolilaclama.com",
+    urlLabel: "pestcontrolilaclama.com",
+    summary: {
+      tr: "Ankara genelinde böcek ilaçlama hizmeti arayan kullanıcıyı doğru hizmete, güven verici bilgiye ve hızlı telefon/WhatsApp aksiyonuna taşıyan yerel SEO odaklı platform.",
+      en: "A local SEO-focused platform that guides people seeking pest control across Ankara to the right service, trustworthy information and fast phone or WhatsApp action.",
+    },
+    scope: [
+      { tr: "Yerel SEO", en: "Local SEO" },
+      { tr: "Hizmet Mimarisi", en: "Service Architecture" },
+      { tr: "İçerik Stratejisi", en: "Content Strategy" },
+      { tr: "Teklif Akışı", en: "Quote Flow" },
+      { tr: "Mobil-öncelikli", en: "Mobile-first" },
+    ],
+    shot: "/images/work-pest-control-ilaclama.jpg",
+    caseStudy: {
+      problem: {
+        tr: "Acil çözüm arayan kullanıcıların zararlı türünü ve uygun uygulamayı hızla anlaması, Ankara'nın farklı bölgelerinde hizmete ulaşması ve fiyat belirsizliği yaşamadan güvenle iletişime geçmesi gerekiyordu.",
+        en: "People needing an urgent solution had to quickly understand the pest and suitable treatment, find service across Ankara districts and make contact confidently without price ambiguity.",
+      },
+      build: {
+        tr: "Konut ve işletmelere özel hizmetler, ayrıntılı zararlı rehberi, uygulama yöntemleri, bölge sayfaları, fiyat yaklaşımı ve blog içeriklerini; dört soruda WhatsApp mesajı hazırlayan teklif akışıyla birleştiren kapsamlı bir yapı.",
+        en: "A comprehensive structure combining residential and commercial services, a detailed pest guide, treatment methods, district pages, pricing guidance and blog content with a four-question WhatsApp quote flow.",
+      },
+      design: {
+        tr: "Güven veren koyu tonlar, yüksek kontrastlı aksiyon alanları ve sahaya odaklanan görseller; yoğun hizmet içeriğini mobilde bile hızlı taranan, doğrudan bir arayüzde topladık.",
+        en: "Trustworthy dark tones, high-contrast action areas and field-focused imagery bring dense service content into a direct interface that remains quick to scan on mobile.",
+      },
+      value: {
+        tr: "Yerel aramalarda geniş bir hizmet yüzeyi oluşturan, ziyaretçiyi ihtiyacına uygun bilgiyle karşılayan ve keşif talebini birkaç dokunuşta telefon ya da WhatsApp'a taşıyan canlı bir müşteri edinme kanalı.",
+        en: "A live acquisition channel with broad local-search coverage that meets visitors with relevant information and moves discovery requests to phone or WhatsApp in a few taps.",
+      },
+      tech: ["Next.js", "React", "Local SEO", "SSR", "WhatsApp Lead Flow", "Responsive UI"],
+    },
+    gallery: [
+      { shot: "/images/case-pest-control-ilaclama-hizmetler.jpg", caption: { tr: "Mekâna ve ihtiyaca göre ayrılan ilaçlama hizmetleri", en: "Pest-control services organized by venue and need" } },
+      { shot: "/images/case-pest-control-ilaclama-zararlilar.jpg", caption: { tr: "Zararlı türüne göre ayrıntılı bilgi ve doğru yönlendirme", en: "Detailed guidance organized by pest type" } },
+    ],
+  },
 ];
 
 // Slug ile tek proje bul (case sayfası için).
